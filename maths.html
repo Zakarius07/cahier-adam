@@ -1,0 +1,1733 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cahier de maths · 6e</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Caveat:wght@600;700&display=swap">
+<style>
+/* Layout : cahier d'écolier. En-tête collant avec les deux leçons en onglets, une colonne de fiches
+   sur papier Seyès, réponses à l'encre bleue, correction et note au stylo rouge en bas de la copie. */
+:root{
+  --paper:#F7F8FE; --sheet:#FFFFFF; --ink:#1B2350; --muted:#5B6287; --rule:#DCE0F3;
+  --seyes:#CBD1F1; --seyes-fine:#E7EAF9; --margin:#E9A3A3;
+  --blue:#2443C8; --blue-soft:#ECF0FF; --red:#CF2E29; --red-soft:#FDEDEC; --green:#1C7F47; --green-soft:#E4F4EA;
+  --amber:#B86B00;
+  --gram:#6A45C0; --ortho:#DA5338;
+  --c-def:#2463C9; --c-con:#0E8A86; --c-ind:#B86B00; --c-pos:#8A3FC4; --c-dem:#C2367B;
+  --f-display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --f-body:"Atkinson Hyperlegible","Segoe UI",system-ui,sans-serif;
+  --f-hand:"Caveat","Segoe Print","Comic Sans MS",cursive;
+  --acc:var(--gram);
+  --r:12px;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#11152A; --sheet:#191E37; --ink:#E7EAFF; --muted:#A3A9CF; --rule:#2C3358;
+  --seyes:#2A3159; --seyes-fine:#1F2546; --margin:#7E3943;
+  --blue:#93A9FF; --blue-soft:#222B5C; --red:#FF7D72; --red-soft:#3A1E26; --green:#62D59A; --green-soft:#16372A;
+  --amber:#F2B04C; --gram:#B89CFF; --ortho:#FF8C70;
+  --c-def:#7DA8FF; --c-con:#45D1C9; --c-ind:#F2B04C; --c-pos:#C99AF5; --c-dem:#FF85BC;
+  color-scheme:dark }}
+:root[data-theme="dark"]{
+  --paper:#11152A; --sheet:#191E37; --ink:#E7EAFF; --muted:#A3A9CF; --rule:#2C3358;
+  --seyes:#2A3159; --seyes-fine:#1F2546; --margin:#7E3943;
+  --blue:#93A9FF; --blue-soft:#222B5C; --red:#FF7D72; --red-soft:#3A1E26; --green:#62D59A; --green-soft:#16372A;
+  --amber:#F2B04C; --gram:#B89CFF; --ortho:#FF8C70;
+  --c-def:#7DA8FF; --c-con:#45D1C9; --c-ind:#F2B04C; --c-pos:#C99AF5; --c-dem:#FF85BC;
+  color-scheme:dark }
+body[data-lesson="acc"]{ --acc:var(--ortho) }
+
+*{box-sizing:border-box}
+body{
+  background:var(--paper); color:var(--ink); font:400 17px/1.55 var(--f-body);
+  background-image:
+    repeating-linear-gradient(to bottom, transparent 0 31px, var(--seyes-fine) 31px 32px),
+    repeating-linear-gradient(to right, transparent 0 31px, var(--seyes-fine) 31px 32px);
+}
+.wrap{max-width:780px; margin:0 auto; padding-inline:16px}
+h1,h2,h3{font-family:var(--f-display); text-wrap:balance; margin:0}
+button{font:inherit; color:inherit}
+:focus-visible{outline:3px solid var(--acc); outline-offset:2px; border-radius:6px}
+
+/* ---- en-tête ---- */
+.top{position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--paper); border-bottom:1px solid var(--rule)}
+.top .wrap{display:flex; align-items:center; gap:12px; padding-block:10px; flex-wrap:wrap}
+.brand{font:800 15px/1 var(--f-display); letter-spacing:.02em; margin-right:auto; white-space:nowrap}
+.brand small{display:block; font:400 12px/1.3 var(--f-body); color:var(--muted); letter-spacing:.04em; text-transform:uppercase; margin-top:3px}
+.tabs{display:flex; gap:6px; max-width:100%; overflow-x:auto; scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tab{flex:none}
+.tab{display:flex; align-items:center; gap:8px; border:1.5px solid var(--rule); background:var(--sheet); border-radius:999px; padding:6px 12px 6px 6px; cursor:pointer; font-weight:700; font-size:15px}
+.tab .num{display:grid; place-items:center; width:26px; height:26px; border-radius:7px; color:#fff; font:800 14px/1 var(--f-display)}
+.tab[data-l="det"] .num{background:var(--gram)} .tab[data-l="acc"] .num{background:var(--ortho)}
+.tab[aria-selected="true"]{border-color:var(--ink); background:var(--ink); color:var(--paper)}
+
+/* ---- tête de leçon ---- */
+.hero{padding-block:26px 6px; display:grid; gap:10px}
+.eyebrow{font:700 13px/1 var(--f-body); letter-spacing:.08em; text-transform:uppercase; color:var(--acc)}
+.hero h1{font-size:clamp(30px,6vw,44px); font-weight:800; line-height:1.05; letter-spacing:-.01em}
+.hero p{margin:0; color:var(--muted); max-width:60ch}
+.prog{display:flex; align-items:center; gap:12px; font-size:14px; color:var(--muted); font-variant-numeric:tabular-nums}
+.bar{flex:1; height:8px; border-radius:99px; background:var(--rule); overflow:hidden; max-width:320px}
+.bar i{display:block; height:100%; width:0; background:var(--acc); border-radius:99px; transition:width .3s}
+
+details.memo{background:var(--sheet); border:1.5px solid var(--rule); border-radius:var(--r); margin-top:14px}
+details.memo summary{cursor:pointer; padding:12px 16px; font-weight:700; list-style:none; display:flex; justify-content:space-between; gap:12px}
+details.memo summary::-webkit-details-marker{display:none}
+details.memo summary::after{content:"Afficher"; font-weight:400; color:var(--acc); font-size:14px}
+details.memo[open] summary::after{content:"Masquer"}
+.memo-body{padding:0 16px 14px; overflow-x:auto}
+.memo table{border-collapse:collapse; width:100%; font-size:15px; min-width:420px}
+.memo th,.memo td{text-align:left; vertical-align:top; padding:8px 10px; border-top:1px solid var(--rule)}
+.memo th{width:32%; font-weight:700}
+
+/* ---- fiches ---- */
+.sheets{display:grid; gap:16px; padding-block:18px 8px}
+.part{font:800 14px/1 var(--f-display); letter-spacing:.06em; text-transform:uppercase; color:var(--acc); padding:14px 2px 0; display:flex; align-items:center; gap:10px}
+.part::after{content:""; flex:1; height:2px; background:var(--acc); opacity:.35; border-radius:2px}
+.ex{background:var(--sheet); border:1.5px solid var(--rule); border-radius:var(--r); padding:16px 16px 14px; min-width:0}
+.ex-h{display:flex; gap:12px; align-items:flex-start}
+.ex-n{flex:none; display:grid; place-items:center; width:30px; height:30px; border-radius:8px; background:var(--acc); color:#fff; font:800 16px/1 var(--f-display)}
+.ex-t{flex:1; min-width:0; font-weight:700; line-height:1.4; padding-top:3px}
+.ex-score{flex:none; font:700 24px/1 var(--f-hand); color:var(--red); padding-top:2px; font-variant-numeric:tabular-nums}
+.ex-score.full{color:var(--green)}
+.hint{margin:8px 0 0 42px; color:var(--muted); font-style:italic; font-size:15px}
+.textbox{margin:12px 0 0; padding:12px 14px; border-radius:10px; background:var(--blue-soft); line-height:1.9}
+ol.items{list-style:none; margin:10px 0 0; padding:0; display:grid; gap:4px; counter-reset:it}
+ol.items>li{counter-increment:it; display:flex; gap:10px; align-items:baseline; padding:5px 0; border-bottom:1px dashed var(--rule); line-height:2.15; min-width:0}
+ol.items>li:last-child{border-bottom:0}
+ol.items>li::before{content:counter(it) "."; flex:none; width:24px; text-align:right; font-weight:700; color:var(--acc); font-variant-numeric:tabular-nums}
+.it{flex:1; min-width:0}
+.pre{display:block; color:var(--muted); font-size:15px; line-height:1.5}
+
+/* blancs à remplir : encre bleue */
+.blank{font:700 17px/1.3 var(--f-body); color:var(--blue); background:var(--blue-soft); border:0; border-bottom:2px dotted var(--blue);
+  border-radius:6px 6px 0 0; padding:3px 6px; width:6.2em; max-width:100%; min-width:0}
+.blank.m{width:10em}
+.blank.l{width:100%; max-width:24em; display:block; margin-top:2px}
+.blank:focus{outline:none; border-bottom-style:solid; box-shadow:0 2px 0 0 var(--blue)}
+.blank.ok{color:var(--green); background:var(--green-soft); border-bottom:2px solid var(--green)}
+.blank.ko{color:var(--muted); background:var(--red-soft); border-bottom:2px solid var(--red); text-decoration:line-through; text-decoration-color:var(--red)}
+.fix{font:700 23px/1 var(--f-hand); color:var(--red); margin:0 .25em; white-space:nowrap}
+.fix.sm{font-size:19px}
+.why{display:block; font:600 19px/1.25 var(--f-hand); color:var(--red)}
+
+/* choix */
+.opts{display:inline-flex; flex-wrap:wrap; gap:6px; vertical-align:middle; margin:2px 4px}
+.opt{border:1.5px solid var(--rule); background:var(--sheet); border-radius:999px; padding:3px 12px; cursor:pointer; line-height:1.5; font-size:16px}
+.opt:hover{border-color:var(--blue)}
+.opt[aria-pressed="true"]{background:var(--blue); border-color:var(--blue); color:var(--sheet); font-weight:700}
+.opt.ok[aria-pressed="true"]{background:var(--green); border-color:var(--green)}
+.opt.ko[aria-pressed="true"]{background:var(--red-soft); border-color:var(--red); color:var(--red); text-decoration:line-through}
+.opt.should{border:2px solid var(--red); color:var(--red); font-weight:700; border-radius:46% 54% 50% 50% / 60% 45% 55% 40%}
+.opt:disabled{cursor:default}
+
+/* mots à toucher */
+.tok{cursor:pointer; border-radius:4px; padding:0 1px; text-decoration:none; transition:background .15s}
+.tok:hover{background:var(--blue-soft)}
+.tok.on{text-decoration:underline 3px var(--blue); text-underline-offset:5px; color:var(--blue); font-weight:700}
+.tok.cur{outline:2px solid var(--blue); outline-offset:1px}
+.tok[data-tag]{font-weight:700; text-decoration:underline 3px var(--tc); text-underline-offset:5px; color:var(--tc)}
+.tok[data-tag]::after{content:attr(data-tag); font:700 11px/1 var(--f-body); vertical-align:super; margin-left:2px; letter-spacing:.02em}
+.tok.err{color:var(--red); text-decoration:underline wavy 2px var(--red); text-underline-offset:5px; font-weight:700}
+.tok.c-ok{color:var(--green); text-decoration-color:var(--green); background:var(--green-soft)}
+.tok.c-fp{color:var(--red); text-decoration:line-through 2px var(--red); background:var(--red-soft)}
+.tok.c-miss{outline:2px solid var(--red); outline-offset:1px; border-radius:40% 60% 50% 50% / 60% 40% 60% 40%}
+.tok.c-ko{color:var(--red); background:var(--red-soft)}
+.locked .tok{cursor:default}
+.locked .tok:hover{background:none}
+.t-def{--tc:var(--c-def)} .t-con{--tc:var(--c-con)} .t-ind{--tc:var(--c-ind)} .t-pos{--tc:var(--c-pos)} .t-dem{--tc:var(--c-dem)}
+
+.catbar{display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; align-items:center}
+.catbar .lbl{font-size:14px; color:var(--muted); width:100%}
+.cat{border:2px solid var(--tc); color:var(--tc); background:var(--sheet); border-radius:999px; padding:4px 12px; cursor:pointer; font-weight:700; font-size:15px}
+.cat:disabled{opacity:.45; cursor:default}
+.cat.clear{--tc:var(--muted)}
+.countline{font-size:14px; color:var(--muted); margin-top:8px; font-variant-numeric:tabular-nums}
+
+.fixlist{display:grid; gap:8px; margin-top:12px}
+.fixrow{display:flex; flex-wrap:wrap; align-items:center; gap:8px}
+.fixrow .w{font-weight:700; color:var(--red); text-decoration:line-through}
+.empty{color:var(--muted); font-size:15px; font-style:italic}
+
+select.sel{font:700 16px var(--f-body); color:var(--blue); background:var(--blue-soft); border:0; border-bottom:2px dotted var(--blue); border-radius:6px 6px 0 0; padding:4px 6px; max-width:100%}
+select.sel.ok{color:var(--green); background:var(--green-soft); border-bottom:2px solid var(--green)}
+select.sel.ko{color:var(--red); background:var(--red-soft); border-bottom:2px solid var(--red)}
+.det{font-weight:700; display:inline-block; min-width:3em}
+
+textarea.write{width:100%; min-height:130px; margin-top:10px; font:700 17px/32px var(--f-body); color:var(--blue); border:1.5px solid var(--rule); border-radius:10px; padding:0 12px;
+  background:var(--sheet) repeating-linear-gradient(to bottom, transparent 0 31px, var(--seyes) 31px 32px); background-attachment:local; resize:vertical}
+.checks{display:flex; flex-wrap:wrap; gap:6px; margin-top:8px}
+.chk{font-size:14px; border-radius:999px; padding:3px 10px; border:1.5px solid var(--rule); color:var(--muted)}
+.chk.yes{border-color:var(--tc); color:var(--tc); font-weight:700}
+.bonus{margin-top:16px; padding-top:14px; border-top:2px dashed var(--rule)}
+.bonus h3{font-size:17px}
+
+/* ---- copie / note ---- */
+.finish{margin-block:22px 40px; border-radius:var(--r); border:1.5px solid var(--rule); padding:20px 18px 20px 56px; position:relative;
+  background:var(--sheet) repeating-linear-gradient(to bottom, transparent 0 31px, var(--seyes) 31px 32px)}
+.finish::before{content:""; position:absolute; left:40px; top:0; bottom:0; width:2px; background:var(--margin)}
+.finish h2{font-size:24px; font-weight:800}
+.finish p{margin:8px 0 0; max-width:56ch}
+.btns{display:flex; flex-wrap:wrap; gap:10px; margin-top:16px}
+.btn{border:0; border-radius:999px; padding:12px 22px; font-weight:700; font-size:16px; cursor:pointer; background:var(--ink); color:var(--paper)}
+.btn.red{background:var(--red); color:#fff}
+.btn.ghost{background:transparent; color:var(--ink); border:1.5px solid var(--ink)}
+.warn{margin-top:14px; padding:12px 14px; border-radius:10px; background:var(--red-soft); color:var(--ink)}
+.result{display:flex; flex-wrap:wrap; align-items:center; gap:18px 28px}
+.mark{display:grid; place-items:center; width:150px; height:118px; border:3px solid var(--red); border-radius:52% 48% 55% 45% / 50% 58% 42% 50%;
+  transform:rotate(-5deg); color:var(--red); font:700 54px/1 var(--f-hand); font-variant-numeric:tabular-nums}
+.mark small{font-size:28px}
+.appr{font:700 30px/1.15 var(--f-hand); color:var(--red); max-width:24ch}
+.chips-lbl{font:700 13px/1 var(--f-body); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin-top:18px!important}
+.chips{display:grid; grid-template-columns:repeat(auto-fill,minmax(60px,1fr)); gap:8px; margin-top:10px}
+.chip{border-radius:10px; padding:6px 8px; font-size:13px; border:1.5px solid var(--rule); background:var(--sheet); font-variant-numeric:tabular-nums; display:grid; justify-items:center; gap:2px; line-height:1.2}
+.chip b{font:800 17px/1 var(--f-display)}
+.chip.full{border-color:var(--green); color:var(--green)}
+.chip.part{border-color:var(--amber); color:var(--amber)}
+.chip.zero{border-color:var(--red); color:var(--red)}
+.foot{color:var(--muted); font-size:13px; padding-bottom:28px}
+
+/* ---- enregistrement, bilan, suivi ---- */
+.status{margin-top:14px; font-size:15px; color:var(--muted); display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.status.ok{color:var(--green); font-weight:700} .status.bad{color:var(--red)}
+.btn.sm{padding:8px 16px; font-size:15px}
+.field{display:grid; gap:4px; margin-top:14px; max-width:320px}
+.field label{font-size:14px; font-weight:700}
+.field input{font:700 17px var(--f-body); color:var(--blue); background:var(--sheet); border:1.5px solid var(--rule); border-radius:10px; padding:8px 10px; min-width:0}
+.bilan{margin-top:22px; display:grid; gap:12px}
+.bilan h3{font-size:20px}
+.sub{font:700 13px/1 var(--f-body); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); margin:0 0 6px}
+.b-kid{border-left:4px solid var(--acc); padding:4px 0 4px 14px; margin:0; max-width:60ch}
+.b-par{background:var(--blue-soft); border-radius:10px; padding:12px 14px; display:grid; gap:8px}
+.b-par ul{margin:0; padding-left:20px} .b-par li{margin:3px 0}
+.b-par p{margin:0}
+.tagrow{display:flex; flex-wrap:wrap; gap:6px}
+.rtag{font-size:14px; border-radius:999px; padding:3px 10px; border:1.5px solid var(--red); color:var(--red); background:var(--sheet)}
+.thinking{color:var(--muted); font-style:italic; margin-top:16px!important}
+.sum{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:12px; margin-top:6px}
+.sumcard{background:var(--sheet); border:1.5px solid var(--rule); border-radius:var(--r); padding:14px 16px; display:grid; gap:8px; min-width:0}
+.sumcard h3{font-size:17px}
+.kpis{display:flex; gap:22px; flex-wrap:wrap; font-variant-numeric:tabular-nums}
+.kpi b{display:block; font:800 24px/1.1 var(--f-display)}
+.kpi span{font-size:13px; color:var(--muted)}
+.trend{font-size:15px; color:var(--muted); font-variant-numeric:tabular-nums; overflow-wrap:anywhere; margin:0}
+.copies{display:grid; gap:12px; margin-block:18px 40px}
+.copy{background:var(--sheet); border:1.5px solid var(--rule); border-radius:var(--r); padding:14px 16px; display:grid; gap:12px; min-width:0}
+.ex:not(.locked){-webkit-user-select:none; user-select:none; -webkit-touch-callout:none}
+.ex:not(.locked) input,.ex:not(.locked) textarea{-webkit-user-select:text; user-select:text}
+.bplus{display:grid; place-items:center; align-content:center; color:var(--green); font:800 40px/1 var(--f-hand,inherit)}
+.bplus small{font:700 14px/1 var(--f-body,inherit)}
+.totalline{font-size:18px; color:var(--green); margin:6px 0 0}
+.totalline small{color:var(--muted); font-size:13px}
+.mbox{display:grid; justify-items:end; gap:4px; flex:none}
+.mplus{font:800 14px/1.2 var(--f-body,inherit); color:var(--green); white-space:nowrap}
+#profBtn{display:none!important}
+.lvl{font-size:15px; color:var(--muted); margin:6px 0 0}
+.rl{margin:6px 0; padding-left:22px; display:grid; gap:6px; font-size:15px; line-height:1.45}
+.memo table.rt{min-width:0; margin:8px 0; text-align:center}
+.memo table.rt th,.memo table.rt td{text-align:center; width:auto; padding:7px 6px}
+.memo table.rt tbody th{text-align:left; font-weight:600}
+.memo table.rt .cur{background:var(--blue-soft); font-weight:800}
+.memo table.rt small{font-weight:600; color:var(--acc); font-size:11px}
+.timer[hidden]{display:none}
+.timer{position:fixed; right:14px; bottom:14px; z-index:30; display:flex; flex-direction:column; align-items:flex-end; gap:2px; padding:9px 14px; border-radius:14px; background:var(--sheet); border:1.5px solid var(--rule); box-shadow:0 4px 16px rgba(0,0,0,.14); font-variant-numeric:tabular-nums}
+.timer span{font:800 22px/1 var(--f-display,inherit); color:var(--acc)}
+.timer small{font-size:12px; color:var(--muted); max-width:200px; text-align:right}
+.timer.over{border-color:var(--red)} .timer.over span{color:var(--red)}
+.bonuses{list-style:none; margin:12px 0 4px; padding:10px 14px; border-radius:12px; background:var(--blue-soft); display:grid; gap:6px; font-size:15px}
+.bonuses li.ok{color:var(--green)}
+.jeu{margin:12px 0 4px; padding:12px 14px; border-radius:12px; border:2px dashed var(--rule); font-size:16px}
+.jeu.on{border-style:solid; border-color:var(--green); color:var(--green); background:var(--sheet)}
+.flags .game{font:700 12px/1 var(--f-body,inherit); color:var(--green); padding:5px 8px; border-radius:99px; border:1px solid var(--green)}
+.flags .game.chk{color:#8a4b00; border-color:#f0c987}
+.flags{display:flex; flex-wrap:wrap; gap:6px; margin:2px 0 10px}
+.flags .tm{font:600 13px/1 var(--f-body,inherit); color:var(--ink2,#555); padding:5px 8px; border-radius:99px; background:var(--blue-soft)}
+.flags .flag{font:700 12px/1 var(--f-body,inherit); color:#8a4b00; background:#fff1d6; border:1px solid #f0c987; padding:5px 8px; border-radius:99px}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) .flags .flag{color:#ffd9a0; background:#4a3411; border-color:#7a5a20}}
+:root[data-theme="dark"] .flags .flag{color:#ffd9a0; background:#4a3411; border-color:#7a5a20}
+.copy-h{display:flex; gap:12px; align-items:flex-start}
+.copy-h .meta{flex:1; min-width:0}
+.copy-h .when{font-size:14px; color:var(--muted)}
+.copy-h .what{font-weight:700}
+.mini{flex:none; display:flex; align-items:baseline; justify-content:center; gap:1px; padding-top:14px!important; min-width:78px; height:56px; padding:0 8px; border:2.5px solid var(--red); border-radius:52% 48% 55% 45% / 50% 58% 42% 50%;
+  transform:rotate(-4deg); color:var(--red); font:700 27px/1 var(--f-hand); font-variant-numeric:tabular-nums}
+.mini.good{border-color:var(--green); color:var(--green)}
+.lt{display:inline-grid; place-items:center; width:22px; height:22px; border-radius:6px; color:#fff; font:800 12px/1 var(--f-display); vertical-align:1px; margin-right:6px}
+.lt.det{background:var(--gram)} .lt.acc{background:var(--ortho)}
+.copy details summary{cursor:pointer; color:var(--blue); font-weight:700; font-size:15px}
+.copy .chips{margin-top:0}
+.errs{margin:8px 0 0; padding:0; list-style:none; display:grid; gap:6px; font-size:15px}
+.errs li{border-bottom:1px dashed var(--rule); padding-bottom:6px; overflow-wrap:anywhere}
+.errs .g{color:var(--red); text-decoration:line-through} .errs .e{color:var(--green); font-weight:700}
+.tab .num svg{width:15px; height:15px}
+.pbtn{display:flex; align-items:center; gap:8px; border:1.5px solid var(--rule); background:var(--sheet); border-radius:999px; padding:4px 12px 4px 5px; cursor:pointer; font-weight:700; font-size:15px; max-width:180px}
+.pbtn .av{display:grid; place-items:center; width:28px; height:28px; border-radius:50%; background:var(--blue-soft); font-size:17px; line-height:1}
+.pbtn .nm{overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.pgrid{display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; margin-top:18px}
+.pcard{position:relative; background:var(--sheet); border:2px solid var(--rule); border-radius:var(--r); padding:18px 12px 14px; display:grid; gap:8px; justify-items:center; text-align:center; cursor:pointer; font-weight:700; font-size:18px}
+.pcard:hover,.pcard.cur{border-color:var(--blue)}
+.pcard .av{display:grid; place-items:center; width:64px; height:64px; border-radius:50%; background:var(--blue-soft); font-size:38px; line-height:1}
+.pcard small{font-weight:400; font-size:13px; color:var(--muted)}
+.pbox{background:var(--sheet); border:1.5px solid var(--rule); border-radius:var(--r); padding:16px; margin-top:18px; display:grid; gap:12px}
+.pbox input[type=text]{font:inherit; padding:8px 10px; border:1.5px solid var(--rule); border-radius:8px; background:var(--paper); color:var(--ink); max-width:20em}
+.avs{display:flex; flex-wrap:wrap; gap:6px}
+.avs button{width:42px; height:42px; border-radius:50%; border:2px solid var(--rule); background:var(--paper); font-size:22px; cursor:pointer}
+.avs button[aria-pressed="true"]{border-color:var(--blue); background:var(--blue-soft)}
+.filt{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px}
+.filt button{border:1.5px solid var(--rule); background:var(--sheet); border-radius:999px; padding:5px 14px; cursor:pointer; font-weight:700; font-size:15px}
+.filt button[aria-pressed="true"]{background:var(--ink); color:var(--paper); border-color:var(--ink)}
+.whois{margin:0 0 10px; font-size:15px; color:var(--muted)}
+.linkbtn{background:none; border:0; color:var(--blue); text-decoration:underline; cursor:pointer; padding:0; font-weight:700}
+.tab[data-l="suivi"] .num{background:var(--muted)}
+body[data-lesson="suivi"]{ --acc:var(--blue) }
+
+@media (max-width:520px){
+  body{font-size:16px}
+  .tab{font-size:14px; padding:5px 10px 5px 5px; gap:6px}
+  .tab .long{display:none}
+  .ex{padding:14px 12px 12px}
+  .hint{margin-left:0}
+  .finish{padding-left:40px}
+  .finish::before{left:26px}
+  .mark{width:124px; height:100px; font-size:44px}
+  .brand small{display:none}
+}
+@media (prefers-reduced-motion: reduce){ *{transition:none!important; scroll-behavior:auto!important} }
+.fg{display:block; max-width:100%; height:auto; color:var(--ink,#1f2a44)}
+.figbox{margin:6px 0 10px; display:flex; justify-content:center}
+.figi{display:block; margin:4px 0 6px}
+li .it:has(.figi){display:block}
+.t-suj{--tc:var(--c-def)} .t-cod{--tc:var(--c-con)} .t-coi{--tc:var(--c-ind)} .t-att{--tc:var(--c-pos)} .t-tps{--tc:var(--c-def)} .t-lie{--tc:var(--c-con)} .t-man{--tc:var(--c-ind)} .t-int{--tc:var(--c-pos)} .t-neg{--tc:var(--c-dem)} .t-cau{--tc:var(--c-dem)} .t-app{--tc:var(--c-pos)}
+.tabs{padding-bottom:2px}
+
+details.story{border-color:var(--blue); background:var(--blue-soft)}
+details.story summary{color:var(--ink); font-size:17px}
+details.story summary::after{content:"Découvrir"; color:var(--blue); font-weight:700}
+details.story[open] summary::after{content:"Masquer"}
+.story .memo-body{display:grid; gap:12px; overflow:visible}
+.sc{background:var(--sheet); border:1.5px solid var(--rule); border-radius:14px; padding:12px 14px}
+.sc h4{margin:0 0 8px; font-size:17px; display:flex; gap:10px; align-items:center; line-height:1.25}
+.sc .em{font-size:26px; flex:none}
+.sc p{margin:8px 0; line-height:1.5}
+.say{display:flex; gap:8px; align-items:flex-start}
+.say .who{flex:none; font-size:13px; font-weight:800; color:var(--blue); background:var(--blue-soft); border-radius:999px; padding:3px 9px; margin-top:2px}
+.say .bub{background:var(--paper); border:1.5px solid var(--rule); border-radius:4px 14px 14px 14px; padding:8px 12px}
+.eq{background:var(--green-soft); border-radius:10px; padding:9px 12px; font-weight:600}
+.big{font-size:19px; text-align:center; line-height:1.7; overflow-wrap:anywhere}
+.big small{font-size:13px; font-weight:400; color:var(--muted)}
+.voc{margin:6px 0; padding-left:18px; line-height:1.55}
+.steps{margin:6px 0; padding-left:22px; line-height:1.55}
+.k1{color:var(--blue)} .k2{color:var(--red)} .k3{color:var(--green)} .k4{color:#8A3FC4}
+details.rv{border:1.5px dashed var(--blue); border-radius:10px; margin:8px 0; background:var(--paper)}
+details.rv summary{cursor:pointer; padding:8px 12px; font-weight:700; color:var(--blue); list-style:none}
+details.rv summary::-webkit-details-marker{display:none}
+details.rv>div{padding:0 12px 10px}
+.sc table.tb{border-collapse:collapse; margin:8px auto; font-size:14px; width:100%; min-width:0}
+.sc table.tb th,.sc table.tb td{border:1px solid var(--rule); padding:6px 6px; text-align:center; width:auto}
+details.story details.rv summary::after,details.story details.rv[open] summary::after{content:none}
+</style>
+
+<header class="top">
+  <div class="wrap">
+    <div class="brand">Cahier de mathématiques<small>6<sup>e</sup> · <a href="index.html" style="color:inherit">← retour à l'accueil</a></small></div>
+    <button class="pbtn" id="profBtn" type="button" aria-label="Changer de profil"></button>
+    <div class="tabs" role="tablist" aria-label="Leçons"></div>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+ <div class="timer" id="timer" hidden></div>
+ <div id="profView" hidden></div>
+ <div id="suiviView" hidden></div>
+ <div id="lessonView">
+  <section class="hero">
+    <div class="eyebrow" id="eyebrow"></div>
+    <h1 id="h1"></h1>
+    <p id="intro"></p>
+    <div class="prog"><div class="bar"><i id="barfill"></i></div><span id="progtxt"></span></div>
+    <details class="memo rulesbox" id="rules"><summary>Règles du jeu</summary><div class="memo-body" id="rulesbody"></div></details>
+    <details class="memo story" id="story" hidden><summary>🎬 Comprendre la leçon en s’amusant</summary><div class="memo-body" id="storybody"></div></details>
+    <details class="memo" id="memo"><summary>Aide-mémoire de la leçon</summary><div class="memo-body" id="memobody"></div></details>
+  </section>
+  <section class="sheets" id="sheets" aria-live="off"></section>
+  <section class="finish" id="finish"></section>
+  <p class="foot">Tes réponses en cours restent sur cet appareil. Chaque copie corrigée est aussi enregistrée dans l'onglet Suivi.</p>
+ </div>
+</main>
+
+<script>
+(function(){
+/* ======================= Données ======================= */
+/* ======================= Données : Chapitre 8, Droites et cercles ======================= */
+const f=(q,...a)=>({q,a:a.map(x=>Array.isArray(x)?x:[x])});
+const ch=(b,a,why)=>({b,a,why});
+const c2=(b,opts,a,why,after)=>({b,opts,a,why,after});
+const VF=['Vrai','Faux'], OUI=['Oui','Non'], EN=['∈','∉'];
+const tf=(s,v,why)=>ch(s,v?'Vrai':'Faux',why);
+const yn=(s,v,why)=>ch(s,v?'Oui':'Non',why);
+const en=(b,a,after)=>({b,opts:EN,a,after});
+const PAR=['//','parallèle','parallèles','parallele','paralleles'];
+
+/* ---- figures SVG (couleur héritée du thème) ---- */
+const svg=(w,h,b)=>`<svg class="fg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}" aria-hidden="true">${b}</svg>`;
+const SK='stroke="currentColor" stroke-width="1.6" fill="none"';
+const TX=(x,y,s,a)=>`<text x="${x}" y="${y}" font-size="14" font-weight="700" fill="currentColor" text-anchor="${a||'middle'}">${s}</text>`;
+const CRX=(x,y)=>`<path d="M${x-4} ${y-4}l8 8M${x+4} ${y-4}l-8 8" stroke="#c0392b" stroke-width="1.8" fill="none"/>`;
+const LN=(a,b,c,d,w)=>`<line x1="${a}" y1="${b}" x2="${c}" y2="${d}" stroke="currentColor" stroke-width="${w||1.6}"/>`;
+const rad=d=>d*Math.PI/180;
+const ruler=(v,l)=>{ const x0=10,k=28,px=x0+k*v; let b=`<rect x="5" y="30" width="238" height="26" rx="3" ${SK}/>`;
+  for(let i=0;i<=80;i++){ const x=x0+i*k/10; b+=LN(x,30,x,30+(i%10===0?13:(i%5===0?9:5)),1); }
+  for(let c=0;c<=8;c++) b+=`<text x="${x0+c*k}" y="52" font-size="10" fill="currentColor" text-anchor="middle">${c}</text>`;
+  b+=`<path d="M${px} 16V29" stroke="#c0392b" stroke-width="2"/><path d="M${px-4} 24L${px} 30L${px+4} 24" fill="#c0392b"/>`+TX(px,12,l);
+  return svg(250,60,b); };
+const segMarks=(kind,P,Q,I)=>{ const xi=kind==='no1'?85:115; const tk=(x,n)=>{ let s=''; for(let i=0;i<n;i++) s+=LN(x-3+i*6,32,x+3+i*6,48,1.6); return s; };
+  let b=LN(20,40,210,40)+[20,xi,210].map(x=>LN(x,34,x,46,1.6)).join('')+TX(20,66,P)+TX(xi,66,I)+TX(210,66,Q);
+  if(kind==='ok') b+=tk((20+xi)/2-3,1)+tk((xi+210)/2-3,1);
+  if(kind==='no1') b+=tk((20+xi)/2-3,1)+tk((xi+210)/2-6,2);
+  return svg(230,76,b); };
+const medFig=(kind,P,Q)=>{ let b=LN(30,100,190,100)+TX(24,124,P)+TX(196,124,Q);
+  const tick=x=>LN(x,94,x,106,1.8);
+  if(kind==='ok') b+=LN(110,15,110,140)+tick(70)+tick(150)+`<polyline points="110,92 118,92 118,100" ${SK}/>`;
+  if(kind==='notMid') b+=LN(72,15,72,140)+`<polyline points="72,92 80,92 80,100" ${SK}/>`;
+  if(kind==='notPerp') b+=LN(150,15,90,145)+tick(70)+tick(150);
+  b+=TX(kind==='notPerp'?162:(kind==='notMid'?60:122),24,'(d)');
+  return svg(220,150,b); };
+const lines2=(kind,ang,flip)=>{ const L=(cx,cy,a,n)=>{ const dx=Math.cos(rad(a))*n, dy=-Math.sin(rad(a))*n; return LN(cx-dx,cy-dy,cx+dx,cy+dy); }; let b='';
+  const s=flip?-1:1;
+  if(kind==='par') b=L(100,30,s*ang,85)+L(100,78,s*ang,85);
+  if(kind==='perp') b=L(100,55,s*ang,85)+L(100,55,s*ang+90,50);
+  if(kind==='sec') b=L(100,55,s*ang,85)+L(100,55,s*(ang+55),55);
+  b+=TX(18,16,'(d₁)','start')+TX(182,102,'(d₂)','end');
+  return svg(200,110,b); };
+const circ=(pts)=>{ const cx=100,cy=95,R=60; let b=`<circle cx="${cx}" cy="${cy}" r="${R}" ${SK}/>`+CRX(cx,cy)+TX(cx+11,cy+17,'O');
+  pts.forEach(([l,ang,k])=>{ const x=cx+R*k*Math.cos(rad(ang)), y=cy-R*k*Math.sin(rad(ang)); b+=CRX(x,y)+TX(x+(x>cx?11:-11),y+(y>cy?16:-7),l); });
+  return svg(200,190,b); };
+const chordFig=(l)=>{ const [O,A,B,C,D,E]=l; const cx=100,cy=95,R=62; const P=a=>[cx+R*Math.cos(rad(a)),cy-R*Math.sin(rad(a))];
+  const pA=P(0),pB=P(130),pC=P(65),pD=P(205),pE=P(25);
+  let b=`<circle cx="${cx}" cy="${cy}" r="${R}" ${SK}/>`+LN(cx,cy,pA[0],pA[1])+LN(pD[0],pD[1],pE[0],pE[1])+LN(pB[0],pB[1],pC[0],pC[1])+CRX(cx,cy)+TX(cx-4,cy+18,O);
+  [[A,pA],[B,pB],[C,pC],[D,pD],[E,pE]].forEach(([n,p])=>{ b+=CRX(p[0],p[1])+TX(p[0]+(p[0]>cx?11:-11),p[1]+(p[1]>cy?15:-6),n); });
+  return svg(210,190,b); };
+
+/* ================= Leçon 1 : droites, segments, perpendiculaires, parallèles, médiatrices ================= */
+const nt=(k,P,Q)=>{ const d=`(${P}${Q})`, s=`[${P}${Q}]`, l=`${P}${Q}`; const txt={d:`La <b>droite</b> qui passe par ${P} et ${Q}`, s:`Le <b>segment</b> d'extrémités ${P} et ${Q}`, l:`La <b>distance</b> entre ${P} et ${Q}`}[k]; return c2(txt,[d,s,l],{d,s,l}[k]); };
+const rl=(v,l,r)=>Object.assign(f(`Le point ${l} est à ___ cm de la graduation 0.`,r||String(v).replace('.',',')),{fig:ruler(v,l)});
+const rl0=(v,l)=>rl(v,l,[String(v).replace('.',','),String(v)]);
+const pos2=(P,Q,I)=>I;
+const POS_MED=['Oui','On ne peut pas l’affirmer'];
+const mk=(P,Q,I,kind)=>Object.assign(ch(`Figure : ${I} est-il le milieu de [${P}${Q}] ?`,kind==='ok'?POS_MED[0]:POS_MED[1],kind==='no1'?'Les deux moitiés n’ont pas le même codage : on ne peut pas affirmer que le point est le milieu.':(kind==='no2'?'Il n’y a aucun codage : on ne peut pas affirmer que le point est le milieu.':'')),{opts:POS_MED,fig:segMarks(kind,P,Q,I)});
+const lg=(kind,ang,flip)=>{ const a={par:'parallèles',perp:'perpendiculaires',sec:'sécantes non perpendiculaires'}[kind]; return Object.assign(ch('Les droites (d₁) et (d₂) semblent être…',a),{fig:lines2(kind,ang,flip),opts:['parallèles','perpendiculaires','sécantes non perpendiculaires']}); };
+const mf=(kind,P,Q)=>Object.assign(yn(`La droite (d) est-elle la médiatrice de [${P}${Q}] ?`,kind==='ok',{notMid:'Elle est perpendiculaire à [__] mais ne passe pas par son milieu.'.replace('__',P+Q),notPerp:'Elle passe par le milieu mais n’est pas perpendiculaire à [__].'.replace('__',P+Q),ok:''}[kind]),{fig:medFig(kind,P,Q)});
+
+const L1={id:'det', num:1, tab:'Droites<span class="long"> et médiatrices</span>', color:'#6A45C0', domain:'Géométrie', title:'Droites, segments et médiatrices',
+ intro:"Chapitre 8, cours 1 et 3. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20.",
+ memo:`<table>
+ <tr><th>Droite, segment</th><td>La <b>droite (AB)</b> n'a pas de fin. Le <b>segment [AB]</b> est limité par A et B. <b>AB</b> est la <b>distance</b> (la longueur) entre A et B.</td></tr>
+ <tr><th>Alignés</th><td>Des points sont <b>alignés</b> s'ils sont sur une même droite. A ∈ (AB) se lit « A appartient à (AB) ». M ∉ [AB] se lit « M n'appartient pas à [AB] ».</td></tr>
+ <tr><th>Milieu</th><td>Le milieu I de [CD] est le point du segment tel que IC = ID = CD ÷ 2. On le code avec le même signe sur les deux moitiés.</td></tr>
+ <tr><th>Sécantes</th><td>Deux droites qui se coupent en un point sont <b>sécantes</b>.</td></tr>
+ <tr><th>Perpendiculaires</th><td>Deux droites sécantes qui forment un <b>angle droit</b> : (d₁) ⊥ (d₂). On trace avec l'équerre.</td></tr>
+ <tr><th>Parallèles</th><td>Deux droites qui ne se coupent jamais : (d₁) // (d₂).</td></tr>
+ <tr><th>Propriété 1</th><td>Si deux droites sont <b>parallèles à une même droite</b>, alors elles sont parallèles entre elles.</td></tr>
+ <tr><th>Propriété 2</th><td>Si deux droites sont <b>perpendiculaires à une même droite</b>, alors elles sont parallèles entre elles.</td></tr>
+ <tr><th>Médiatrice</th><td>La médiatrice de [AB] est la droite <b>perpendiculaire</b> à [AB] qui passe par son <b>milieu</b>. Un point est sur la médiatrice de [AB] si et seulement s'il est à la <b>même distance</b> de A et de B : PA = PB.</td></tr></table>`,
+ parts:{1:'Points, droites et segments',5:'Le milieu d’un segment',9:'Perpendiculaires et parallèles',13:'La médiatrice',17:'Raisonner et construire',20:'Bilan'}};
+
+const D1=[
+ [1,'choice','Quelle notation correspond à chaque description ? Droite (AB), segment [AB] ou distance AB.',[
+  [['d','A','B'],['s','C','D'],['l','E','F'],['s','G','H'],['d','K','L'],['l','M','N'],['d','R','S'],['s','T','U']].map(x=>nt(...x)),
+  [['s','P','Q'],['l','A','C'],['d','D','E'],['d','B','F'],['l','G','K'],['s','L','M'],['s','N','R'],['d','S','T']].map(x=>nt(...x)),
+  [['l','J','K'],['d','O','P'],['s','A','E'],['l','H','I'],['s','U','V'],['d','W','X'],['l','Y','Z'],['s','B','C']].map(x=>nt(...x))]],
+ [2,'choice','Appartient (∈) ou n’appartient pas (∉) ? Choisis le bon symbole.',[
+  [en('I est le milieu de [CD].  I','∈','[CD]'),en('K est sur la droite (CD), mais en dehors du segment [CD].  K','∉','[CD]'),en('K est sur la droite (CD), mais en dehors du segment [CD].  K','∈','(CD)'),en('C est une extrémité du segment [CD].  C','∈','[CD]'),en('Les points P, Q et R sont alignés dans cet ordre.  Q','∈','[PR]'),en('Le point T n’est pas aligné avec C et D.  T','∉','(CD)'),en('M est le milieu de [AB].  M','∈','(AB)'),en('Z est entre O et E sur la droite (OE).  Z','∈','[OE]')],
+  [en('N est à 3 cm de A sur le segment [AB] qui mesure 8 cm.  N','∈','[AB]'),en('N est à 3 cm de A sur la droite (AB), de l’autre côté de A par rapport à B.  N','∉','[AB]'),en('N est à 3 cm de A sur la droite (AB), de l’autre côté de A par rapport à B.  N','∈','(AB)'),en('Le point H est un peu au-dessus de la droite (EF).  H','∉','(EF)'),en('F est une extrémité du segment [EF].  F','∈','(EF)'),en('Y est le milieu de [UV].  Y','∈','[UV]'),en('Les points A, B et C sont alignés dans cet ordre.  B','∉','[AC]'),en('Le point S est au-delà de R, sur la droite (PR) (P, R, S dans cet ordre).  S','∉','[PR]')].map((x,i)=>i===6?en('Les points A, B et C sont alignés dans cet ordre.  B','∈','[AC]'):x),
+  [en('J est le milieu de [KL].  J','∈','[KL]'),en('Le point W est sur la droite (UV), après V (U, V, W dans cet ordre).  W','∈','(UV)'),en('Le point W est sur la droite (UV), après V (U, V, W dans cet ordre).  W','∉','[UV]'),en('Le point D n’est pas aligné avec A et B.  D','∉','(AB)'),en('B est une extrémité du segment [AB].  B','∈','[AB]'),en('G est à 2 cm de E sur le segment [EF] de 5 cm.  G','∈','[EF]'),en('Le point Q est à l’extérieur de la droite (MN).  Q','∉','(MN)'),en('M est une extrémité de [MN].  M','∈','(MN)')]]],
+ [3,'fill','Lis la graduation de la règle : à combien de centimètres de 0 se trouve chaque point ?',[
+  [rl0(3.4,'P'),rl0(5.7,'Q'),rl0(1.2,'R'),rl0(6.5,'S'),rl0(2.8,'T'),rl0(7.3,'U')],
+  [rl0(4.6,'P'),rl0(2.3,'Q'),rl0(6.8,'R'),rl0(1.5,'S'),rl0(5.2,'T'),rl0(7.7,'U')],
+  [rl0(3.9,'P'),rl0(6.1,'Q'),rl0(2.4,'R'),rl0(5.5,'S'),rl0(1.8,'T'),rl0(7.2,'U')]],{hint:'Chaque petit trait vaut 1 mm, soit 0,1 cm. Écris ta réponse avec une virgule : 3,4.'}],
+ [4,'choice','Vrai ou faux ?',[
+  [tf('Par deux points distincts, il passe une seule droite.',1),tf('Un segment a une longueur, une droite n’en a pas.',1),tf('Trois points sont toujours alignés.',0),tf('La droite (AB) et la droite (BA) sont la même droite.',1),tf('Une droite a deux extrémités.',0),tf('Le segment [AB] et le segment [BA] sont le même segment.',1),tf('Si A, B et C sont alignés, alors ils sont sur une même droite.',1),tf('AB est une longueur.',1)],
+  [tf('Un segment est une partie de droite limitée par deux points.',1),tf('Une droite peut se prolonger sans limite dans les deux sens.',1),tf('AB et BA sont deux distances différentes.',0),tf('On peut mesurer la longueur d’une droite entière.',0),tf('Si A, B et C ne sont pas alignés, une même droite passe par les trois.',0),tf('Le point A appartient à la droite (AB).',1),tf('Le segment [AB] est contenu dans la droite (AB).',1),tf('Deux points distincts sont toujours alignés.',1)],
+  [tf('Un point n’a pas de longueur.',1),tf('Le segment [CD] a deux extrémités : C et D.',1),tf('Les points A, B, C sont alignés si on peut tracer une droite qui passe par les trois.',1),tf('(AB) et [AB] désignent la même chose.',0),tf('La distance AB est la longueur du segment [AB].',1),tf('Une droite a une longueur de 10 cm.',0),tf('Quatre points sont toujours alignés.',0),tf('Si M ∈ [AB], alors M ∈ (AB).',1)]]],
+
+ [5,'fill','Utilise le milieu pour calculer. Écris le résultat en centimètres.',[
+  [f('I est le milieu de [AB] et AB = 9 cm. Alors AI = ___ cm.','4,5'),f('M est le milieu de [EF] et EM = 3,2 cm. Alors EF = ___ cm.','6,4'),f('O est le milieu de [PQ] et PQ = 14 cm. Alors OQ = ___ cm.','7'),f('J est le milieu de [KL] et JL = 2,5 cm. Alors KL = ___ cm.','5'),f('N est le milieu de [RS] et RS = 7 cm. Alors NS = ___ cm.','3,5'),f('C est le milieu de [DE] et DC = 1,8 cm. Alors DE = ___ cm.','3,6')],
+  [f('I est le milieu de [CD] et CD = 12 cm. Alors CI = ___ cm.','6'),f('M est le milieu de [GH] et GM = 4,5 cm. Alors GH = ___ cm.','9'),f('O est le milieu de [ST] et ST = 5 cm. Alors OT = ___ cm.','2,5'),f('K est le milieu de [UV] et KV = 6,3 cm. Alors UV = ___ cm.','12,6'),f('A est le milieu de [BC] et BC = 8,4 cm. Alors AB = ___ cm.','4,2'),f('L est le milieu de [MN] et ML = 0,9 cm. Alors MN = ___ cm.','1,8')],
+  [f('I est le milieu de [EF] et EF = 16 cm. Alors IF = ___ cm.','8'),f('M est le milieu de [JK] et JM = 5,5 cm. Alors JK = ___ cm.','11'),f('O est le milieu de [AB] et AB = 3 cm. Alors AO = ___ cm.','1,5'),f('T est le milieu de [PR] et TR = 2,4 cm. Alors PR = ___ cm.','4,8'),f('S est le milieu de [XY] et XY = 9,2 cm. Alors SY = ___ cm.','4,6'),f('B est le milieu de [AC] et AC = 6,6 cm. Alors BC = ___ cm.','3,3')]]],
+ [6,'choice','Observe le codage de la figure. Peut-on affirmer que le point est le milieu du segment ?',[
+  [mk('C','D','I','ok'),mk('E','F','M','no1'),mk('A','B','K','no2'),mk('G','H','O','ok')],
+  [mk('P','Q','J','no2'),mk('R','S','T','ok'),mk('U','V','W','no1'),mk('K','L','N','ok')],
+  [mk('A','B','I','no1'),mk('M','N','O','no2'),mk('C','D','J','ok'),mk('E','F','K','ok')]]],
+ [7,'fill','Complète avec le mot qui convient.',[
+  [f('Le milieu d’un segment est le point du segment situé à la même ___ des deux extrémités.',['distance']),f('Deux droites qui se coupent en un point sont ___.',['sécantes','secantes']),f('Des points situés sur une même droite sont ___.',['alignés','alignes']),f('Le segment [AB] a pour ___ la distance AB.',['longueur']),f('Si I est le milieu de [CD], alors IC = ___.',['ID','id']),f('Si I est le milieu de [CD], alors CD = 2 × ___.',['IC','ID','ic','id'])],
+  [f('Si M est le milieu de [EF], alors ME = ___.',['MF','mf']),f('Un segment possède deux ___.',['extrémités','extremites']),f('Pour un segment de 9 cm, la distance du milieu à une extrémité est de ___ cm.','4,5'),f('Pour coder le milieu, on met le ___ signe sur les deux moitiés du segment.',['même','meme']),f('Si M est le milieu de [EF], alors EF = 2 × ___.',['ME','MF','me','mf']),f('Des points qui ne sont pas sur une même droite ne sont pas ___.',['alignés','alignes'])],
+  [f('Le milieu de [AB] est à égale ___ de A et de B.',['distance']),f('Deux droites qui ne se coupent jamais sont ___.',PAR),f('Si K est le milieu de [LM], alors LK = ___.',['KM','km']),f('Si K est le milieu de [LM], alors LM = 2 × ___.',['LK','KM','lk','km']),f('Le milieu d’un segment partage ce segment en deux parties de même ___.',['longueur']),f('Un segment de 11 cm a pour milieu un point situé à ___ cm de chaque extrémité.','5,5')]]],
+ [8,'fill','Sur une droite graduée en centimètres, A et B sont placés aux graduations indiquées. À quelle graduation se trouve le milieu de [AB] ?',[
+  [f('A en 2 et B en 10. Le milieu est en ___ .','6'),f('A en 3 et B en 9. Le milieu est en ___ .','6'),f('A en 1 et B en 8. Le milieu est en ___ .','4,5'),f('A en 0 et B en 7. Le milieu est en ___ .','3,5'),f('A en 4 et B en 11. Le milieu est en ___ .','7,5'),f('A en 2 et B en 5. Le milieu est en ___ .','3,5')],
+  [f('A en 1 et B en 7. Le milieu est en ___ .','4'),f('A en 5 et B en 13. Le milieu est en ___ .','9'),f('A en 2 et B en 9. Le milieu est en ___ .','5,5'),f('A en 0 et B en 5. Le milieu est en ___ .','2,5'),f('A en 6 et B en 12. Le milieu est en ___ .','9'),f('A en 3 et B en 4. Le milieu est en ___ .','3,5')],
+  [f('A en 0 et B en 12. Le milieu est en ___ .','6'),f('A en 4 et B en 8. Le milieu est en ___ .','6'),f('A en 1 et B en 4. Le milieu est en ___ .','2,5'),f('A en 7 et B en 14. Le milieu est en ___ .','10,5'),f('A en 2 et B en 3. Le milieu est en ___ .','2,5'),f('A en 5 et B en 10. Le milieu est en ___ .','7,5')]],{hint:'Le milieu est à mi-chemin : ajoute les deux graduations et divise par 2.'}],
+
+ [9,'choice','Comment semblent être les droites (d₁) et (d₂) de chaque figure ?',[
+  [lg('par',12),lg('perp',25),lg('sec',20),lg('perp',10,1),lg('par',20,1)],
+  [lg('sec',30,1),lg('par',8),lg('perp',35),lg('par',25,1),lg('sec',15)],
+  [lg('perp',18,1),lg('sec',40),lg('par',15),lg('sec',10,1),lg('perp',30)]]],
+ [10,'choice','Notations et vocabulaire : parallèles ou perpendiculaires ?',[
+  [c2('(AB) // (CD) se lit : les droites (AB) et (CD) sont',['parallèles','perpendiculaires'],'parallèles'),c2('(EF) ⊥ (GH) se lit : les droites (EF) et (GH) sont',['parallèles','perpendiculaires'],'perpendiculaires'),c2('« Les droites (d₁) et (d₂) sont perpendiculaires » s’écrit : (d₁)',['//','⊥'],'⊥',null,'(d₂)'),c2('« Les droites (d₃) et (d₄) sont parallèles » s’écrit : (d₃)',['//','⊥'],'//',null,'(d₄)'),c2('On utilise une équerre pour tracer des droites',['parallèles','perpendiculaires'],'perpendiculaires'),c2('Deux droites parallèles distinctes ont',['aucun point commun','un point commun'],'aucun point commun'),c2('Deux droites perpendiculaires se coupent en',['un point','deux points'],'un point')],
+  [c2('(MN) ⊥ (PQ) se lit : les droites (MN) et (PQ) sont',['parallèles','perpendiculaires'],'perpendiculaires'),c2('(RS) // (TU) se lit : les droites (RS) et (TU) sont',['parallèles','perpendiculaires'],'parallèles'),c2('« Les droites (d₅) et (d₆) sont parallèles » s’écrit : (d₅)',['//','⊥'],'//',null,'(d₆)'),c2('« Les droites (d₇) et (d₈) sont perpendiculaires » s’écrit : (d₇)',['//','⊥'],'⊥',null,'(d₈)'),c2('Le symbole // signifie',['parallèle','perpendiculaire'],'parallèle'),c2('Deux droites perpendiculaires forment un angle',['droit','aigu'],'droit'),c2('Deux droites sécantes ont',['un point commun','aucun point commun'],'un point commun')],
+  [c2('(UV) // (WX) se lit : les droites (UV) et (WX) sont',['parallèles','perpendiculaires'],'parallèles'),c2('(AB) ⊥ (AC) se lit : les droites (AB) et (AC) sont',['parallèles','perpendiculaires'],'perpendiculaires'),c2('« Les droites (EF) et (GH) sont perpendiculaires » s’écrit : (EF)',['//','⊥'],'⊥',null,'(GH)'),c2('« Les droites (KL) et (MN) sont parallèles » s’écrit : (KL)',['//','⊥'],'//',null,'(MN)'),c2('Le symbole ⊥ signifie',['parallèle','perpendiculaire'],'perpendiculaire'),c2('Des droites parallèles ne se coupent',['jamais','en un point'],'jamais'),c2('Pour vérifier un angle droit, on utilise',['une équerre','un compas'],'une équerre')]]],
+ [11,'choice','Vrai ou faux ? Pense aux deux propriétés du cours.',[
+  [tf('Deux droites parallèles ont un point commun.',0),tf('Deux droites perpendiculaires sont sécantes.',1),tf('Si (d₁) ⊥ (d₃) et (d₂) ⊥ (d₃), alors (d₁) // (d₂).',1),tf('Si (d₁) // (d₂) et (d₂) // (d₃), alors (d₁) // (d₃).',1),tf('Si (d₁) ⊥ (d₂) et (d₂) ⊥ (d₃), alors (d₁) ⊥ (d₃).',0,'Elles sont parallèles, pas perpendiculaires.'),tf('Deux droites perpendiculaires à une même droite sont sécantes.',0,'Elles sont parallèles.')],
+  [tf('Deux droites sécantes se coupent en un point.',1),tf('Deux droites parallèles sont toujours perpendiculaires.',0),tf('Si (a) // (b) et (b) // (c), alors (a) // (c).',1),tf('Si (a) ⊥ (c) et (b) ⊥ (c), alors (a) // (b).',1),tf('Si (a) ⊥ (b) et (b) ⊥ (c), alors (a) // (c).',1),tf('Deux droites perpendiculaires n’ont aucun point commun.',0)],
+  [tf('Deux droites parallèles ne se coupent jamais.',1),tf('Deux droites perpendiculaires sont parallèles.',0),tf('Si (p) // (q) et (r) // (q), alors (p) // (r).',1),tf('Si (p) ⊥ (s) et (r) ⊥ (s), alors (p) et (r) sont sécantes.',0,'Elles sont parallèles.'),tf('Deux droites qui sont toutes les deux perpendiculaires à une même droite sont parallèles.',1),tf('Si (p) ⊥ (q) et (q) ⊥ (r), alors (p) ⊥ (r).',0,'Elles sont parallèles.')]]],
+ [12,'fill','Complète la démonstration.',[
+  [f('(d₁) ⊥ (d₃) et (d₂) ⊥ (d₃). Donc (d₁) ___ (d₂).',PAR),f('(d₁) // (d₂) et (d₂) // (d₃). Donc (d₁) ___ (d₃).',PAR),f('Les droites (AB) et (CD) sont perpendiculaires à (EF). Donc (AB) et (CD) sont ___.',PAR),f('(d₁) // (d₃) et (d₂) // (d₃). Donc (d₁) et (d₂) sont ___ entre elles.',PAR),f('(d₁) ⊥ (d₃) et (d₂) ⊥ (d₃). Les droites (d₁) et (d₂) sont-elles sécantes ? ___ (oui ou non)','non')],
+  [f('(a) ⊥ (c) et (b) ⊥ (c). Donc (a) ___ (b).',PAR),f('(a) // (b) et (b) // (c). Donc (a) ___ (c).',PAR),f('Les droites (MN) et (PQ) sont perpendiculaires à (RS). Donc (MN) et (PQ) sont ___.',PAR),f('(a) // (c) et (b) // (c). Donc (a) et (b) sont ___ entre elles.',PAR),f('(a) // (b) et (b) // (c). Les droites (a) et (c) ont-elles un point commun ? ___ (oui ou non)','non')],
+  [f('(p) // (q) et (q) // (r). Donc (p) ___ (r).',PAR),f('(p) ⊥ (s) et (r) ⊥ (s). Donc (p) ___ (r).',PAR),f('Les droites (EF) et (GH) sont perpendiculaires à (KL). Donc (EF) et (GH) sont ___.',PAR),f('(p) // (s) et (r) // (s). Donc (p) et (r) sont ___ entre elles.',PAR),f('(p) ⊥ (s) et (r) ⊥ (s). Les droites (p) et (r) se coupent-elles ? ___ (oui ou non)','non')]],{hint:'Tu peux écrire // ou le mot « parallèles ».'}],
+
+ [13,'fill','Complète avec les mots qui conviennent.',[
+  [f('La médiatrice d’un segment est la droite ___ à ce segment qui passe par son ___.',['perpendiculaire','perpendiculaires'],['milieu','le milieu']),f('Un point de la médiatrice de [AB] est à la même ___ de A et de B.',['distance']),f('Si PA = PB, alors P appartient à la ___ de [AB].',['médiatrice','mediatrice','la médiatrice']),f('La médiatrice de [AB] coupe [AB] en son ___.',['milieu','le milieu']),f('La médiatrice de [AB] et la droite (AB) forment un angle ___.',['droit'])],
+  [f('La médiatrice de [CD] est ___ à (CD).',['perpendiculaire']),f('La médiatrice de [CD] passe par le ___ de [CD].',['milieu','le milieu']),f('Si M est sur la médiatrice de [CD], alors MC = ___.',['MD','md']),f('Un point équidistant de E et de F est sur la ___ de [EF].',['médiatrice','mediatrice','la médiatrice']),f('Pour la tracer à l’équerre, on place l’équerre sur le segment et on trace la perpendiculaire au ___.',['milieu','le milieu'])],
+  [f('Pour qu’une droite soit la médiatrice de [RS], elle doit être ___ à [RS] et passer par son ___.',['perpendiculaire'],['milieu','le milieu']),f('Tous les points de la médiatrice de [RS] sont à égale ___ de R et de S.',['distance']),f('Si QR = QS, alors Q est sur la ___ de [RS].',['médiatrice','mediatrice','la médiatrice']),f('La médiatrice de [RS] coupe [RS] en son ___.',['milieu','le milieu']),f('La médiatrice de [RS] est une ___ (segment, droite ou cercle ?).',['droite','une droite'])]]],
+ [14,'choice','La droite (d) est-elle la médiatrice du segment ? Regarde bien le codage.',[
+  [mf('ok','A','B'),mf('notMid','C','D'),mf('notPerp','E','F'),mf('ok','G','H')],
+  [mf('notPerp','K','L'),mf('ok','M','N'),mf('notMid','P','Q'),mf('notPerp','R','S')],
+  [mf('notMid','U','V'),mf('notPerp','W','X'),mf('ok','Y','Z'),mf('notMid','A','B')]]],
+ [15,'fill','P est sur la médiatrice du segment. Utilise l’équidistance pour trouver la longueur.',[
+  [f('P est sur la médiatrice de [AB] et PA = 2,4 cm. Alors PB = ___ cm.','2,4'),f('M est sur la médiatrice de [CD] et MD = 5 cm. Alors MC = ___ cm.','5'),f('Q est sur la médiatrice de [EF] et QE = 3,7 cm. Alors QF = ___ cm.','3,7'),f('Un point T vérifie TG = TH. T appartient à la ___ de [GH].',['médiatrice','mediatrice','la médiatrice']),f('N est sur la médiatrice de [KL] et NK = 6 cm. Alors NL = ___ cm.','6'),f('R est sur la médiatrice de [UV], RU = 1,9 cm. Alors RV = ___ cm.','1,9')],
+  [f('P est sur la médiatrice de [AB] et PB = 4,1 cm. Alors PA = ___ cm.','4,1'),f('M est sur la médiatrice de [CD] et MC = 2,8 cm. Alors MD = ___ cm.','2,8'),f('Q est sur la médiatrice de [EF] et QF = 7 cm. Alors QE = ___ cm.','7'),f('Un point S vérifie SM = SN. S appartient à la ___ de [MN].',['médiatrice','mediatrice','la médiatrice']),f('N est sur la médiatrice de [RS] et NS = 3,3 cm. Alors NR = ___ cm.','3,3'),f('R est sur la médiatrice de [XY], RX = 5,2 cm. Alors RY = ___ cm.','5,2')],
+  [f('P est sur la médiatrice de [AB] et PA = 1,5 cm. Alors PB = ___ cm.','1,5'),f('M est sur la médiatrice de [EF] et ME = 8 cm. Alors MF = ___ cm.','8'),f('Q est sur la médiatrice de [GH] et QH = 2,6 cm. Alors QG = ___ cm.','2,6'),f('Un point V vérifie VA = VB. V appartient à la ___ de [AB].',['médiatrice','mediatrice','la médiatrice']),f('N est sur la médiatrice de [JK] et NJ = 9 cm. Alors NK = ___ cm.','9'),f('R est sur la médiatrice de [CD], RC = 4,4 cm. Alors RD = ___ cm.','4,4')]]],
+ [16,'choice','Le point est-il sur la médiatrice de [AB] ? Compare ses distances à A et à B.',[
+  [yn('PA = 3 cm et PB = 3 cm.',1),yn('QA = 4 cm et QB = 5 cm.',0),yn('RA = 2,5 cm et RB = 2,5 cm.',1),yn('SA = 6 cm et SB = 4 cm.',0),yn('TA = 1,2 cm et TB = 1,2 cm.',1),yn('UA = 3,5 cm et UB = 3,6 cm.',0)],
+  [yn('MA = 5 cm et MB = 5 cm.',1),yn('NA = 2 cm et NB = 3 cm.',0),yn('OA = 4,5 cm et OB = 4,5 cm.',1),yn('PA = 7 cm et PB = 6 cm.',0),yn('QA = 0,8 cm et QB = 0,8 cm.',1),yn('RA = 2,1 cm et RB = 2,2 cm.',0)],
+  [yn('KA = 6 cm et KB = 6 cm.',1),yn('LA = 3 cm et LB = 3,5 cm.',0),yn('MA = 2,2 cm et MB = 2,2 cm.',1),yn('NA = 8 cm et NB = 9 cm.',0),yn('OA = 1,5 cm et OB = 1,5 cm.',1),yn('PA = 4 cm et PB = 2 cm.',0)]]],
+
+ [17,'choice','Que peut-on dire des droites (d₁) et (d₃) ?',[
+  [c2('(d₁) ⊥ (d₂) et (d₃) ⊥ (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('(d₁) // (d₂) et (d₂) // (d₃)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₁) // (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure'),c2('(d₁) // (d₄) et (d₃) // (d₄)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₁) ⊥ (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure')],
+  [c2('(d₁) // (d₂) et (d₃) // (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('(d₁) ⊥ (d₄) et (d₃) ⊥ (d₄)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₃) ⊥ (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure'),c2('(d₁) // (d₂) et (d₂) // (d₄) et (d₄) // (d₃)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₁) // (d₄)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure')],
+  [c2('(d₁) ⊥ (d₅) et (d₃) ⊥ (d₅)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('(d₃) // (d₂) et (d₂) // (d₁)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₃) // (d₂)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure'),c2('(d₁) // (d₆) et (d₃) // (d₆)',['parallèles','perpendiculaires','on ne peut pas conclure'],'parallèles'),c2('On sait seulement que (d₁) ⊥ (d₄)',['parallèles','perpendiculaires','on ne peut pas conclure'],'on ne peut pas conclure')]]],
+ [18,'fill','Programme de construction : complète avec le mot qui convient.',[
+  [f('Trace un segment [AB] de 5 cm. Place le ___ I de [AB]. Trace la droite (d) perpendiculaire à (AB) passant par I.',['milieu','le milieu']),f('Trace un segment [AB] de 6 cm, puis trace la ___ de [AB].',['médiatrice','mediatrice','la médiatrice']),f('Trace la droite (d) perpendiculaire à (AB) passant par A. Utilise une ___.',['équerre','equerre','une équerre']),f('Trace un segment [CD] de 8 cm. Le milieu I est à ___ cm de C.','4'),f('Place un point M sur la médiatrice de [CD]. Alors MC = ___ .',['MD','md'])],
+  [f('Trace un segment [EF] de 7 cm. Place son ___ M à 3,5 cm de E.',['milieu','le milieu']),f('Trace la droite perpendiculaire à [EF] qui passe par le milieu de [EF] : c’est la ___ de [EF].',['médiatrice','mediatrice','la médiatrice']),f('Pour tracer une droite parallèle à (d), on trace deux droites ___ à la même droite.',['perpendiculaires','perpendiculaire']),f('Trace un segment [KL] de 9 cm. Son milieu est à ___ cm de L.','4,5'),f('Place un point P tel que PK = PL. P est sur la ___ de [KL].',['médiatrice','mediatrice','la médiatrice'])],
+  [f('Trace un segment [GH] de 4 cm. Place le ___ O de [GH]. Trace la perpendiculaire à (GH) passant par O.',['milieu','le milieu']),f('Trace un segment [RS] de 10 cm, puis sa ___ avec l’équerre.',['médiatrice','mediatrice']),f('Pour tracer deux droites parallèles avec l’équerre, on trace deux ___ à une même droite.',['perpendiculaires','perpendiculaire']),f('Trace un segment [UV] de 5 cm. Son milieu est à ___ cm de U.','2,5'),f('Un point Q est à égale distance de U et V. Q est sur la ___ de [UV].',['médiatrice','mediatrice','la médiatrice'])]]],
+ [19,'choice','Quel instrument faut-il utiliser ?',[
+  [c2('Mesurer ou tracer un segment de 4,2 cm',['règle graduée','équerre','compas'],'règle graduée'),c2('Tracer une droite perpendiculaire à une autre',['règle graduée','équerre','compas'],'équerre'),c2('Vérifier qu’un angle est droit',['règle graduée','équerre','compas'],'équerre'),c2('Reporter une longueur sans la mesurer',['règle graduée','équerre','compas'],'compas'),c2('Trouver le milieu d’un segment en le mesurant',['règle graduée','équerre','compas'],'règle graduée'),c2('Tracer un cercle',['règle graduée','équerre','compas'],'compas')],
+  [c2('Tracer un angle droit',['règle graduée','équerre','compas'],'équerre'),c2('Mesurer la distance entre deux points',['règle graduée','équerre','compas'],'règle graduée'),c2('Tracer un arc de cercle',['règle graduée','équerre','compas'],'compas'),c2('Construire la médiatrice avec une règle non graduée',['règle graduée','équerre','compas'],'compas','On utilise le compas pour trouver deux points équidistants de A et de B.'),c2('Contrôler que deux droites sont perpendiculaires',['règle graduée','équerre','compas'],'équerre'),c2('Placer le milieu à 3,5 cm d’un segment de 7 cm',['règle graduée','équerre','compas'],'règle graduée')],
+  [c2('Contrôler un angle droit',['règle graduée','équerre','compas'],'équerre'),c2('Tracer un segment de longueur 6,3 cm',['règle graduée','équerre','compas'],'règle graduée'),c2('Placer des points à la même distance d’un point O',['règle graduée','équerre','compas'],'compas'),c2('Tracer la perpendiculaire à (AB) passant par un point',['règle graduée','équerre','compas'],'équerre'),c2('Tracer un cercle de rayon 2 cm',['règle graduée','équerre','compas'],'compas'),c2('Mesurer un segment',['règle graduée','équerre','compas'],'règle graduée')]]],
+ [20,'fill','Bilan : un petit problème qui mélange tout le chapitre.',[
+  [f('On trace [AB] avec AB = 8 cm. I est son milieu. Alors AI = ___ cm.','4'),f('La droite (d) perpendiculaire à (AB) passant par I s’appelle la ___ de [AB].',['médiatrice','mediatrice','la médiatrice']),f('M est un point de (d) avec MA = 5 cm. Alors MB = ___ cm.','5'),f('(d′) est la perpendiculaire à (AB) passant par A. (d′) et (d) sont-elles parallèles ? ___ (oui ou non)',['oui']),f('Peut-on placer un point N de (d) tel que NA = 6 cm et NB = 4 cm ? ___ (oui ou non)',['non']),f('Pour un point de (d), les distances à A et à B sont ___ . (égales ou différentes ?)',['égales','egales','égaux','egaux'])],
+  [f('On trace [CD] avec CD = 10 cm. I est son milieu. Alors DI = ___ cm.','5'),f('La droite perpendiculaire à (CD) passant par I est la ___ de [CD].',['médiatrice','mediatrice','la médiatrice']),f('M est un point de cette droite avec MC = 7 cm. Alors MD = ___ cm.','7'),f('La perpendiculaire à (CD) passant par C est-elle parallèle à la médiatrice de [CD] ? ___ (oui ou non)',['oui']),f('Peut-on avoir un point P de la médiatrice avec PC = 3 cm et PD = 4 cm ? ___ (oui ou non)',['non']),f('Pour un point de la médiatrice, les distances PC et PD sont ___ . (égales ou différentes ?)',['égales','egales','égaux','egaux'])],
+  [f('On trace [EF] avec EF = 6 cm. I est son milieu. Alors EI = ___ cm.','3'),f('La droite perpendiculaire à (EF) passant par I est la ___ de [EF].',['médiatrice','mediatrice','la médiatrice']),f('M est un point de cette droite avec ME = 4,5 cm. Alors MF = ___ cm.','4,5'),f('La perpendiculaire à (EF) passant par F est-elle parallèle à la médiatrice de [EF] ? ___ (oui ou non)',['oui']),f('Peut-on avoir un point Q de la médiatrice avec QE = 2 cm et QF = 5 cm ? ___ (oui ou non)',['non']),f('Pour un point de la médiatrice, les distances QE et QF sont ___ . (égales ou différentes ?)',['égales','egales','égaux','egaux'])]]]
+];
+const mkSets=(defs)=>[0,1,2].map(s=>defs.map(([n,type,t,its,o])=>{ const e=Object.assign({n,t,type,items:its[s]},o||{},(o&&o.figs)?{fig:o.figs[s]}:{});
+  if(type==='choice'&&!e.opts&&e.items.some(it=>!it.opts)){ e.opts=['Vrai','Faux'].includes(e.items[0].a)?VF:OUI; } return e; }));
+L1.sets=mkSets(D1);
+
+/* ================= Leçon 2 : cercles et disques ================= */
+const V6=['rayon','diamètre','corde','arc de cercle','cercle','disque'];
+const POS=['sur le cercle','à l’intérieur du disque (pas sur le cercle)','à l’extérieur du disque'];
+const cm=x=>String(x).replace('.',',');
+const pos=(r,d)=>d===r?POS[0]:(d<r?POS[1]:POS[2]);
+const sg=(a,b,ans)=>ch(`Le segment [${a}${b}] est un`,ans);
+const CL=[['O','A','B','C','D','E'],['O','M','N','P','R','S'],['O','F','G','H','K','L']];
+const chordItems=(s)=>{ const [O,A,B,C,D,E]=CL[s]; const q={0:[[O,A,'rayon'],[D,E,'diamètre'],[B,C,'corde'],[O,E,'rayon'],[A,B,'corde'],[O,D,'rayon']],1:[[D,E,'diamètre'],[O,B,'rayon'],[A,C,'corde'],[O,A,'rayon'],[B,C,'corde'],[C,D,'corde']],2:[[B,C,'corde'],[O,D,'rayon'],[D,E,'diamètre'],[O,E,'rayon'],[B,D,'corde'],[O,A,'rayon']]}[s]; return q.map(x=>sg(...x)); };
+const pt=(l,k)=>ch(`Le point ${l} est`,k);
+const COUR=['dans la couronne','trop près de A','trop loin de A'];
+const cr=(a,b,d)=>ch(`La couronne contient les points dont la distance à A est comprise entre ${cm(a)} cm et ${cm(b)} cm. AM = ${cm(d)} cm. Le point M est`,d<a?COUR[1]:(d>b?COUR[2]:COUR[0]));
+const ab=(P,Q)=>`[${P}${Q}]`;
+
+const L2={id:'acc', num:2, tab:'Cercles', color:'#DA5338', domain:'Géométrie', title:'Cercles et disques',
+ intro:"Chapitre 8, cours 2. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20.",
+ memo:`<table>
+ <tr><th>Cercle</th><td>Le <b>cercle</b> de centre O et de rayon r est l'ensemble des points situés à la distance r de O. OM = r ⟺ M ∈ cercle.</td></tr>
+ <tr><th>Disque</th><td>Le <b>disque</b> de centre O et de rayon r est la surface limitée par le cercle : tous les points M tels que OM ≤ r. Le cercle fait partie du disque.</td></tr>
+ <tr><th>Rayon</th><td>Un <b>rayon</b> relie le centre à un point du cercle. Tous les rayons ont la même longueur r.</td></tr>
+ <tr><th>Diamètre</th><td>Un <b>diamètre</b> est une corde qui passe par le centre. Sa longueur est <b>deux fois le rayon</b> : d = 2 × r.</td></tr>
+ <tr><th>Corde</th><td>Une <b>corde</b> relie deux points du cercle. Aucune corde n'est plus longue que le diamètre.</td></tr>
+ <tr><th>Arc</th><td>Un <b>arc de cercle</b> est une partie du cercle limitée par deux points.</td></tr>
+ <tr><th>Distances</th><td>Les points à exactement 3 cm de A forment un cercle. Les points à moins de 3 cm de A forment un disque. Les points à une distance de A comprise entre 1,8 et 2,1 cm forment une <b>couronne</b>.</td></tr></table>`,
+ parts:{1:'Le vocabulaire du cercle',5:'Appartenir au cercle ou au disque',9:'Rayon, diamètre et corde',13:'Distances et couronnes',17:'Programmes de construction et raisonnement',20:'Bilan'}};
+
+const D2=[
+ [1,'choice','Quel mot correspond à chaque description ?',[
+  [ch('Segment qui relie le centre à un point du cercle','rayon'),ch('Segment qui relie deux points du cercle','corde'),ch('Corde qui passe par le centre','diamètre'),ch('Partie du cercle comprise entre deux points','arc de cercle'),ch('Ensemble des points situés à la même distance du centre','cercle'),ch('Surface limitée par un cercle','disque'),ch('Plus longue corde d’un cercle','diamètre'),ch('Longueur du centre à un point du cercle','rayon')],
+  [ch('Surface qui contient le cercle et tout son intérieur','disque'),ch('Segment qui passe par le centre et dont les extrémités sont sur le cercle','diamètre'),ch('Ligne fermée dont tous les points sont à la même distance du centre','cercle'),ch('Segment [AB] dont A et B sont sur le cercle mais qui ne passe pas par le centre','corde'),ch('Morceau de cercle, comme la croûte d’une part de gâteau','arc de cercle'),ch('Segment [OA] avec O centre et A sur le cercle','rayon'),ch('Corde de longueur maximale','diamètre'),ch('Moitié d’un diamètre','rayon')],
+  [ch('Segment [OM], O étant le centre et M un point du cercle','rayon'),ch('Segment qui joint deux points d’un cercle','corde'),ch('Surface contenue à l’intérieur d’un cercle','disque'),ch('Corde dont le milieu est le centre','diamètre'),ch('Partie du cercle entre deux points','arc de cercle'),ch('Ligne dont tous les points sont à 4 cm du centre','cercle'),ch('Segment dont la longueur est le double du rayon','diamètre'),ch('Longueur égale à la moitié du diamètre','rayon')]],{opts:V6}],
+ [2,'choice','Observe la figure : quelle est la nature de chaque segment ?',[chordItems(0),chordItems(1),chordItems(2)],{opts:['rayon','diamètre','corde'],figs:CL.map(chordFig)}],
+ [3,'fill','Complète avec le mot qui convient.',[
+  [f('Le ___ d’un cercle est le point situé à la même distance de tous les points du cercle.',['centre','le centre']),f('Un segment qui relie deux points d’un cercle est une ___.',['corde','une corde']),f('Un diamètre est une corde qui passe par le ___.',['centre','le centre']),f('Un rayon relie le ___ à un point du cercle.',['centre','le centre']),f('Le diamètre est égal à ___ fois le rayon.',['2','deux']),f('Une partie du cercle entre deux points s’appelle un ___ de cercle.',['arc','un arc'])],
+  [f('Le ___ est la surface limitée par un cercle.',['disque','le disque']),f('Tous les rayons d’un même cercle ont la même ___.',['longueur']),f('Un diamètre est la plus longue ___ du cercle.',['corde']),f('Le rayon est égal à la ___ du diamètre.',['moitié','moitie','la moitié']),f('Deux rayons mis bout à bout (de part et d’autre du centre) forment un ___.',['diamètre','diametre','un diamètre']),f('Le centre du cercle est le ___ de tout diamètre.',['milieu','le milieu'])],
+  [f('Un cercle est l’ensemble des points situés à la même ___ du centre.',['distance']),f('Le diamètre mesure le ___ du rayon.',['double','le double']),f('Une ___ qui passe par le centre est un diamètre.',['corde','une corde']),f('Le centre d’un cercle est le milieu de chaque ___.',['diamètre','diametre']),f('Un cercle de rayon 3 cm a un diamètre de ___ cm.','6'),f('Le segment [OM] est un ___ si M est sur le cercle de centre O.',['rayon','un rayon'])]]],
+ [4,'choice','Vrai ou faux ?',[
+  [tf('Un diamètre est une corde.',1),tf('Un rayon est une corde.',0,'Un rayon relie le centre au cercle : une corde relie deux points du cercle.'),tf('Un cercle et un disque, c’est la même chose.',0),tf('Le centre appartient au cercle.',0),tf('Le centre appartient au disque.',1),tf('Tout diamètre passe par le centre.',1)],
+  [tf('Tous les rayons d’un cercle ont la même longueur.',1),tf('Un cercle contient une infinité de points.',1),tf('Une corde passe toujours par le centre.',0),tf('Le disque est la surface à l’intérieur du cercle.',1),tf('Un arc de cercle est un segment.',0),tf('Un cercle a un seul diamètre.',0,'Il y en a une infinité.')],
+  [tf('Un point du cercle est aussi un point du disque.',1),tf('Un diamètre est plus long qu’un rayon.',1),tf('Une corde peut passer par le centre.',1),tf('Un cercle a deux centres.',0),tf('Le rayon est la moitié du diamètre.',1),tf('Un arc de cercle est une partie du cercle.',1)]]],
+
+ [5,'choice','Observe la figure : où se trouve chaque point par rapport au cercle de centre O ?',[
+  [pt('A',POS[0]),pt('B',POS[1]),pt('C',POS[2]),pt('D',POS[0]),pt('E',POS[1]),pt('F',POS[2])],
+  [pt('P',POS[2]),pt('Q',POS[0]),pt('R',POS[1]),pt('S',POS[2]),pt('T',POS[1]),pt('U',POS[0])],
+  [pt('G',POS[1]),pt('H',POS[2]),pt('J',POS[0]),pt('K',POS[0]),pt('L',POS[2]),pt('M',POS[1])]],{opts:POS,figs:[
+   circ([['A',60,1],['B',200,0.5],['C',300,1.4],['D',140,1],['E',350,0.45],['F',250,1.35]]),
+   circ([['P',40,1.4],['Q',170,1],['R',290,0.5],['S',220,1.35],['T',90,0.4],['U',330,1]]),
+   circ([['G',120,0.5],['H',20,1.4],['J',250,1],['K',60,1],['L',190,1.35],['M',320,0.45]])]}],
+ [6,'choice','Compare OM au rayon pour placer le point M.',[
+  [[4,3],[4,4],[4,5.5],[2.5,2.5],[3,1.2],[3.2,4]].map(([r,d])=>ch(`Cercle de centre O et de rayon ${cm(r)} cm. OM = ${cm(d)} cm. Le point M est`,pos(r,d))),
+  [[5,5],[5,6.2],[3,2.1],[2,2],[4.5,3.9],[1.5,2]].map(([r,d])=>ch(`Cercle de centre O et de rayon ${cm(r)} cm. OM = ${cm(d)} cm. Le point M est`,pos(r,d))),
+  [[6,4.5],[3.5,3.5],[2.4,3],[1.8,1.8],[5,7],[4,2.5]].map(([r,d])=>ch(`Cercle de centre O et de rayon ${cm(r)} cm. OM = ${cm(d)} cm. Le point M est`,pos(r,d)))],{opts:POS}],
+ [7,'choice','Appartient (∈) ou n’appartient pas (∉) ? Choisis le bon symbole.',[
+  [en('Le point A est tel que OA = r (le rayon).  A','∈','le cercle 𝒞'),en('Le point B est à l’intérieur du disque, pas sur le cercle.  B','∈','le disque'),en('Le point B est à l’intérieur du disque, pas sur le cercle.  B','∉','le cercle 𝒞'),en('Le point C est tel que OC est plus grand que le rayon.  C','∉','le disque'),en('Le point D est tel que OD est plus petit que le rayon.  D','∈','le disque'),en('Un point E du cercle.  E','∈','le disque'),en('Le centre O du cercle 𝒞.  O','∉','le cercle 𝒞'),en('Le centre O du cercle 𝒞.  O','∈','le disque')],
+  [en('M est tel que OM = 3 cm et le rayon est 3 cm.  M','∈','le cercle 𝒞'),en('N est tel que OM = 2 cm et le rayon est 3 cm.  N','∈','le disque'),en('N est tel que ON = 2 cm et le rayon est 3 cm.  N','∉','le cercle 𝒞'),en('P est tel que OP = 4 cm et le rayon est 3 cm.  P','∉','le disque'),en('Q est à l’extérieur du cercle.  Q','∉','le disque'),en('R est sur le cercle.  R','∈','le disque'),en('Le milieu du rayon [OA].  Ce point','∈','le disque'),en('Le milieu du rayon [OA].  Ce point','∉','le cercle 𝒞')],
+  [en('Le point T est tel que OT = 5 cm, le rayon étant 5 cm.  T','∈','le cercle 𝒞'),en('Le point U est tel que OU = 6 cm, le rayon étant 5 cm.  U','∉','le disque'),en('Le point V est tel que OV = 1 cm, le rayon étant 5 cm.  V','∈','le disque'),en('Le point V est tel que OV = 1 cm, le rayon étant 5 cm.  V','∉','le cercle 𝒞'),en('Un point W du cercle.  W','∈','le cercle 𝒞'),en('Un point X à l’extérieur du disque.  X','∉','le cercle 𝒞'),en('Le centre O.  O','∈','le disque'),en('Le point Y tel que OY est égal au rayon.  Y','∈','le disque')]]],
+ [8,'fill','Utilise la définition du cercle : tous ses points sont à la même distance du centre.',[
+  [f('M est sur le cercle de centre O et de rayon 2,5 cm. OM = ___ cm.','2,5'),f('AB = 6 cm. Le cercle de centre A passe par B. Son rayon est ___ cm.','6'),f('Le cercle de centre O passe par E et OE = 4,2 cm. Un point F sur ce cercle vérifie OF = ___ cm.','4,2'),f('Le cercle de centre C passe par D et CD = 3 cm. Le point D appartient-il à ce cercle ? ___ (oui ou non)','oui'),f('Le cercle de centre C passe par D. Le centre C appartient-il à ce cercle ? ___ (oui ou non)','non'),f('Si OA = 5 cm et OB = 5 cm, A et B sont sur le même cercle de centre O et de rayon ___ cm.','5')],
+  [f('N est sur le cercle de centre S et de rayon 3,6 cm. SN = ___ cm.','3,6'),f('EF = 7 cm. Le cercle de centre E passe par F. Son rayon est ___ cm.','7'),f('Le cercle de centre O passe par G et OG = 1,5 cm. Un point H sur ce cercle vérifie OH = ___ cm.','1,5'),f('Le cercle de centre K passe par L et KL = 2 cm. Le point L appartient-il à ce cercle ? ___ (oui ou non)','oui'),f('Le cercle de centre K passe par L. Le centre K appartient-il à ce cercle ? ___ (oui ou non)','non'),f('Si OP = 4 cm et OQ = 4 cm, P et Q sont sur le même cercle de centre O et de rayon ___ cm.','4')],
+  [f('R est sur le cercle de centre T et de rayon 1,8 cm. TR = ___ cm.','1,8'),f('MN = 9 cm. Le cercle de centre M passe par N. Son rayon est ___ cm.','9'),f('Le cercle de centre O passe par U et OU = 6,5 cm. Un point V sur ce cercle vérifie OV = ___ cm.','6,5'),f('Le cercle de centre X passe par Y et XY = 5 cm. Le point Y appartient-il à ce cercle ? ___ (oui ou non)','oui'),f('Le cercle de centre X passe par Y. Le centre X appartient-il à ce cercle ? ___ (oui ou non)','non'),f('Si OB = 3 cm et OC = 3 cm, B et C sont sur le même cercle de centre O et de rayon ___ cm.','3')]]],
+
+ [9,'fill','Passe du rayon au diamètre, ou du diamètre au rayon.',[
+  [f('Rayon 4 cm. Diamètre : ___ cm.','8'),f('Diamètre 9 cm. Rayon : ___ cm.','4,5'),f('Rayon 1,6 cm. Diamètre : ___ cm.','3,2'),f('Diamètre 5,6 cm. Rayon : ___ cm.','2,8'),f('Rayon 8 mm. Diamètre : ___ mm.','16'),f('Diamètre 3 cm. Rayon : ___ cm.','1,5')],
+  [f('Rayon 6 cm. Diamètre : ___ cm.','12'),f('Diamètre 7 cm. Rayon : ___ cm.','3,5'),f('Rayon 2,5 cm. Diamètre : ___ cm.','5'),f('Diamètre 4,4 cm. Rayon : ___ cm.','2,2'),f('Rayon 12 mm. Diamètre : ___ mm.','24'),f('Diamètre 1 cm. Rayon : ___ cm.','0,5')],
+  [f('Rayon 3,5 cm. Diamètre : ___ cm.','7'),f('Diamètre 10 cm. Rayon : ___ cm.','5'),f('Rayon 0,9 cm. Diamètre : ___ cm.','1,8'),f('Diamètre 8,2 cm. Rayon : ___ cm.','4,1'),f('Rayon 15 mm. Diamètre : ___ mm.','30'),f('Diamètre 6 cm. Rayon : ___ cm.','3')]]],
+ [10,'choice','Vrai ou faux ?',[
+  [tf('Le diamètre est égal à deux fois le rayon.',1),tf('Une corde est toujours plus longue que le diamètre.',0),tf('Le diamètre est la plus longue corde du cercle.',1),tf('Dans un même cercle, tous les rayons ont la même longueur.',1),tf('Une corde peut mesurer plus que le diamètre.',0),tf('Une corde qui mesure exactement le diamètre passe par le centre.',1)],
+  [tf('Le rayon est la moitié du diamètre.',1),tf('Un cercle de rayon 3 cm a un diamètre de 3 cm.',0),tf('Dans un même cercle, tous les diamètres ont la même longueur.',1),tf('Une corde est toujours plus courte ou égale au diamètre.',1),tf('Le diamètre d’un cercle est plus petit que son rayon.',0),tf('Il existe des cordes plus longues que le diamètre.',0)],
+  [tf('Deux cercles de même rayon ont le même diamètre.',1),tf('Un diamètre est plus long qu’un rayon.',1),tf('Un rayon est plus long qu’un diamètre.',0),tf('Une corde de 11 cm existe dans un cercle de diamètre 10 cm.',0),tf('Un diamètre est une corde.',1),tf('Un cercle de rayon 4 cm a un diamètre de 8 cm.',1)]]],
+ [11,'fill','Résous ces petits problèmes sur les cercles.',[
+  [f('Le diamètre [UJ] d’un cercle mesure 4,2 cm. Son rayon est ___ cm.','2,1'),f('Soraya trace deux cercles de rayons 8 mm et 1,6 cm. Le diamètre du plus grand mesure ___ mm.','32'),f('Un cercle a pour rayon 4,5 cm. Son diamètre mesure ___ cm.','9'),f('Un cercle a un diamètre de 12 cm. La plus longue corde mesure ___ cm.','12'),f('Deux rayons alignés de part et d’autre du centre forment un ___.',['diamètre','diametre','un diamètre'])],
+  [f('Le diamètre [AB] d’un cercle mesure 5,8 cm. Son rayon est ___ cm.','2,9'),f('Luc trace deux cercles de rayons 1,2 cm et 15 mm. Le diamètre du plus petit mesure ___ mm.','24'),f('Un cercle a pour rayon 3,2 cm. Son diamètre mesure ___ cm.','6,4'),f('Un cercle a un diamètre de 7 cm. La plus longue corde mesure ___ cm.','7'),f('Un diamètre est une corde qui passe par le ___.',['centre','le centre'])],
+  [f('Le diamètre [PQ] d’un cercle mesure 9,6 cm. Son rayon est ___ cm.','4,8'),f('Lina trace deux cercles de rayons 6 mm et 0,7 cm. Le diamètre du plus grand mesure ___ mm.','14'),f('Un cercle a pour rayon 5,5 cm. Son diamètre mesure ___ cm.','11'),f('Un cercle a un diamètre de 15 cm. La plus longue corde mesure ___ cm.','15'),f('Si le diamètre d’un cercle est 20 cm, son rayon est ___ cm.','10')]]],
+ [12,'choice','Dans un cercle de diamètre 8 cm, peut-on tracer une corde de cette longueur ?',[
+  [yn('Une corde de 7 cm',1),yn('Une corde de 8,5 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 8 cm',1),yn('Une corde de 3 cm',1),yn('Une corde de 10 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 8,1 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).')].map(x=>Object.assign(x,{b:x.b+' ?'}) ),
+  [yn('Une corde de 6,5 cm',1),yn('Une corde de 9 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 7,9 cm',1),yn('Une corde de 8,3 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 1 cm',1),yn('Une corde de 8 cm exactement',1)].map(x=>Object.assign(x,{b:x.b+' ?'}) ),
+  [yn('Une corde de 5 cm',1),yn('Une corde de 12 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 7,5 cm',1),yn('Une corde de 8,01 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).'),yn('Une corde de 2,2 cm',1),yn('Une corde de 9,9 cm',0,'Une corde ne peut pas dépasser le diamètre (8 cm).')].map(x=>Object.assign(x,{b:x.b+' ?'}) )]],
+
+ [13,'fill','Distances et ensembles de points : complète.',[
+  [f('Les points situés à 3,2 cm du point A forment un ___ de centre A et de rayon ___ cm.',['cercle','un cercle'],'3,2'),f('Les points situés à moins de 2 cm du point O forment un ___ de centre O.',['disque','un disque']),f('A et B sont distants de 6 cm. Combien de points sont à la fois à 3,5 cm de A et à 3,5 cm de B ? ___','2'),f('A et B sont distants de 10 cm. Combien de points sont à la fois à 3 cm de A et à 4 cm de B ? ___','0'),f('A et B sont distants de 7 cm. Combien de points sont à la fois à 3 cm de A et à 4 cm de B ? ___','1')],
+  [f('Les points situés à 4,5 cm du point B forment un ___ de centre B et de rayon ___ cm.',['cercle','un cercle'],'4,5'),f('Les points situés à moins de 3 cm du point K forment un ___ de centre K.',['disque','un disque']),f('A et B sont distants de 8 cm. Combien de points sont à la fois à 4,5 cm de A et à 4,5 cm de B ? ___','2'),f('A et B sont distants de 12 cm. Combien de points sont à la fois à 5 cm de A et à 4 cm de B ? ___','0'),f('A et B sont distants de 9 cm. Combien de points sont à la fois à 4 cm de A et à 5 cm de B ? ___','1')],
+  [f('Les points situés à 2,8 cm du point C forment un ___ de centre C et de rayon ___ cm.',['cercle','un cercle'],'2,8'),f('Les points situés à moins de 1,5 cm du point R forment un ___ de centre R.',['disque','un disque']),f('A et B sont distants de 5 cm. Combien de points sont à la fois à 3 cm de A et à 3 cm de B ? ___','2'),f('A et B sont distants de 9 cm. Combien de points sont à la fois à 2 cm de A et à 3 cm de B ? ___','0'),f('A et B sont distants de 6 cm. Combien de points sont à la fois à 2 cm de A et à 4 cm de B ? ___','1')]],{hint:'Pense aux deux cercles : ils se coupent en 2 points, se touchent en 1 point, ou ne se rencontrent pas.'}],
+ [14,'choice','Dans quelle zone est le point M ?',[
+  [cr(1.8,2.1,1.9),cr(1.8,2.1,2.5),cr(1.8,2.1,1.5),cr(3,4,3.5),cr(3,4,4.4),cr(3,4,2.6)],
+  [cr(2,3,2.4),cr(2,3,1.2),cr(2,3,3.6),cr(4.5,5,4.8),cr(4.5,5,4),cr(4.5,5,5.3)],
+  [cr(1,1.5,1.2),cr(1,1.5,0.7),cr(1,1.5,2),cr(5,6,5.5),cr(5,6,6.4),cr(5,6,4.2)]],{opts:COUR}],
+ [15,'fill','Largeur d’une couronne : c’est la différence entre les deux rayons.',[
+  [f('Couronne entre deux cercles de même centre et de rayons 3 cm et 4 cm. Largeur : ___ cm.','1'),f('Rayons 2 cm et 5 cm. Largeur : ___ cm.','3'),f('Rayons 1,8 cm et 2,1 cm. Largeur : ___ cm.','0,3'),f('Rayons 4,5 cm et 6 cm. Largeur : ___ cm.','1,5'),f('Un point à 3,5 cm de O est-il dans la couronne entre 3 cm et 4 cm ? ___ (oui ou non)','oui'),f('Un point à 4,5 cm de O est-il dans la couronne entre 3 cm et 4 cm ? ___ (oui ou non)','non')],
+  [f('Rayons 5 cm et 7 cm. Largeur : ___ cm.','2'),f('Rayons 1 cm et 4 cm. Largeur : ___ cm.','3'),f('Rayons 2,4 cm et 2,9 cm. Largeur : ___ cm.','0,5'),f('Rayons 3,5 cm et 6 cm. Largeur : ___ cm.','2,5'),f('Un point à 2,5 cm de O est-il dans la couronne entre 2 cm et 3 cm ? ___ (oui ou non)','oui'),f('Un point à 1,5 cm de O est-il dans la couronne entre 2 cm et 3 cm ? ___ (oui ou non)','non')],
+  [f('Rayons 6 cm et 8 cm. Largeur : ___ cm.','2'),f('Rayons 0,5 cm et 3 cm. Largeur : ___ cm.','2,5'),f('Rayons 3,2 cm et 3,6 cm. Largeur : ___ cm.','0,4'),f('Rayons 5,5 cm et 7 cm. Largeur : ___ cm.','1,5'),f('Un point à 5,5 cm de O est-il dans la couronne entre 5 cm et 6 cm ? ___ (oui ou non)','oui'),f('Un point à 6,5 cm de O est-il dans la couronne entre 5 cm et 6 cm ? ___ (oui ou non)','non')]]],
+ [16,'fill','Deux cercles : le cercle de centre A passe par B, et le cercle de centre B passe par A.',[
+  [f('AB = 5 cm. Le cercle de centre A passe par B. Son rayon est ___ cm.','5'),f('AB = 5 cm. Le cercle de centre B passe par A. Son diamètre mesure ___ cm.','10'),f('Les deux cercles ont le même ___ . (rayon ou diamètre ?)',['rayon','le rayon']),f('Le point A appartient-il au cercle de centre B ? ___ (oui ou non)','oui'),f('Un point M est sur les deux cercles. MA = ___ cm et MB = ___ cm.','5','5')],
+  [f('AB = 4 cm. Le cercle de centre A passe par B. Son rayon est ___ cm.','4'),f('AB = 4 cm. Le cercle de centre B passe par A. Son diamètre mesure ___ cm.','8'),f('Les deux cercles ont le même ___ . (rayon ou diamètre ?)',['rayon','le rayon']),f('Le point B appartient-il au cercle de centre A ? ___ (oui ou non)','oui'),f('Un point M est sur les deux cercles. MA = ___ cm et MB = ___ cm.','4','4')],
+  [f('AB = 3,5 cm. Le cercle de centre A passe par B. Son rayon est ___ cm.','3,5'),f('AB = 3,5 cm. Le cercle de centre B passe par A. Son diamètre mesure ___ cm.','7'),f('Les deux cercles ont le même ___ . (rayon ou diamètre ?)',['rayon','le rayon']),f('Le centre A appartient-il au cercle de centre A ? ___ (oui ou non)','non'),f('Un point M est sur les deux cercles. MA = ___ cm et MB = ___ cm.','3,5','3,5')]]],
+
+ [17,'fill','Programme de construction : place les points A, B et C, puis réponds.',[
+  [f('Avec AB = 6 cm, C ∈ [AB] et AC = 2 cm : CB = ___ cm.','4'),f('Avec AB = 6 cm, C ∈ [AB] et AC = 2 cm : le cercle de centre A passant par C a pour rayon ___ cm.','2'),f('Avec AB = 6 cm, C ∈ [AB] et AC = 2 cm : le cercle de centre C passant par B a pour rayon ___ cm.','4'),f('Avec AB = 6 cm, C ∈ [AB] et AC = 2 cm : le cercle de diamètre [BC] a pour rayon ___ cm.','2'),f('Avec AB = 6 cm, C ∈ [AB] et AC = 2 cm : le cercle de centre C passant par B a pour diamètre ___ cm.','8')],
+  [f('Avec AB = 9 cm, C ∈ [AB] et AC = 3 cm : CB = ___ cm.','6'),f('Avec AB = 9 cm, C ∈ [AB] et AC = 3 cm : le cercle de centre A passant par C a pour rayon ___ cm.','3'),f('Avec AB = 9 cm, C ∈ [AB] et AC = 3 cm : le cercle de centre C passant par B a pour rayon ___ cm.','6'),f('Avec AB = 9 cm, C ∈ [AB] et AC = 3 cm : le cercle de diamètre [BC] a pour rayon ___ cm.','3'),f('Avec AB = 9 cm, C ∈ [AB] et AC = 3 cm : le cercle de centre C passant par B a pour diamètre ___ cm.','12')],
+  [f('Avec AB = 12 cm, C ∈ [AB] et AC = 5 cm : CB = ___ cm.','7'),f('Avec AB = 12 cm, C ∈ [AB] et AC = 5 cm : le cercle de centre A passant par C a pour rayon ___ cm.','5'),f('Avec AB = 12 cm, C ∈ [AB] et AC = 5 cm : le cercle de centre C passant par B a pour rayon ___ cm.','7'),f('Avec AB = 12 cm, C ∈ [AB] et AC = 5 cm : le cercle de diamètre [BC] a pour rayon ___ cm.','3,5'),f('Avec AB = 12 cm, C ∈ [AB] et AC = 5 cm : le cercle de centre C passant par B a pour diamètre ___ cm.','14')]]],
+ [18,'choice','Traduis le programme de construction : quelle est la nature du segment ?',[
+  [c2('On trace le cercle de centre O passant par A. Le segment [OA] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('On trace le cercle de diamètre [AB]. Le segment [AB] est',['un rayon','un diamètre','une corde'],'un diamètre'),c2('E et F sont deux points du cercle et [EF] ne passe pas par le centre. [EF] est',['un rayon','un diamètre','une corde'],'une corde'),c2('On trace le cercle de centre A passant par B. Le segment [AB] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('[CD] est une corde qui passe par le centre. [CD] est aussi',['un rayon','un diamètre','une corde'],'un diamètre'),c2('O est le centre et M un point du cercle. Le segment [OM] est',['un rayon','un diamètre','une corde'],'un rayon')],
+  [c2('On trace le cercle de centre B passant par C. Le segment [BC] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('On trace le cercle de diamètre [UV]. Le segment [UV] est',['un rayon','un diamètre','une corde'],'un diamètre'),c2('G et H sont deux points du cercle, et O n’est pas sur (GH). [GH] est',['un rayon','un diamètre','une corde'],'une corde'),c2('Le cercle de centre K passe par L. Le segment [KL] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('[PQ] passe par le centre O et ses extrémités sont sur le cercle. [PQ] est',['un rayon','un diamètre','une corde'],'un diamètre'),c2('O est le centre. Le segment [OR] est un rayon si R est',['sur le cercle','dans le disque seulement','en dehors du disque'],'sur le cercle')],
+  [c2('On trace le cercle de centre M passant par N. Le segment [MN] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('On trace le cercle de diamètre [ST]. Le segment [ST] est',['un rayon','un diamètre','une corde'],'un diamètre'),c2('J et K sont deux points du cercle, [JK] ne passe pas par le centre. [JK] est',['un rayon','un diamètre','une corde'],'une corde'),c2('Le cercle de centre X passe par Y. Le segment [XY] est',['un rayon','un diamètre','une corde'],'un rayon'),c2('Un diamètre est aussi',['un rayon','une corde','un arc'],'une corde'),c2('Un segment qui relie deux points du cercle est',['un rayon','un diamètre ou une corde','un arc'],'un diamètre ou une corde')]]],
+ [19,'choice','Raisonne : est-ce vrai ou faux ?',[
+  [tf('A est le centre du cercle, B et C sont sur le cercle. Alors AB = AC.',1),tf('Si AB = AC, alors C est sur le cercle de centre A passant par B.',1),tf('Si [BC] est un diamètre du cercle de centre A, alors A est le milieu de [BC].',1),tf('Deux points d’un cercle sont toujours alignés avec le centre.',0),tf('Si D est sur le cercle de centre A et sur le cercle de centre B, alors AD = BD.',0,'Cela n’est vrai que si les deux cercles ont le même rayon.'),tf('Si A est le milieu de [BC] et B est sur le cercle de centre A, alors C est aussi sur ce cercle.',1)],
+  [tf('O est le centre du cercle, M et N sont sur le cercle. Alors OM = ON.',1),tf('Si OM = ON, alors N est sur le cercle de centre O passant par M.',1),tf('Si [MN] est un diamètre du cercle de centre O, alors O est le milieu de [MN].',1),tf('Trois points d’un cercle sont toujours alignés.',0),tf('Si M est sur deux cercles de centres O et P, alors OM = PM.',0,'Cela n’est vrai que si les deux cercles ont le même rayon.'),tf('Si O est le milieu de [MN] et M est sur le cercle de centre O, alors N est aussi sur ce cercle.',1)],
+  [tf('P est le centre du cercle, Q et R sont sur le cercle. Alors PQ = PR.',1),tf('Si PQ = PR, alors R est sur le cercle de centre P passant par Q.',1),tf('Si [QR] est un diamètre du cercle de centre P, alors P est le milieu de [QR].',1),tf('Un cercle passe toujours par son centre.',0),tf('Si S est sur le cercle de centre P et sur le cercle de centre Q, alors PS = QS.',0,'Cela n’est vrai que si les deux cercles ont le même rayon.'),tf('Si P est le milieu de [QR] et Q est sur le cercle de centre P, alors R est aussi sur ce cercle.',1)]]],
+ [20,'fill','Bilan : un petit problème qui mélange tout le chapitre.',[
+  [f('Le cercle 𝒞 de centre O a un diamètre [AB] de 8 cm. Son rayon est ___ cm.','4'),f('Le point O est le ___ de [AB].',['milieu','le milieu']),f('M est tel que OM = 5 cm. M est-il dans le disque ? ___ (oui ou non)','non'),f('N est tel que ON = 3 cm. N est-il dans le disque ? ___ (oui ou non)','oui'),f('Une corde de 9 cm peut-elle exister dans 𝒞 ? ___ (oui ou non)','non'),f('La plus longue corde de 𝒞 mesure ___ cm.','8')],
+  [f('Le cercle 𝒞 de centre O a un diamètre [AB] de 10 cm. Son rayon est ___ cm.','5'),f('Le point O est le ___ de [AB].',['milieu','le milieu']),f('M est tel que OM = 6 cm. M est-il dans le disque ? ___ (oui ou non)','non'),f('N est tel que ON = 4 cm. N est-il dans le disque ? ___ (oui ou non)','oui'),f('Une corde de 11 cm peut-elle exister dans 𝒞 ? ___ (oui ou non)','non'),f('La plus longue corde de 𝒞 mesure ___ cm.','10')],
+  [f('Le cercle 𝒞 de centre O a un diamètre [AB] de 6 cm. Son rayon est ___ cm.','3'),f('Le point O est le ___ de [AB].',['milieu','le milieu']),f('M est tel que OM = 3 cm. M est-il dans le disque ? ___ (oui ou non)','oui'),f('N est tel que ON = 3,5 cm. N est-il dans le disque ? ___ (oui ou non)','non'),f('Une corde de 5,5 cm peut-elle exister dans 𝒞 ? ___ (oui ou non)','oui'),f('La plus longue corde de 𝒞 mesure ___ cm.','6')]],{hint:'Le disque contient aussi son cercle.'}]
+];
+L2.sets=mkSets(D2);
+
+
+/* ================= Chapitre 4 : Division (leçons 3, 4 et 5) — exercices générés avec une graine fixe ================= */
+const rngOf=(seed)=>{ let a=seed>>>0; return ()=>{ a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a); t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; };
+const ri=(R,a,b)=>a+Math.floor(R()*(b-a+1));
+const pk=(R,arr)=>arr[Math.floor(R()*arr.length)];
+const shuf=(R,arr)=>{ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(R()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; };
+const gcd=(a,b)=>b?gcd(b,a%b):a, lcm=(a,b)=>a/gcd(a,b)*b;
+const th=s=>s.replace(/\B(?=(\d{3})+(?!\d))/g,' ');
+const F=n=>th(String(n));                       /* entier avec espaces insécables */
+const an=(n,k)=>{ const s=String(Math.abs(n)).padStart(k+1,'0'); const i=s.slice(0,s.length-k), d=s.slice(s.length-k).replace(/0+$/,''); return (n<0?'-':'')+i+(d?','+d:''); };  /* n/10^k, réponse */
+const fd=(n,k)=>{ const s=an(n,k); const [i,d]=s.split(','); return th(i)+(d?','+d:''); }; /* n/10^k, affichage */
+const DAYS=['lundi','mardi','mercredi','jeudi','vendredi','samedi','dimanche'];
+const hsh=s=>{ let h=7; for(const c of s) h=(h*31+c.charCodeAt(0))|0; return Math.abs(h); };
+const G=(n,type,fn,o)=>({n,type,fn,o});
+const buildG=(id,defs)=>[0,1,2].map(s=>defs.map(d=>{ const R=rngOf(hsh(id)+s*1000+d.n*7919); const r=d.fn(R);
+  const e=Object.assign({n:d.n,type:d.type,t:r.t,items:r.items},r.hint?{hint:r.hint}:{},d.o||{});
+  if(e.type==='choice'&&!e.opts&&e.items.some(it=>!it.opts)){ e.opts=['Vrai','Faux'].includes(e.items[0].a)?['Vrai','Faux']:['Oui','Non']; } return e; }));
+const uniq=(n,mk)=>{ const out=[], seen=new Set(); let g=0; while(out.length<n&&g++<400){ const x=mk(); const k=JSON.stringify(x); if(!seen.has(k)){ seen.add(k); out.push(x); } } return out; };
+const NOUNS=['bonbons','billes','autocollants','cartes','stylos','gâteaux','crayons','timbres'];
+const WHO=['enfants','élèves','amis','cousins','voisins'];
+
+/* ---------- Leçon 3 : division euclidienne ---------- */
+const mkDiv=(R,bmin,bmax,qmin,qmax)=>{ const b=ri(R,bmin,bmax), q=ri(R,qmin,qmax), r=ri(R,0,b-1); return {a:b*q+r,b,q,r}; };
+const E1=[
+ G(1,'choice',R=>{ const d=mkDiv(R,11,35,10,40); d.r=d.r||3; d.a=d.b*d.q+d.r; const P=[[`${F(d.a)} est le dividende`,1],[`${d.b} est le diviseur`,1],[`${d.q} est le quotient`,1],[`${d.r} est le reste`,1],[`${F(d.a)} est le diviseur`,0],[`${d.b} est le quotient`,0],[`${d.q} est le reste`,0],[`${d.r} est le diviseur`,0],[`${d.r} est plus petit que ${d.b}`,1],[`${d.r} est plus grand que ${d.b}`,0]];
+   let it; do{ it=shuf(R,P).slice(0,6); }while(it.filter(x=>x[1]).length<2||it.filter(x=>!x[1]).length<2);
+   return {t:`Dans la division euclidienne de ${F(d.a)} par ${d.b}, le quotient est ${d.q} et le reste est ${d.r}. Vrai ou faux ?`,items:it.map(([s,v])=>tf(s,v))}; }),
+ G(2,'fill',R=>({t:'Complète le quotient et le reste de chaque division euclidienne.',items:uniq(5,()=>{ const b=ri(R,3,9),q=ri(R,3,15),r=ri(R,1,b-1),a=b*q+r; return f(`Division de ${a} par ${b} : quotient ___ et reste ___.`,String(q),String(r)); })})),
+ G(3,'fill',R=>({t:'Complète l’égalité qui traduit la division euclidienne.',hint:'dividende = (diviseur × quotient) + reste',items:uniq(5,()=>{ const b=ri(R,6,45),q=ri(R,8,60),r=ri(R,1,b-1),a=b*q+r; return f(`${F(a)} = (${b} × ___) + ___`,String(q),String(r)); })})),
+ G(4,'fill',R=>({t:'Retrouve le nombre qui manque dans la division euclidienne.',items:uniq(5,()=>{ const b=ri(R,5,40),q=ri(R,4,50),r=ri(R,1,b-1),a=b*q+r, k=ri(R,0,2);
+   if(k===0) return f(`Diviseur ${b}, quotient ${q}, reste ${r}. Le dividende est ___.`,String(a));
+   if(k===1) return f(`Dividende ${F(a)}, diviseur ${b}, quotient ${q}. Le reste est ___.`,String(r));
+   return f(`Dividende ${F(a)}, diviseur ${b}, reste ${r}. Le quotient est ___.`,String(q)); })})),
+ G(5,'fill',R=>({t:'Pose et effectue chaque division euclidienne. Écris le quotient et le reste.',items:uniq(6,()=>{ const b=ri(R,11,29),q=ri(R,9,45),r=ri(R,1,b-1),a=b*q+r; return f(`${F(a)} par ${b} : quotient ___ et reste ___.`,String(q),String(r)); })})),
+ G(6,'fill',R=>({t:'Pose et effectue ces divisions plus grandes. Écris le quotient et le reste.',items:uniq(6,()=>{ const b=ri(R,12,65),q=ri(R,30,260),r=ri(R,1,b-1),a=b*q+r; return f(`${F(a)} par ${b} : quotient ___ et reste ___.`,String(q),String(r)); })})),
+ G(7,'choice',R=>({t:'Le reste d’une division euclidienne peut-il avoir cette valeur ?',items:uniq(8,()=>{ const b=ri(R,6,45); const ok=R()<0.5; const x=ok?ri(R,0,b-1):ri(R,b,b+12); return yn(`Division par ${b} : le reste peut-il être ${x} ?`,ok,ok?'':`Le reste doit être inférieur au diviseur (${b}).`); })})),
+ G(8,'fill',R=>({t:'On connaît une égalité. Sans poser de division, donne le quotient et le reste.',hint:'Pour la division par le second facteur, regarde combien de fois il rentre dans le reste.',items:(()=>{ const out=[]; for(let i=0;i<3;i++){ const b=ri(R,15,40), q=ri(R,12,b-1), r=ri(R,1,Math.min(b,q)-1), a=b*q+r; out.push(f(`${F(a)} = (${b} × ${q}) + ${r}. Division de ${F(a)} par ${b} : quotient ___ et reste ___.`,String(q),String(r))); out.push(f(`${F(a)} = (${b} × ${q}) + ${r}. Division de ${F(a)} par ${q} : quotient ___ et reste ___.`,String(Math.floor(a/q)),String(a%q))); } return out; })()})),
+ G(9,'fill',R=>({t:'Situation de partage : une part pour chacun.',hint:'On connaît le nombre de parts et on cherche la valeur d’une part.',items:uniq(5,()=>{ const k=ri(R,5,26), n=ri(R,60,420), noun=pk(R,NOUNS), who=pk(R,WHO); return f(`${n} ${noun} sont partagés équitablement entre ${k} ${who}. Chacun reçoit ___ ${noun} et il en reste ___.`,String(Math.floor(n/k)),String(n%k)); })})),
+ G(10,'fill',R=>({t:'Situation de groupement : on remplit des paquets.',hint:'On connaît la valeur d’une part et on cherche le nombre de parts.',items:uniq(5,()=>{ const k=ri(R,4,25), n=ri(R,60,420), noun=pk(R,NOUNS); return f(`${n} ${noun} sont rangés dans des paquets de ${k}. On remplit ___ paquets et il reste ___ ${noun}.`,String(Math.floor(n/k)),String(n%k)); })})),
+ G(11,'choice',R=>{ const mk=()=>{ const n=ri(R,60,420),k=ri(R,4,26),noun=pk(R,NOUNS),who=pk(R,WHO);
+   return pk(R,[[`On répartit ${n} ${noun} entre ${k} ${who}.`,'partage'],[`${n} ${noun} sont distribués également à ${k} ${who}.`,'partage'],[`On partage ${n} € entre ${k} ${who}.`,'partage'],[`On fait des paquets de ${k} avec ${n} ${noun}.`,'groupement'],[`Des minibus de ${k} places transportent ${n} personnes.`,'groupement'],[`On range ${n} ${noun} dans des boîtes de ${k}.`,'groupement']]); };
+   let it; do{ it=uniq(6,mk); }while(it.filter(x=>x[1]==='partage').length<2||it.filter(x=>x[1]==='groupement').length<2);
+   return {t:'Partage ou groupement ? Choisis le type de situation.',items:it.map(([s,a])=>ch(s,a)),};},{opts:['partage','groupement']}),
+ G(12,'fill',R=>({t:'Combien au minimum ? Attention au reste !',hint:'S’il reste des objets, il faut un paquet de plus.',items:uniq(5,()=>{ const k=pk(R,[6,12,8,10,24,35,55]), n=ri(R,k*3+1,k*20), r=n%k, c=Math.ceil(n/k), t=ri(R,0,2);
+   if(t===0) return f(`Un carton contient ${k} objets. Combien de cartons faut-il au minimum pour ranger ${n} objets ? ___`,String(c));
+   if(t===1) return f(`${n} personnes voyagent dans des bus de ${k} places. Combien de bus faut-il au minimum ? ___`,String(c));
+   return f(`${n} personnes voyagent dans des bus de ${k} places. Combien de places libres dans le dernier bus ? ___`,String(r?k-r:0)); })})),
+ G(13,'fill',R=>({t:'Calcule mentalement le quotient et le reste.',items:uniq(6,()=>{ const b=pk(R,[4,5,6,7,8,9,10,12,15,20,25]),q=ri(R,3,15),r=ri(R,1,b-1),a=b*q+r; return f(`${a} par ${b} : quotient ___ et reste ___.`,String(q),String(r)); })})),
+ G(14,'choice',R=>{ const b=ri(R,12,45); const P=[[`le reste peut être égal à ${b-1}`,1],[`le reste peut être égal à ${b}`,0],[`le reste peut être égal à ${b+ri(R,3,9)}`,0],[`le reste peut être égal à 0`,1],[`le reste peut être égal à ${ri(R,1,b-2)}`,1],[`le quotient peut être n’importe quel nombre entier`,1],[`le reste est toujours plus petit que ${b}`,1],[`le reste peut être plus grand que ${b}`,0]];
+   return {t:`Quand on pose une division euclidienne d’un nombre par ${b}, vrai ou faux ?`,items:shuf(R,P).slice(0,6).map(([s,v])=>tf('… '+s,v))}; }),
+ G(15,'fill',R=>({t:'Valeurs possibles du dividende.',hint:'Le reste va de 0 jusqu’à (diviseur − 1).',items:uniq(4,()=>{ const b=ri(R,5,15),q=ri(R,6,25); return f(`Le diviseur est ${b} et le quotient est ${q}. Le plus petit dividende possible est ___ et le plus grand est ___.`,String(b*q),String(b*q+b-1)); })})),
+ G(16,'fill',R=>({t:'Convertis ces durées avec une division euclidienne.',items:[
+   ...uniq(2,()=>{ const m=ri(R,100,400); return m%60?f(`${m} minutes = ___ h ___ min`,String(Math.floor(m/60)),String(m%60)):f(`125 minutes = ___ h ___ min`,'2','5'); }),
+   ...uniq(2,()=>{ const s=ri(R,130,900); return f(`${s} secondes = ___ min ___ s`,String(Math.floor(s/60)),String(s%60)); }),
+   (()=>{ const s=ri(R,4000,20000); return f(`${s} secondes = ___ h ___ min ___ s`,String(Math.floor(s/3600)),String(Math.floor(s%3600/60)),String(s%60)); })()]})),
+ G(17,'choice',R=>({t:'Cette égalité traduit-elle une division euclidienne ?',items:uniq(8,()=>{ const b=ri(R,6,30),q=ri(R,5,30),k=ri(R,0,2); let r=ri(R,1,b-1),a=b*q+r; if(k===1){ r=ri(R,b,b+8); a=b*q+r; } if(k===2){ a=b*q+r+ri(R,1,3); }
+   const ok=(b*q+r===a&&r<b); return yn(`${F(a)} = (${b} × ${q}) + ${r}`,ok,ok?'':(b*q+r!==a?'L’égalité est fausse.':'Le reste doit être inférieur au diviseur.')); })})),
+ G(18,'fill',R=>({t:'Dans chaque égalité qui traduit une division euclidienne, retrouve le nombre demandé.',items:(()=>{ const out=[]; for(let i=0;i<2;i++){ const b=ri(R,8,40),q=ri(R,8,40),r=ri(R,1,b-1),a=b*q+r; const eq=`(${b} × ${q}) + ${r} = ${F(a)}`; [['le dividende',a],['le diviseur',b],['le quotient',q],['le reste',r]].sort(()=>R()-.5).slice(0,3).forEach(([w,v])=>out.push(f(`${eq} : ${w} est ___.`,String(v)))); } return out; })()})),
+ G(19,'fill',R=>({t:'Jours de la semaine et motifs qui se répètent : utilise le reste.',hint:'Une semaine = 7 jours. Le reste te dit où tu es dans le motif.',items:[
+   ...uniq(3,()=>{ const d=ri(R,0,6),n=ri(R,20,400); return f(`Aujourd’hui, nous sommes ${DAYS[d]}. Quel jour serons-nous dans ${n} jours ? ___`,DAYS[(d+n)%7]); }),
+   ...uniq(3,()=>{ const W=pk(R,['ANNABELLE','PROBLEME','MATHS','DIVISION']), n=ri(R,60,400); return f(`On écrit ${W} en boucle sans espace. Quelle est la ${n}e lettre écrite ? ___`,W[(n-1)%W.length]); })]})),
+ G(20,'fill',R=>({t:'Bilan : un petit problème qui mélange tout le chapitre.',items:(()=>{ const b=ri(R,12,35),q=ri(R,20,60),r=ri(R,1,b-1),a=b*q+r, k=ri(R,5,14), n=ri(R,80,300), m=ri(R,150,400);
+   return [f(`Division euclidienne de ${F(a)} par ${b} : quotient ___ et reste ___.`,String(q),String(r)),
+    f(`${F(a)} = (${b} × ___) + ___`,String(q),String(r)),
+    f(`${n} billes sont partagées équitablement entre ${k} enfants. Chacun reçoit ___ billes et il en reste ___.`,String(Math.floor(n/k)),String(n%k)),
+    f(`Combien de paquets de ${k} billes peut-on faire avec ${n} billes ? ___`,String(Math.floor(n/k))),
+    f(`Combien de bus de 55 places faut-il au minimum pour ${m} personnes ? ___`,String(Math.ceil(m/55))),
+    f(`${m} minutes = ___ h ___ min`,String(Math.floor(m/60)),String(m%60))]; })()}))
+];
+const L3={id:'dv1', num:3, tab:'Division<span class="long"> euclidienne</span>', color:'#2463C9', domain:'Nombres et calculs', title:'La division euclidienne',
+ intro:"Chapitre 4, cours 1. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20.",
+ memo:`<table>
+ <tr><th>Définition</th><td>Effectuer la <b>division euclidienne</b> d'un nombre entier (le <b>dividende</b>) par un nombre entier non nul (le <b>diviseur</b>), c'est trouver le <b>quotient</b> et le <b>reste</b> tels que : <b>dividende = (diviseur × quotient) + reste</b>, avec <b>reste &lt; diviseur</b>.</td></tr>
+ <tr><th>Exemple</th><td>529 = (12 × 44) + 1 : 529 contient 44 fois 12 et il reste 1.</td></tr>
+ <tr><th>Remarques</th><td>On ne peut jamais diviser par 0. Le reste est toujours plus petit que le diviseur.</td></tr>
+ <tr><th>Partage équitable</th><td>On connaît le nombre de parts, on cherche la valeur d'une part. Ex. 38 bonbons pour 5 enfants : 38 = (5 × 7) + 3 → 7 bonbons chacun, il en reste 3.</td></tr>
+ <tr><th>Groupement</th><td>On connaît la valeur d'une part, on cherche le nombre de parts. Ex. 38 bonbons en paquets de 5 : 7 paquets, il reste 3 bonbons.</td></tr></table>`,
+ parts:{1:'Vocabulaire et égalité',5:'Poser la division',9:'Partage et groupement',13:'Calcul mental et reste',17:'Raisonner',20:'Bilan'}};
+L3.sets=buildG('dv1',E1);
+
+/* ---------- Leçon 4 : multiples et diviseurs ---------- */
+const divisors=n=>{ const o=[]; for(let i=1;i<=n;i++) if(n%i===0) o.push(i); return o; };
+const PICKP=(R,P,n)=>shuf(R,P).slice(0,n).map(([s,v])=>tf(s,v));
+const E2=[
+ G(1,'fill',R=>({t:'Complète avec multiple, diviseur ou divisible.',items:uniq(6,()=>{ const b=ri(R,3,12),k=ri(R,2,9),k2=ri(R,0,2);
+   if(k2===0) return f(`${b*k} est un ___ de ${b}.`,['multiple','un multiple']);
+   if(k2===1) return f(`${b} est un ___ de ${b*k}.`,['diviseur','un diviseur']);
+   return f(`${b*k} est ___ par ${b}.`,['divisible','divisible']); })})),
+ G(2,'choice',R=>({t:'Vrai ou faux ?',items:(()=>{ let it; do{ it=uniq(6,()=>{ const y=ri(R,2,13), ok=R()<.5, x=ok?y*ri(R,2,12):y*ri(R,2,12)+ri(R,1,y-1); const k=ri(R,0,2);
+     return k===0?tf(`${x} est un multiple de ${y}.`,ok):(k===1?tf(`${y} est un diviseur de ${x}.`,ok):tf(`${x} est divisible par ${y}.`,ok)); }); }while(it.filter(x=>x.a==='Vrai').length<2||it.filter(x=>x.a==='Faux').length<2); return it; })()})),
+ G(3,'fill',R=>({t:'Divise, puis réponds : le nombre est-il un multiple ?',hint:'Si le reste est 0, c’est un multiple.',items:uniq(5,()=>{ const b=ri(R,7,26),q=ri(R,6,25),ok=R()<.5,r=ok?0:ri(R,1,b-1),a=b*q+r; return f(`Le reste de la division de ${a} par ${b} est ___. ${a} est-il un multiple de ${b} ? ___ (oui ou non)`,String(r),ok?'oui':'non'); })})),
+ G(4,'choice',R=>({t:'Ce nombre est-il pair ou impair ?',items:uniq(8,()=>{ const n=ri(R,10,99999); return ch(`Le nombre ${F(n)} est`,n%2?'impair':'pair'); }),}),{opts:['pair','impair']}),
+ G(5,'choice',R=>({t:'Ce nombre est-il divisible par le nombre indiqué ?',hint:'Regarde son chiffre des unités.',items:uniq(8,()=>{ const d=pk(R,[2,5,10]); const n=ri(R,10,99999); return yn(`${F(n)} est-il divisible par ${d} ?`,n%d===0); })})),
+ G(6,'choice',R=>({t:'Par quels nombres parmi 2, 5 et 10 ce nombre est-il divisible ?',items:uniq(8,()=>{ const n=ri(R,10,99999); const u=n%10; return ch(`${F(n)} est divisible par`,u===0?'2, 5 et 10':(u===5?'5 seulement':(u%2===0?'2 seulement':'aucun')) ); })}),{opts:['2 seulement','5 seulement','2, 5 et 10','aucun']}),
+ G(7,'fill',R=>({t:'Remplace ♦ par un chiffre pour que l’affirmation soit vraie.',hint:'Une seule valeur suffit.',items:uniq(5,()=>{ const d=pk(R,[2,5,10]); const p=ri(R,10,999); const A={2:['0','2','4','6','8'],5:['0','5'],10:['0']}[d]; return f(`${p}♦ est divisible par ${d} : ♦ = ___`,A); })})),
+ G(8,'choice',R=>({t:'Vrai ou faux ?',items:PICKP(R,[['Un nombre divisible par 10 est divisible par 5.',1],['Un nombre divisible par 10 est divisible par 2.',1],['Un nombre divisible par 5 est divisible par 10.',0],['Un nombre qui se termine par 5 est impair.',1],['Un nombre divisible par 2 et par 5 est divisible par 10.',1],['Un nombre pair se termine par 0, 2, 4, 6 ou 8.',1],['Un nombre impair est divisible par 2.',0],['Tous les nombres qui se terminent par 0 sont pairs.',1],['0 est un nombre pair.',1],['Un nombre qui se termine par 2 est divisible par 5.',0]],6)})),
+ G(9,'fill',R=>({t:'Complète la liste des diviseurs.',hint:'Les diviseurs vont par paires : 1 × n, puis 2 × … et ainsi de suite.',items:uniq(4,()=>{ const n=pk(R,[12,18,20,24,28,30,36,40,42,45,48,50,60]); const dv=divisors(n); const mid=dv.slice(1,-1); const pick=shuf(R,mid).slice(0,Math.min(3,mid.length)); let q='Diviseurs de '+n+' : '; const ans=[]; q+=dv.map(d=>{ if(pick.includes(d)){ ans.push(String(d)); return '___'; } return String(d); }).join(' ; '); return f(q,...ans); })})),
+ G(10,'fill',R=>({t:'Combien de diviseurs ?',items:uniq(5,()=>{ const n=pk(R,[12,15,16,18,20,21,24,25,28,30,36,45,49,50]); const k=ri(R,0,2); const dv=divisors(n);
+   if(k===0) return f(`Combien de diviseurs a ${n} ? ___`,String(dv.length));
+   if(k===1) return f(`Quel est le plus grand diviseur de ${n} autre que ${n} ? ___`,String(dv[dv.length-2]));
+   return f(`Quel est le plus petit diviseur de ${n} supérieur à 1 ? ___`,String(dv[1])); })})),
+ G(11,'choice',R=>({t:'Le premier nombre est-il un diviseur du second ?',hint:'Pose la division : le reste doit être 0.',items:uniq(6,()=>{ const d=ri(R,7,29),k=ri(R,10,30),ok=R()<.5,n=d*k+(ok?0:ri(R,1,d-1)); return yn(`${d} est-il un diviseur de ${n} ?`,ok); })})),
+ G(12,'fill',R=>({t:'Diviseurs communs : trouve le plus grand diviseur commun.',items:shuf(R,[[12,28],[18,22],[10,15],[20,30],[16,24],[14,21],[9,12],[15,25],[8,9],[36,48],[18,27],[16,40]]).slice(0,5).map(([a,b])=>f(`Le plus grand diviseur commun de ${a} et ${b} est ___.`,String(gcd(a,b))))})),
+ G(13,'fill',R=>({t:'Complète la liste des multiples.',items:uniq(4,()=>{ const m=pk(R,[6,7,8,9,12,15,25,75]); return f(`Multiples de ${m} : 0 ; ${m} ; ___ ; ___ ; ___`,String(2*m),String(3*m),String(4*m)); })})),
+ G(14,'fill',R=>({t:'Multiple le plus proche : attention à « inférieur » et « supérieur ».',items:uniq(5,()=>{ const m=ri(R,3,19), x=ri(R,m*3+1,m*14); const x2=x%m?x:x+1; if(R()<.5) return f(`Le plus grand multiple de ${m} inférieur à ${x2} est ___.`,String(Math.floor(x2/m)*m)); return f(`Le plus petit multiple de ${m} supérieur à ${x2} est ___.`,String((Math.floor(x2/m)+1)*m)); })})),
+ G(15,'fill',R=>({t:'Encadre le nombre entre deux multiples consécutifs.',items:uniq(4,()=>{ const m=ri(R,4,15), x=ri(R,m*3+1,m*12); const x2=x%m?x:x+1; return f(`${x2} est compris entre ___ et ___ (deux multiples consécutifs de ${m}).`,String(Math.floor(x2/m)*m),String((Math.floor(x2/m)+1)*m)); })})),
+ G(16,'choice',R=>({t:'Vrai ou faux ?',items:PICKP(R,[['Tous les nombres entiers sont divisibles par 1.',1],['Il n’existe pas de nombre entier qui ait un seul diviseur.',0],['Le nombre 17 a exactement deux diviseurs.',1],['Le nombre 9 a exactement deux diviseurs.',0],['0 est un multiple de tous les nombres entiers.',1],['1 est un multiple de tous les nombres entiers.',0],['1 est un diviseur de tous les nombres entiers.',1],['Un nombre a une infinité de multiples.',1],['Un nombre entier non nul a une infinité de diviseurs.',0],['Le nombre 13 a exactement deux diviseurs.',1]],6)})),
+ G(17,'choice',R=>({t:'Cette affirmation est-elle toujours vraie ? Cherche un contre-exemple.',items:PICKP(R,[['Tous les nombres impairs sont divisibles par 3.',0],['Si un nombre est divisible par 5, alors il est divisible par 10.',0],['Si le chiffre des unités est 9, alors le nombre est multiple de 9.',0],['La somme de deux nombres impairs est impaire.',0],['Tous les nombres pairs sont divisibles par 4.',0],['Tous les nombres divisibles par 10 sont pairs.',1],['La somme de deux multiples de 5 est un multiple de 5.',1],['Le produit de deux nombres impairs est impair.',1],['La somme de deux nombres pairs est paire.',1]],6)})),
+ G(18,'fill',R=>({t:'Nombres divisibles à la fois par 2 et par 5.',hint:'Divisible par 2 et par 5 : il se termine par 0.',items:uniq(5,()=>{ const L=ri(R,20,980); return f(`Le plus petit nombre divisible par 2 et par 5 supérieur à ${L} est ___.`,String((Math.floor(L/10)+1)*10)); })})),
+ G(19,'fill',R=>({t:'Multiples communs : trouve le plus petit multiple commun non nul.',items:shuf(R,[[4,6],[6,9],[5,7],[3,4],[10,15],[8,12],[2,5],[6,8],[4,10],[9,12]]).slice(0,5).map(([a,b])=>f(`Le plus petit multiple commun non nul de ${a} et ${b} est ___.`,String(lcm(a,b))))})),
+ G(20,'fill',R=>({t:'Bilan : un petit problème qui mélange tout le chapitre.',items:(()=>{ const b=ri(R,7,23),q=ri(R,6,25),ok=R()<.5,r=ok?0:ri(R,1,b-1),a=b*q+r, n=pk(R,[24,28,30,36,40,42]), m=ri(R,4,12);
+   return [f(`Le reste de la division de ${a} par ${b} est ___. ${a} est-il un multiple de ${b} ? ___ (oui ou non)`,String(r),r?'non':'oui'),
+    f(`Combien de diviseurs a ${n} ? ___`,String(divisors(n).length)),
+    f(`Le plus grand diviseur de ${n} autre que ${n} est ___.`,String(divisors(n).slice(-2)[0])),
+    f(`Le plus petit multiple de ${m} supérieur à 100 est ___.`,String((Math.floor(100/m)+1)*m)),
+    f(`${F(ri(R,10,99999)*10)} est-il divisible par 5 ? ___ (oui ou non)`,'oui'),
+    f(`Le plus petit nombre divisible par 2 et par 5 supérieur à 77 est ___.`,'80')]; })()}))
+];
+const L4={id:'dv2', num:4, tab:'Multiples<span class="long"> et diviseurs</span>', color:'#0E8A86', domain:'Nombres et calculs', title:'Multiples et diviseurs',
+ intro:"Chapitre 4, cours 2. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20.",
+ memo:`<table>
+ <tr><th>Reste nul</th><td>Si la division euclidienne de 105 par 7 a un reste nul : 105 est <b>divisible</b> par 7 ; 7 est un <b>diviseur</b> de 105 ; 105 est un <b>multiple</b> de 7. 105 = 7 × 15.</td></tr>
+ <tr><th>Remarques</th><td>Tous les nombres entiers (sauf zéro) sont divisibles par 1 et par eux-mêmes. <b>0</b> est un multiple de tous les nombres entiers.</td></tr>
+ <tr><th>Pairs, impairs</th><td>Les multiples de 2 sont les nombres <b>pairs</b>. Les autres sont les nombres <b>impairs</b>.</td></tr>
+ <tr><th>Divisible par 2</th><td>quand le chiffre des unités est 0, 2, 4, 6 ou 8.</td></tr>
+ <tr><th>Divisible par 5</th><td>quand le chiffre des unités est 0 ou 5.</td></tr>
+ <tr><th>Divisible par 10</th><td>quand le chiffre des unités est 0.</td></tr>
+ <tr><th>Trouver les diviseurs</th><td>On écrit le nombre comme produit de deux facteurs, en commençant par 1, puis 2, puis 3… Ex. 28 = 1 × 28 = 2 × 14 = 4 × 7 : diviseurs de 28 : 1, 2, 4, 7, 14, 28.</td></tr></table>`,
+ parts:{1:'Vocabulaire',5:'Pair, impair et critères de divisibilité',9:'Diviseurs',13:'Multiples',17:'Raisonner',20:'Bilan'}};
+L4.sets=buildG('dv2',E2);
+
+/* ---------- Leçon 5 : division décimale ---------- */
+const dc=(R,k)=>{ const n=ri(R,12,9999); return n; };                      /* n / 10^k */
+const E3=[
+ G(1,'fill',R=>({t:'Divise mentalement par 10, 100 ou 1 000.',hint:'Chaque fois, la virgule recule d’autant de rangs que de zéros.',items:uniq(6,()=>{ const k=pk(R,[0,1,1,2]); const n=ri(R,12,99999); const p=pk(R,[1,2,3]); const kk=k+p; return f(`${fd(n,k)} ÷ ${F(10**p)} = ___`,an(n,kk)); })})),
+ G(2,'fill',R=>({t:'Complète les phrases.',items:shuf(R,[['Diviser par 10 revient à multiplier par ___.','0,1'],['Diviser par 100 revient à multiplier par ___.','0,01'],['Multiplier par 0,1 revient à diviser par ___.','10'],['Multiplier par 0,01 revient à diviser par ___.','100'],['Diviser par 1 000 revient à multiplier par ___.','0,001'],['Multiplier par 0,001 revient à diviser par ___.','1000']]).slice(0,5).map(([q,a])=>f(q,a))})),
+ G(3,'fill',R=>({t:'Multiplie par 0,1 ; 0,01 ou 0,001.',items:uniq(6,()=>{ const k=pk(R,[0,1,2]); const n=ri(R,12,9999); const p=pk(R,[1,2,3]); return f(`${fd(n,k)} × ${p===1?'0,1':(p===2?'0,01':'0,001')} = ___`,an(n,k+p)); })})),
+ G(4,'fill',R=>({t:'Calcule le prix d’un objet.',hint:'Divise le prix total par le nombre d’objets.',items:uniq(5,()=>{ const n=pk(R,[2,3,4,5,10]); const u=ri(R,2,40)*5; const noun=pk(R,['bonbon','stylo','gâteau','crayon','timbre']); return f(`${n} ${noun}s coûtent ${fd(u*n,2)} €. Un ${noun} coûte ___ €.`,an(u,2)); })})),
+ G(5,'fill',R=>({t:'Pose et effectue ces divisions : le quotient est décimal et exact.',items:uniq(6,()=>{ const b=pk(R,[2,3,4,5,6,7,8,9,12]); const q=ri(R,25,999); const a=q*b; return f(`${fd(a,1)} ÷ ${b} = ___`,an(q,1)); })})),
+ G(6,'fill',R=>({t:'Pose et effectue ces divisions d’un nombre entier par un entier. Le quotient est décimal.',items:uniq(6,()=>{ const b=pk(R,[4,5,8,20,25,50]); const a=ri(R,10,300); return f(`${a} ÷ ${b} = ___`,an(a*1000/b,3)); })})),
+ G(7,'choice',R=>({t:'Le quotient est-il un nombre décimal ? (Pose la division jusqu’à voir si elle s’arrête.)',items:uniq(8,()=>{ const b=pk(R,[2,3,4,5,6,7,8,9,11,12,16,20,25]); const a=ri(R,5,80); let d=b/gcd(a,b); while(d%2===0) d/=2; while(d%5===0) d/=5; return yn(`Le quotient de ${a} par ${b} est-il un nombre décimal ?`,d===1); })})),
+ G(8,'fill',R=>({t:'Donne l’arrondi du quotient demandé.',hint:'Au dixième : 1 chiffre après la virgule. Au centième : 2 chiffres.',items:uniq(5,()=>{ const b=pk(R,[3,7,9,11,13]); const a=ri(R,2,70); if(a%b===0) return f(`${a+1} ÷ ${b} ≈ ___ (arrondi au dixième)`,an(Math.round((a+1)*10/b),1)); const c=R()<.5; return f(`${a} ÷ ${b} ≈ ___ (arrondi ${c?'au dixième':'au centième'})`,c?an(Math.round(a*10/b),1):an(Math.round(a*100/b),2)); })})),
+ G(9,'fill',R=>({t:'Calcule le facteur manquant.',hint:'Pour trouver le facteur manquant, divise.',items:uniq(6,()=>{ const b=pk(R,[4,5,6,8,9,15,25]); const x=ri(R,12,999); return f(`${b} × ___ = ${fd(b*x,2)}`,an(x,2)); })})),
+ G(10,'fill',R=>({t:'Schémas de calcul : complète avec des nombres décimaux.',items:uniq(6,()=>{ const n=pk(R,[3,4,5,6,7,8,9]); const x=ri(R,12,999); const k=ri(R,0,2);
+   if(k===0) return f(`${fd(x,1)} × ${n} → ___`,an(x*n,1));
+   if(k===1) return f(`___ × ${n} → ${fd(x*n,1)}`,an(x,1));
+   return f(`${fd(x*n,1)} ÷ ${n} → ___`,an(x,1)); })})),
+ G(11,'fill',R=>({t:'Égalités à trous : retrouve le nombre manquant.',items:uniq(6,()=>{ const k=ri(R,0,2);
+   if(k===0){ const a=pk(R,[15,25,5,45]); const x=ri(R,2,9); return f(`${fd(a,1)} × ___ = ${fd(a*x,1)}`,String(x)); }
+   if(k===1){ const x=ri(R,2,9), y=ri(R,10,60); return f(`${x*y} ÷ ___ = ${y}`,String(x)); }
+   const n=ri(R,2,9), y=ri(R,20,600); return f(`___ ÷ ${n} = ${fd(y,1)}`,an(y*n,1)); })})),
+ G(12,'fill',R=>({t:'Trouve le nombre cherché.',items:uniq(5,()=>{ const k=ri(R,0,3); const n=pk(R,[4,5,6,8]); const x=ri(R,12,999);
+   if(k===0) return f(`On multiplie un nombre par ${n} et on obtient ${fd(n*x,2)}. Ce nombre est ___.`,an(x,2));
+   if(k===1) return f(`On divise un nombre par ${n} et on obtient ${fd(x,1)}. Ce nombre est ___.`,an(x*n,1));
+   if(k===2) return f(`Un nombre est ${n} fois plus petit que ${fd(x*n,1)}. Ce nombre est ___.`,an(x,1));
+   return f(`Un nombre est ${n} fois plus grand que ${fd(x,2)}. Ce nombre est ___.`,an(x*n,2)); })})),
+ G(13,'fill',R=>({t:'Je suis 10, 100 ou 1 000 fois plus petit ou plus grand. Qui suis-je ?',items:uniq(5,()=>{ const p=pk(R,[1,2,3]), n=ri(R,12,9999), k=pk(R,[0,1,2]); const small=R()<.5;
+   return f(`Je suis ${F(10**p)} fois plus ${small?'petit':'grand'} que ${fd(n,k)}. Je suis ___.`,small?an(n,k+p):an(n*10**p,k)); })})),
+ G(14,'choice',R=>({t:'Vrai ou faux ?',items:PICKP(R,[['Diviser par 0,1 revient à multiplier par 10.',1],['Multiplier par 0,01 revient à diviser par 100.',1],['Diviser un nombre par 2 donne toujours un nombre plus grand.',0],['Le quotient de 5 par 3 est un nombre décimal.',0],['Le quotient de 7 par 4 est un nombre décimal.',1],['Si on multiplie par 7 puis on divise par 7, on retrouve le nombre de départ.',1],['25 ÷ 100 = 2,5',0],['3,6 ÷ 10 = 0,36',1],['Diviser par 1 000 revient à multiplier par 0,001.',1],['12 ÷ 5 = 2,4',1]],6)})),
+ G(15,'fill',R=>({t:'On paie en plusieurs fois sans frais : calcule chaque mensualité.',items:uniq(5,()=>{ const n=pk(R,[2,3,4,5,6,8,10,12]); const m=ri(R,1000,9990); const thing=pk(R,['un téléviseur','un vélo','un ordinateur','une console','une tablette']); return f(`${thing[0].toUpperCase()+thing.slice(1)} coûte ${fd(m*n,2)} €, payé en ${n} fois sans frais. Chaque mensualité est de ___ €.`,an(m,2)); })})),
+ G(16,'fill',R=>({t:'Prix ou masse d’un seul objet dans un lot.',items:uniq(4,()=>{ const n=pk(R,[10,100]); const u=ri(R,5,500); const thing=pk(R,['masques','stickers','clous','feuilles','agrafes']); const unit=pk(R,['€','g']); const v=unit==='€'?'coûte':'pèse'; return f(`Un lot de ${n} ${thing} ${v} ${fd(u*n,2)} ${unit}. Un seul objet ${v} ___ ${unit}.`,an(u,2)); })})),
+ G(17,'fill',R=>({t:'Deux personnes, un rapport : retrouve la somme de la plus petite.'.replace('retrouve la somme de la plus petite','trouve ce qu’a rapporté la seconde'),items:uniq(4,()=>{ const A=pk(R,['Juliette','Maya','Lina','Sarah']), B=pk(R,['Aziza','Inès','Nora','Salma']), k=ri(R,3,9), b=ri(R,100,9999); return f(`${A} a vendu ${k} fois plus de tickets que ${B} et a rapporté ${fd(b*k,2)} €. ${B} a rapporté ___ €.`,an(b,2)); })})),
+ G(18,'fill',R=>({t:'Prix d’un seul stylo dans chaque magasin.',items:uniq(4,()=>{ const n=pk(R,[4,5,8,10]); const u=ri(R,20,300)*5; return f(`${pk(R,['Magasin A','Magasin B','Magasin C'])} : ${n} stylos coûtent ${fd(u*n,2)} €. Un stylo coûte ___ €.`,an(u,2)); })})),
+ G(19,'choice',R=>({t:'Dans quel magasin le stylo est-il le moins cher ?',hint:'Calcule le prix d’un seul stylo dans chaque magasin.',items:uniq(4,()=>{ let s; do{ s=['A','B','C'].map(()=>{ const n=pk(R,[4,5,10]); return {n,u:ri(R,40,150)*5}; }); }while(new Set(s.map(x=>x.u)).size<3); const mn=Math.min(...s.map(x=>x.u)); const ans='ABC'[s.findIndex(x=>x.u===mn)];
+   return Object.assign(ch(s.map((x,i)=>`${'ABC'[i]} : ${x.n} stylos à ${fd(x.u*x.n,2)} €`).join(' · '),ans),{opts:['A','B','C']}); })})),
+ G(20,'fill',R=>({t:'Bilan : un petit problème qui mélange tout le chapitre.',items:(()=>{ const n=ri(R,12,999),b=pk(R,[4,5,6,8]),x=ri(R,12,999),a=ri(R,2,70), p=pk(R,[3,7,9,11]);
+   return [f(`${fd(n,1)} ÷ 100 = ___`,an(n,3)),
+    f(`${b} × ___ = ${fd(b*x,2)}`,an(x,2)),
+    f(`${fd(b*x,1)} ÷ ${b} = ___`,an(x,1)),
+    f(`Le quotient de 7 par 4 est-il un nombre décimal ? ___ (oui ou non)`,'oui'),
+    f(`${a%p===0?a+1:a} ÷ ${p} ≈ ___ (arrondi au dixième)`,an(Math.round((a%p===0?a+1:a)*10/p),1)),
+    f(`${b} cahiers coûtent ${fd(x*b,2)} €. Un cahier coûte ___ €.`,an(x,2))]; })()}))
+];
+const L5={id:'dv3', num:5, tab:'Division<span class="long"> décimale</span>', color:'#C2367B', domain:'Nombres et calculs', title:'La division décimale',
+ intro:"Chapitre 4, cours 3. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20.",
+ memo:`<table>
+ <tr><th>Définition</th><td>Effectuer la <b>division</b> d'un nombre décimal par un entier non nul, c'est chercher le <b>quotient</b> tel que : <b>dividende = diviseur × quotient</b>. On écrit : dividende ÷ diviseur = quotient.</td></tr>
+ <tr><th>Poser</th><td>On divise comme pour une division euclidienne, mais on met la <b>virgule</b> dans le quotient dès qu'on « descend » le chiffre des dixièmes. Quand le reste est 0, la division est terminée. Ex. 5,16 ÷ 4 = 1,29.</td></tr>
+ <tr><th>Sans fin</th><td>Certaines divisions ne se terminent jamais (ex. 5 ÷ 3). Le quotient n'est alors pas un nombre décimal : on donne un <b>arrondi</b> (5 ÷ 3 ≈ 1,7 au dixième).</td></tr>
+ <tr><th>÷ 10, 100, 1 000</th><td>Diviser par 10, 100 ou 1 000, c'est multiplier par 0,1 ; 0,01 ou 0,001 : la virgule recule de 1, 2 ou 3 rangs.</td></tr>
+ <tr><th>Opération inverse</th><td>Multiplier puis diviser par le même nombre (ou l'inverse) redonne le nombre de départ : 7 × 3 ÷ 3 = 7.</td></tr></table>`,
+ parts:{1:'Diviser par 10, 100, 1 000',5:'Poser une division décimale',9:'Opération inverse',13:'Propriétés et prix à l’unité',17:'Problèmes',20:'Bilan'}};
+L5.sets=buildG('dv3',E3);
+
+/* ---- « Comprendre la leçon en s'amusant » : petites scènes sans JavaScript ---- */
+const SC=(em,t,b)=>`<section class="sc"><h4><span class="em">${em}</span>${t}</h4>${b}</section>`;
+const SAY=(who,txt)=>`<p class="say"><span class="who">${who}</span><span class="bub">${txt}</span></p>`;
+const RV=(q,a)=>`<details class="rv"><summary>${q}</summary><div>${a}</div></details>`;
+const EQ=h=>`<p class="eq">${h}</p>`;
+const ROW=(e,n)=>e.repeat(n);
+L3.story=
+ SC('👑','Le roi Euclide partage ses bonbons',
+  SAY('👑 Roi Euclide','J’ai <b>23 bonbons</b> à donner à <b>4 amis</b>, à parts égales. Combien chacun en reçoit-il ?')+
+  `<p class="big">${ROW('🍬',5)}<br>${ROW('🍬',5)}<br>${ROW('🍬',5)}<br>${ROW('🍬',5)}<br>🍬🍬🍬 <small>← il en reste 3, impossible d’en donner un de plus à chacun</small></p>`+
+  EQ('<span class="k1">23</span> = (<span class="k2">4</span> × <span class="k3">5</span>) + <span class="k4">3</span>')+
+  `<ul class="voc"><li><b class="k1">23 = dividende</b> : le gros tas de départ</li><li><b class="k2">4 = diviseur</b> : le nombre de parts (d’amis)</li><li><b class="k3">5 = quotient</b> : ce que reçoit chacun</li><li><b class="k4">3 = reste</b> : ce qui n’a pas pu être distribué</li></ul>`)+
+ SC('🚦','La règle d’or : le reste est toujours plus petit que le diviseur',
+  SAY('👑 Roi Euclide','Si mon reste était <b>4</b> (autant que d’amis), je pourrais encore donner 1 bonbon à chacun ! Le partage ne serait pas fini.')+
+  RV('🎯 À toi : 31 bonbons, 6 amis. Quel quotient et quel reste ?','31 = (6 × <b>5</b>) + <b>1</b>. Chacun en reçoit 5 et il en reste 1. Et 1 est bien plus petit que 6 ✔'))+
+ SC('🔄','Partage ou groupement : même calcul, autre question',
+  `<p><b>Partage</b> : 23 bonbons pour 4 amis → <i>combien chacun ?</i> (on cherche la valeur d’une part).<br><b>Groupement</b> : 23 bonbons en paquets de 4 → <i>combien de paquets ?</i> (on cherche le nombre de parts).</p>`+
+  RV('🎯 Dans les deux cas, quel est le calcul ?','On pose la même division : 23 = (4 × 5) + 3. Seule la question change, donc l’interprétation du « 5 » aussi : 5 bonbons chacun, ou 5 paquets.'))+
+ SC('🪜','Poser la division en 4 gestes : D – M – S – A',
+  SAY('🧙 Maître Calcul','Pour <b>529 ÷ 12</b>, je répète : <b>D</b>ivise, <b>M</b>ultiplie, <b>S</b>oustrais, <b>A</b>baisse.')+
+  `<ol class="steps"><li><b>D</b> : 52 ÷ 12 → 4 (car 4 × 12 = 48, et 5 × 12 = 60 est trop grand)</li><li><b>M</b> : 4 × 12 = 48</li><li><b>S</b> : 52 − 48 = 4</li><li><b>A</b> : j’abaisse le 9 → 49. Je recommence : 49 ÷ 12 → 4 ; 4 × 12 = 48 ; 49 − 48 = <b>1</b>.</li></ol>`+
+  EQ('529 = (12 × 44) + 1 &nbsp;✔')+
+  `<p>🔍 <b>Vérification</b> : on refait (diviseur × quotient) + reste et on doit retrouver le dividende.</p>`)+
+ SC('📅','Le reste, c’est ton GPS dans un motif qui se répète',
+  `<p>La semaine a 7 jours. Dans 25 jours ? 25 = (7 × 3) + <b>4</b> : on fait 3 semaines complètes, puis <b>4 jours</b> de plus. Si on est lundi, on sera vendredi.</p>`+
+  RV('🎯 Nous sommes mardi. Quel jour dans 30 jours ?','30 = (7 × 4) + 2 → on avance de 2 jours : <b>jeudi</b>.'));
+
+L4.story=
+ SC('🦘','Multiples : les atterrissages du kangourou',
+  SAY('🦘 Kanga','Je saute de <b>7 en 7</b> en partant de 0. Là où j’atterris, ce sont les <b>multiples de 7</b> !')+
+  `<p class="big">0 → <b>7</b> → <b>14</b> → <b>21</b> → <b>28</b> → <b>35</b> …<br><small>c’est la table de 7, qui ne s’arrête jamais</small></p>`+
+  `<p>0 est un multiple de tous les nombres (0 × n = 0). Chaque nombre a une <b>infinité</b> de multiples.</p>`+
+  RV('🎯 49 est-il un multiple de 7 ?','Oui, car 49 = 7 × 7. Le kangourou y atterrit au 7e saut.'))+
+ SC('🍪','Diviseurs : des paquets égaux, sans aucun reste',
+  SAY('👩‍🍳 Boulangère','J’ai <b>12 cookies</b>. Je veux faire des paquets <b>tous égaux</b> sans en laisser un seul.')+
+  `<p class="big">paquets de <b>1</b> ✔ · <b>2</b> ✔ · <b>3</b> ✔ · <b>4</b> ✔ · 5 ✘ (reste 2) · <b>6</b> ✔ · <b>12</b> ✔</p>`+
+  `<p>Les diviseurs de 12 sont 1, 2, 3, 4, 6 et 12.</p>`+
+  EQ('reste <b>0</b> ⇒ <b>divisible</b> par · <b>diviseur</b> de · <b>multiple</b> de')+
+  `<p>Une seule égalité raconte tout : <b>105 = 7 × 15</b>. Donc 105 est divisible par 7, 7 est un diviseur de 105 et 105 est un multiple de 7.</p>`)+
+ SC('🕵️','Le détective des derniers chiffres : 2, 5 et 10',
+  SAY('🕵️ Inspecteur Unité','Pas besoin de poser la division ! Je regarde seulement le <b>chiffre des unités</b>.')+
+  `<table class="tb"><tr><th>Unités</th><th>Divisible par</th></tr><tr><td>0</td><td>2, 5 <i>et</i> 10</td></tr><tr><td>5</td><td>5</td></tr><tr><td>2, 4, 6, 8</td><td>2</td></tr><tr><td>1, 3, 7, 9</td><td>aucun des trois</td></tr></table>`+
+  `<p>Nombres <b>pairs</b> : 0, 2, 4, 6, 8, … Nombres <b>impairs</b> : 1, 3, 5, 7, 9, …</p>`+
+  RV('🎯 3 715 est-il divisible par 2, 5, 10 ?','Il finit par 5 : divisible par <b>5</b> seulement.'))+
+ SC('🔑','Trouver tous les diviseurs : la méthode des paires',
+  `<p>Pour 28, on cherche des <b>produits</b> qui donnent 28, en testant 1, puis 2, puis 3…</p>`+
+  `<p class="big">28 = 1 × 28 &nbsp;·&nbsp; 28 = 2 × 14 &nbsp;·&nbsp; (3 ✘) &nbsp;·&nbsp; 28 = 4 × 7 &nbsp;·&nbsp; (5 ✘) (6 ✘)</p>`+
+  `<p>On s’arrête quand on retrouve des nombres déjà vus. Diviseurs de 28 : <b>1, 2, 4, 7, 14, 28</b>.</p>`+
+  RV('🎯 Quels sont les diviseurs de 18 ?','18 = 1 × 18 = 2 × 9 = 3 × 6. Diviseurs : <b>1, 2, 3, 6, 9, 18</b>.'))+
+ SC('💥','Le contre-exemple : un seul cas suffit à casser une règle',
+  SAY('🕵️ Inspecteur Unité','« Tous les nombres impairs sont divisibles par 3 », vraiment ? Je cherche un nombre impair qui <b>ne l’est pas</b>… <b>5</b> ! Il est impair mais 5 n’est pas divisible par 3.')+
+  `<p>Pour prouver qu’une phrase est <b>fausse</b>, on donne un <b>contre-exemple</b>. Pour prouver qu’elle est vraie, il faut une preuve valable pour tous les cas.</p>`);
+
+L5.story=
+ SC('🚂','La virgule voyageuse recule dans le train',
+  SAY('🚂 Chef de gare','Diviser par <b>10</b>, c’est faire reculer la virgule d’<b>un cran</b>. Par <b>100</b> : deux crans. Par <b>1 000</b> : trois crans.')+
+  `<p class="big">3 5 7,2 &nbsp;÷ 10 → 3 5,7 2 &nbsp;÷ 100 → 3,5 7 2</p>`+
+  `<p>Diviser par 10, c’est multiplier par 0,1. Diviser par 100, c’est multiplier par 0,01.</p>`+
+  RV('🎯 Calcule 48,5 ÷ 100','La virgule recule de 2 rangs : <b>0,485</b>.'))+
+ SC('🍰','Poser la division : la virgule se pose dans le quotient au bon moment',
+  SAY('🍰 Pâtissier','On divise <b>5,16 ÷ 4</b> comme d’habitude, mais dès que j’abaisse le <b>premier chiffre après la virgule</b>, je mets la virgule au quotient.')+
+  `<ol class="steps"><li>5 ÷ 4 = 1, reste 1 → quotient : <b>1</b></li><li>j’abaisse le 1 (après la virgule) : <b>virgule au quotient</b> → 11 ÷ 4 = 2, reste 3 → <b>1,2</b></li><li>j’abaisse le 6 : 36 ÷ 4 = 9, reste 0 → <b>1,29</b></li></ol>`+
+  EQ('5,16 ÷ 4 = 1,29 &nbsp;✔ &nbsp;(car 4 × 1,29 = 5,16)'))+
+ SC('♾️','Parfois la division ne s’arrête jamais',
+  `<p>7 ÷ 4 = 1,75 : le reste devient 0, le quotient est <b>décimal</b>.<br>5 ÷ 3 = 1,6666… : le reste ne devient jamais 0, le quotient n’est pas décimal. On donne alors une <b>valeur approchée</b> :</p>`+
+  `<p class="big">5 ÷ 3 ≈ 1,7 <small>(arrondi au dixième)</small> &nbsp; ≈ 1,67 <small>(arrondi au centième)</small></p>`+
+  RV('🎯 Arrondis 10 ÷ 3 au dixième','10 ÷ 3 = 3,333… ≈ <b>3,3</b>.'))+
+ SC('🔁','L’opération inverse : défaire ce qu’on a fait',
+  SAY('🧙 Maître Calcul','Multiplier par 7 puis diviser par 7 : on revient au départ ! Pour trouver un facteur manquant, on <b>divise</b>.')+
+  `<p class="big">6,2 → (× 7) → 43,4 → (÷ 7) → 6,2</p>`+
+  RV('🎯 4 × … = 7,04 ; quel nombre manque ?','On divise : 7,04 ÷ 4 = <b>1,76</b>.'))+
+ SC('🖊️','Le meilleur prix : toujours se ramener à UN objet',
+  SAY('🛒 Jamila','Magasin A : 4 stylos à 13,00 €. B : 5 stylos à 16,30 €. C : 10 stylos à 32,00 €. Lequel est le moins cher ?')+
+  RV('🎯 Je calcule le prix d’un seul stylo','A : 13 ÷ 4 = 3,25 € · B : 16,30 ÷ 5 = 3,26 € · C : 32 ÷ 10 = <b>3,20 €</b> → le magasin <b>C</b> est le moins cher.'));
+
+/* ---- fiche de 10 exercices tirés au sort : au moins un par partie de la leçon ---- */
+const GOAL_PER_EX=90000; /* 90 s par exercice : 15 min pour 10 exercices */
+const PART_COUNT={det:[2,2,2,2,1,1], acc:[2,2,2,2,1,1], dv1:[2,2,2,2,1,1], dv2:[2,2,2,2,1,1], dv3:[2,2,2,2,1,1]};
+function partRanges(L){ const ks=Object.keys(L.parts).map(Number).sort((a,b)=>a-b); return ks.map((k,i)=>[k,(ks[i+1]||21)-1,L.parts[k]]); }
+function pickN(arr,k){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a.slice(0,k); }
+function makeDraw(L){
+  const last=(state.last&&state.last[L.id])||{}; const out=[];
+  partRanges(L).forEach(([a,b],i)=>{
+    const nums=[]; for(let n=a;n<=b;n++) nums.push(n);
+    const cnt=PART_COUNT[L.id][i]; const fresh=nums.filter(n=>last[n]===undefined); const pool=fresh.length>=cnt?fresh:nums;
+    pickN(pool,cnt).forEach(n=>{ const ss=[0,1,2].filter(x=>x!==last[n]); out.push([n,pickN(ss,1)[0]]); });
+  });
+  out.sort((x,y)=>x[0]-y[0]);
+  state.last=state.last||{}; state.last[L.id]={}; out.forEach(([n,sx])=>{ state.last[L.id][n]=sx; });
+  return out;
+}
+const drawCache={};
+function buildEx(L){
+  const d=state.draw&&state.draw[L.id];
+  if(!d) return L.sets[(state.set&&state.set[L.id])||0]||L.sets[0];
+  const key=L.id+JSON.stringify(d); if(drawCache[key]) return drawCache[key];
+  const rg=partRanges(L); const seen={};
+  const list=d.map(([n,sx],i)=>{ const src=(L.sets[sx]||L.sets[0])[n-1]; const r=rg.find(x=>n>=x[0]&&n<=x[1]);
+    const e=Object.assign({},src,{n:i+1,orig:n}); if(r&&!seen[r[0]]){ seen[r[0]]=1; e.part=r[2]; } else e.part=''; return e; });
+  drawCache[key]=list; return list;
+}
+[L1,L2,L3,L4,L5].forEach(L=>Object.defineProperty(L,'ex',{get(){ return buildEx(this); }}));
+
+const LESSONS={det:L1, acc:L2, dv1:L3, dv2:L4, dv3:L5};
+const IDS=Object.keys(LESSONS); const Z=f=>{ const o={}; IDS.forEach(i=>{ o[i]=f(); }); return o; };
+const NSETS=3;
+const BONUS_SETS=[
+ {k:'def',l:'Article défini',w:['le','la',"l'",'les']},{k:'ind',l:'Article indéfini',w:['un','une','des']},
+ {k:'con',l:'Article contracté',w:['au','aux','du']},{k:'pos',l:'Possessif',w:['mon','ton','son','ma','ta','sa','mes','tes','ses','notre','votre','leur','nos','vos','leurs']},
+ {k:'dem',l:'Démonstratif',w:['ce','cet','cette','ces']}];
+
+/* ======================= Outils ======================= */
+const norm=s=>{ let t=(s||'').toLowerCase().replace(/[’`´]/g,"'").replace(/\s*'\s*/g,"'").replace(/\s+/g,' ').trim().replace(/[.!?;,:…]+$/,'').trim();
+  t=t.replace(/(\d),(\d)/g,'$1.$2').replace(/(\d)\s*(cm|mm|m|€|euros?|eur|g|kg|l|s|h|min)$/,'$1').replace(/(\d)\s+(?=\d)/g,'$1'); if(/^\d+(\.\d+)?$/.test(t)) t=String(parseFloat(t)); return t; };
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const el=(tag,cls,html)=>{const e=document.createElement(tag); if(cls) e.className=cls; if(html!=null) e.innerHTML=html; return e;};
+const fmt=x=>(Math.round(x*2)/2).toString().replace('.',',');
+const reduced=()=>window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function tokenize(src){
+  const re=/\[([^\]|]+)(?:\|([^\]]+))?\]|\{([^}|]+)\|([^}]+)\}|([A-Za-zÀ-ÖØ-öø-ÿŒœ]+['’]?)|(\s+)|([^\sA-Za-zÀ-ÖØ-öø-ÿŒœ\[\{]+)/g;
+  const out=[]; let m;
+  while((m=re.exec(src))){
+    if(m[1]!==undefined) out.push({w:m[1],key:m[2]||true});
+    else if(m[3]!==undefined) out.push({w:m[3],fix:m[4]});
+    else if(m[5]!==undefined) out.push({w:m[5]});
+    else if(m[6]!==undefined) out.push({sp:m[6]});
+    else out.push({p:m[7]});
+  }
+  return out;
+}
+
+/* ======================= État ======================= */
+const KEY='cahier-maths-6e-droites-cercles-v1';
+let state={tab:'det', set:Z(()=>0), ans:Z(()=>({})), done:Z(()=>false), bonus:{}, copyId:{}, bilan:{}, watch:{}, draw:{}, last:{}, bon:{}, eleve:'', profiles:[], cur:''};
+const ui={cur:{}, warn:false, confirmReset:false, save:{}, bil:{}, picker:false, filter:'', delP:'', newAv:'🦊'};
+
+/* ---- version autonome : copies enregistrées dans ce navigateur, bilan calculé sur place ---- */
+const COPY_KEY='cahier-maths-6e-copies-v1';
+const LDB=(()=>{
+  const rd=()=>{ try{ const a=JSON.parse(localStorage.getItem(COPY_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } };
+  const wr=a=>{ for(let k=0;k<12;k++){ try{ localStorage.setItem(COPY_KEY,JSON.stringify(a)); return; }catch(e){ a.sort((x,y)=>String(x.at).localeCompare(String(y.at))); a.splice(0,Math.max(5,Math.ceil(a.length/10))); } } throw {code:'quota_exceeded'}; };
+  const subs=[]; const emit=()=>{ const a=rd().sort((x,y)=>String(y.at).localeCompare(String(x.at))).slice(0,300); subs.forEach(f=>{ try{ f({docs:a.map(d=>({id:d.id,data:()=>d}))}); }catch(e){} }); };
+  window.addEventListener('storage',e=>{ if(e.key===COPY_KEY) emit(); });
+  const doc=id=>{ id=id||('c'+Date.now().toString(36)+Math.random().toString(36).slice(2,7)); return {id,
+    set:async d=>{ const a=rd(); const x=Object.assign({},d,{id}); if(Array.isArray(x.erreurs)) x.erreurs=x.erreurs.slice(0,80); a.push(x); wr(a); emit(); },
+    update:async p=>{ const a=rd(); const x=a.find(z=>z.id===id); if(x){ Object.assign(x,p); wr(a); emit(); } },
+    delete:async()=>{ wr(rd().filter(z=>z.id!==id)); emit(); } }; };
+  const q={ onSnapshot:(f)=>{ subs.push(f); setTimeout(emit,0); return ()=>{}; } };
+  return { collection:()=>({ doc, orderBy:()=>({ limit:()=>q }) }) };
+})();
+let DB=LDB, SAMPLE={local:true}, UID=null, CANW=true, copies=null, dbErr=false, capsDone=false;
+const caps=Promise.resolve().then(()=>{
+  DB.collection('copies').orderBy('at','desc').limit(300).onSnapshot(
+    s=>{ copies=s.docs.map(d=>Object.assign({id:d.id},d.data())); if(state.tab==='suivi') renderSuivi(); });
+}).finally(()=>{ capsDone=true; renderAll(); });
+
+/* bilan rédigé à partir des résultats de la copie (sans appel extérieur) */
+function localBilan(L,R){
+  const rg=partRanges(L); const parts={};
+  L.ex.forEach((ex,i)=>{ const o=ex.orig||ex.n; const r=rg.find(x=>o>=x[0]&&o<=x[1]); const nm=r?r[2]:'Exercices'; const sc=R.scores[i]||{s:0,t:0};
+    const p=parts[nm]||(parts[nm]={nm,s:0,t:0,first:i}); p.s+=sc.t?sc.s/sc.t:0; p.t+=1; });
+  const P=Object.values(parts).map(p=>Object.assign(p,{r:p.t?p.s/p.t:0}));
+  const ok=P.filter(p=>p.r>=0.8), mid=P.filter(p=>p.r>=0.5&&p.r<0.8), ko=P.filter(p=>p.r<0.5);
+  const best=P.slice().sort((a,b)=>b.r-a.r)[0], worst=P.slice().sort((a,b)=>a.r-b.r)[0];
+  const n=R.note, low=s=>s.charAt(0).toLowerCase()+s.slice(1);
+  let kid;
+  if(n>=17) kid=`Excellent travail ! Tu maîtrises très bien « ${L.title} ».`;
+  else if(n>=14) kid=`Très bien ! Tu as compris l’essentiel de la leçon « ${L.title} ».`;
+  else if(n>=10) kid=`C’est un bon début : une bonne partie de la leçon est acquise, mais il reste des points à travailler.`;
+  else kid=`Courage ! Cette leçon est nouvelle et elle demande encore de l’entraînement. C’est normal de se tromper au début.`;
+  if(best&&best.r>=0.8) kid+=` Ton point fort : ${low(best.nm)}.`;
+  if(worst&&worst.r<0.8&&worst!==best) kid+=` Relis l’aide-mémoire sur ${low(worst.nm)}, puis refais une fiche : chaque fiche est différente.`;
+  else kid+=` Refais une fiche pour viser le niveau suivant !`;
+  const parents=[];
+  if(ok.length) parents.push('Acquis : '+ok.map(p=>low(p.nm)).join(', ')+'.');
+  if(mid.length) parents.push('En cours d’acquisition : '+mid.map(p=>low(p.nm)).join(', ')+'.');
+  if(ko.length) parents.push('Non acquis : '+ko.map(p=>low(p.nm)).join(', ')+'.');
+  const er=R.erreurs.filter(e=>e.attendu&&e.donne);
+  er.slice(0,2).forEach(e=>parents.push(`Exemple d’erreur (ex. ${e.n}) : « ${plain(e.q).slice(0,70)} » → réponse « ${plain(e.donne).slice(0,40)} » au lieu de « ${plain(e.attendu).slice(0,40)} ».`));
+  const W=wch(L.id); const mins=Math.round(W.ms/60000*10)/10;
+  parents.push(`Temps de travail : ${String(mins).replace('.',',')} min (conseillé : ${goalTxt(L)}).`+(W.paste||W.copy||W.away>1?' Attention : '+[W.paste?W.paste+' collage(s)':'',W.copy?W.copy+' copie(s)':'',W.away>1?'page quittée '+W.away+' fois':''].filter(Boolean).join(', ')+'.':''));
+  const a_revoir=P.filter(p=>p.r<0.8).sort((a,b)=>a.r-b.r).slice(0,4).map(p=>p.nm);
+  const conseil=a_revoir.length?`Lire ensemble « Comprendre la leçon » et l’aide-mémoire (partie « ${a_revoir[0]} »), faire expliquer la règle à voix haute avec un exemple inventé, puis refaire une fiche dans 2 ou 3 jours.`:`Leçon maîtrisée : refaire une fiche dans une semaine pour vérifier que c’est bien retenu, puis passer à la leçon suivante.`;
+  return {enfant:kid, parents:parents.slice(0,6), a_revoir, conseil};
+}
+
+/* message à envoyer au parent (WhatsApp) */
+function shareText(L){
+  const R=result(L); const B=state.bon[L.id]||{t:0,p:0}; const tot=Math.min(20,R.note+B.t+B.p); const lv=B.lvl||lessonLevel(L.id); const W=wch(L.id);
+  const fl=flagsOf({duree:Math.round(W.ms/1000),collages:W.paste,copies:W.copy||0,absences:W.away,nbEx:L.ex.length}); const jm=jeuMin(tot,lv);
+  const nm=curName()||'Adam'; const b=state.bilan[L.id]||localBilan(L,R);
+  return `📚 Cahier de maths — ${nm}\nLeçon : ${L.title}\nNote : ${fmt(R.note)}/20`+((B.t||B.p)?` (+${fmt(B.t+B.p)} bonus → ${fmt(tot)}/20)`:'')+`\n⏱ Temps : ${String(Math.round(W.ms/60000*10)/10).replace('.',',')} min`+`\n🎮 Temps de jeu gagné : ${jm} min`+(fl.length?' (à valider : '+fl.join(' ; ')+')':'')+(b.a_revoir&&b.a_revoir.length?`\nÀ revoir : ${b.a_revoir.join(', ')}`:'\nTout est acquis 👏');
+}
+function shareEl(L){
+  const d=el('div','status');
+  const a=el('a','btn sm','📲 Envoyer ma note à Papa (WhatsApp)'); a.href='https://wa.me/?text='+encodeURIComponent(shareText(L)); a.target='_blank'; a.rel='noopener';
+  d.append(a); return d;
+}
+
+const plain=s=>String(s==null?'':s).replace(/<[^>]+>/g,'').replace(/\s+/g,' ').trim();
+function curP(){ return state.profiles.find(p=>p.id===state.cur)||null; }
+function curName(){ const p=curP(); return p?p.name:''; }
+function stash(){ const p=curP(); if(p) p.w={set:state.set,ans:state.ans,done:state.done,bonus:state.bonus,copyId:state.copyId,bilan:state.bilan,watch:state.watch,draw:state.draw,last:state.last,bon:state.bon}; }
+function loadWork(p){ const w=(p&&p.w)||{}; state.set=Object.assign(Z(()=>0),w.set||{}); state.ans=w.ans||Z(()=>({})); IDS.forEach(i=>{ state.ans[i]=state.ans[i]||{}; });
+  state.done=Object.assign(Z(()=>false),w.done||{}); state.bonus=w.bonus||{}; state.copyId=w.copyId||{}; state.bilan=w.bilan||{}; state.watch=w.watch||{}; state.draw=w.draw||{}; state.last=w.last||{}; state.bon=w.bon||{}; }
+function save(){ try{ stash(); localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
+function loadSaved(){ try{ const s=JSON.parse(localStorage.getItem(KEY)); if(s&&s.ans) return s; }catch(e){} return null; }
+/* ---- indices de travail (durée active, collages, pages quittées) ---- */
+function wch(id){ state.watch=state.watch||{}; const w=state.watch[id]||(state.watch[id]={ms:0,paste:0,away:0,last:0}); if(w.el===undefined){ w.el=0; w.run=false; } return w; }
+function working(){ return IDS.includes(state.tab)&&!state.done[state.tab]&&!ui.picker; }
+function tick(e){ if(!working()) return; const w=wch(state.tab), n=Date.now(); if(w.last) w.ms+=Math.min(n-w.last,90000); w.last=n;
+  if(!w.run && e && e.target && e.target.closest && e.target.closest('#sheets')){ w.run=true; beat=Date.now(); } }
+let hiddenAt=0, beat=Date.now(), beatN=0;
+const PER_EX={1:90000,2:75000,3:60000}; /* 15 min, 12 min 30, 10 min pour 10 exercices */
+const goalMs=L=>L.ex.length*(PER_EX[lessonLevel(L.id)]||GOAL_PER_EX);
+const goalTxt=L=>{ const t=Math.round(goalMs(L)/1000), m=Math.floor(t/60), sc=t%60; return m+' min'+(sc?' '+String(sc).padStart(2,'0'):''); };
+const fmtT=ms=>{ const t=Math.floor(ms/1000); return String(Math.floor(t/60)).padStart(2,'0')+':'+String(t%60).padStart(2,'0'); };
+function updateTimer(){
+  const t=document.getElementById('timer'); if(!t) return;
+  if(!working()){ t.hidden=true; return; }
+  const L=LESSONS[state.tab], w=wch(L.id), g=goalMs(L), over=(w.el||0)>g; t.hidden=false; t.className='timer'+(over?' over':'');
+  t.innerHTML='<span>⏱ '+fmtT(w.el||0)+'</span><small>'+(!w.run?'démarre à ta 1re réponse · conseillé : '+goalTxt(L):(over?'temps conseillé dépassé':'conseillé : '+goalTxt(L)))+'</small>';
+}
+setInterval(()=>{ const n=Date.now(), dt=Math.min(n-beat,1000); beat=n;
+  if(working()&&!document.hidden){ const w=wch(state.tab); if(w.run){ w.el+=dt; if(++beatN%20===0) save(); } }
+  updateTimer(); },250);
+['input','click','keydown'].forEach(t=>document.addEventListener(t,tick,true));
+document.addEventListener('copy',e=>{ if(!working()) return; const t=document.activeElement&&document.activeElement.tagName; if(/^(INPUT|TEXTAREA)$/.test(t||'')) return; wch(state.tab).copy=(wch(state.tab).copy||0)+1; e.preventDefault(); save(); },true);
+document.addEventListener('cut',e=>{ if(!working()) return; const t=document.activeElement&&document.activeElement.tagName; if(/^(INPUT|TEXTAREA)$/.test(t||'')) return; e.preventDefault(); },true);
+document.addEventListener('paste',()=>{ if(working()){ tick(); wch(state.tab).paste++; save(); } },true);
+document.addEventListener('visibilitychange',()=>{
+  if(document.hidden){ hiddenAt=Date.now(); }
+  else if(hiddenAt){ const gap=Date.now()-hiddenAt; hiddenAt=0; if(working()&&gap>=5000){ const w=wch(state.tab); w.away++; w.last=0; save(); } }
+});
+function A(L,ex){ const a=state.ans[L.id]; if(a[ex.n]===undefined) a[ex.n]=init(ex); return a[ex.n]; }
+function init(ex){
+  switch(ex.type){
+    case 'fill': return ex.items.map(it=>it.a.map(()=>''));
+    case 'choice': return ex.items.map(()=>null);
+    case 'click': return ex.items.map(()=>[]);
+    case 'build': return ex.dets.map(()=>['','']);
+    default: return {};
+  }
+}
+
+/* ======================= Correction ======================= */
+function grade(L,ex){
+  const a=A(L,ex);
+  if(ex.type==='fill'){ let s=0,t=0; ex.items.forEach((it,i)=>it.a.forEach((acc,k)=>{t++; if(acc.map(norm).includes(norm(a[i][k]))) s++;})); return {s,t}; }
+  if(ex.type==='choice'){ let s=0; ex.items.forEach((it,i)=>{ if(a[i]===it.a) s++; }); return {s,t:ex.items.length}; }
+  if(ex.type==='click'){ let s=0,t=0; ex.items.forEach((src,i)=>{ const toks=tokenize(src); const E=new Set(toks.map((x,j)=>x.key?j:-1).filter(j=>j>=0)); const S=new Set(a[i]);
+      let hit=0,fpos=0; S.forEach(j=>E.has(j)?hit++:fpos++); t+=E.size; s+=Math.max(0,hit-fpos); }); return {s,t}; }
+  if(ex.type==='classify'||ex.type==='errors'){ const toks=tokenize(ex.text); let s=0,t=0,fpos=0;
+      toks.forEach((x,j)=>{ const exp=ex.type==='classify'?x.key:x.fix; const got=a[j];
+        if(exp){ t++; if(got!==undefined && (ex.type==='classify'? got===exp : norm(got)===norm(exp))) s++; }
+        else if(got!==undefined) fpos++; });
+      return {s:Math.max(0,s-fpos),t}; }
+  if(ex.type==='build'){ let s=0; ex.dets.forEach((d,i)=>{ if(ex.valid[d].some(([n,j])=>a[i][0]===n&&a[i][1]===j)) s++; }); return {s,t:ex.dets.length}; }
+  return {s:0,t:0};
+}
+function progress(L){
+  let done=0,tot=0;
+  L.ex.forEach(ex=>{ const a=A(L,ex);
+    if(ex.type==='fill') a.forEach(r=>r.forEach(v=>{tot++; if(norm(v)) done++;}));
+    else if(ex.type==='choice') a.forEach(v=>{tot++; if(v) done++;});
+    else if(ex.type==='click') a.forEach(v=>{tot++; if(v.length) done++;});
+    else if(ex.type==='build') a.forEach(r=>{tot++; if(r[0]&&r[1]) done++;});
+    else { const n=tokenize(ex.text).filter(x=>ex.type==='classify'?x.key:x.fix).length; tot+=n; done+=Math.min(n,Object.keys(a).length); }
+  });
+  return {done,tot};
+}
+
+/* ======================= Rendu ======================= */
+function blankInput(id,val,w,locked,ok){
+  const i=el('input','blank'+(w?' '+w:'')); i.id=id; i.type='text'; i.value=val||''; i.autocomplete='off'; i.spellcheck=false;
+  i.setAttribute('autocapitalize','off'); i.setAttribute('aria-label','Réponse');
+  if(locked){ i.readOnly=true; i.classList.add(ok?'ok':'ko'); }
+  return i;
+}
+
+function renderEx(L,ex){
+  const locked=state.done[L.id]; const a=A(L,ex); const base=`${L.id}-${ex.n}`;
+  const card=el('article','ex'+(locked?' locked':'')); card.id='ex-'+base;
+  const h=el('div','ex-h'); h.append(el('div','ex-n',ex.n), el('div','ex-t',esc(ex.t)));
+  if(locked){ const g=grade(L,ex); const sc=el('div','ex-score'+(g.s===g.t?' full':''), `${g.s}/${g.t}`); sc.setAttribute('aria-label',`${g.s} sur ${g.t}`); h.append(sc); }
+  card.append(h);
+  if(ex.hint) card.append(el('p','hint',esc(ex.hint)));
+  if(ex.fig) card.append(el('div','figbox',ex.fig));
+  if(ex.text && ex.type==='fill') card.append(el('div','textbox',esc(ex.text)));
+
+  if(ex.type==='fill'){
+    const ol=el('ol','items');
+    ex.items.forEach((it,i)=>{
+      const li=el('li'); const box=el('div','it');
+      if(it.p) box.append(el('span','pre',it.p));
+      if(it.fig) box.append(el('span','figi',it.fig));
+      const segs=it.q.split('___'); let allOk=true;
+      segs.forEach((sg,k)=>{
+        if(sg) box.append(el('span',null,sg));
+        if(k<segs.length-1){
+          const acc=it.a[k]; const ok=acc.map(norm).includes(norm(a[i][k])); if(!ok) allOk=false;
+          const inp=blankInput(`${base}-${i}-${k}`,a[i][k],it.w||ex.w,locked,ok);
+          if(!locked) inp.addEventListener('input',()=>{ a[i][k]=inp.value; save(); updateProgress(); });
+          box.append(inp);
+          if(locked&&!ok) box.append(el('span','fix',esc(acc[0])));
+        }
+      });
+      if(locked&&!allOk&&it.why) box.append(el('span','why',esc(it.why)));
+      li.append(box); ol.append(li);
+    });
+    card.append(ol);
+  }
+
+  if(ex.type==='choice'){
+    const ol=el('ol','items');
+    ex.items.forEach((it,i)=>{
+      const li=el('li'); const box=el('div','it');
+      if(it.fig) box.append(el('span','figi',it.fig));
+      if(it.b) box.append(el('span',null,it.b+' '));
+      const g=el('span','opts'); g.setAttribute('role','group');
+      (it.opts||ex.opts).forEach((o,k)=>{
+        const b=el('button','opt',esc(o)); b.type='button'; b.id=`${base}-${i}-o${k}`; b.setAttribute('aria-pressed', a[i]===o?'true':'false');
+        if(locked){ b.disabled=true; if(a[i]===o) b.classList.add(o===it.a?'ok':'ko'); if(a[i]!==it.a && o===it.a) b.classList.add('should'); }
+        else b.addEventListener('click',()=>{ a[i]=(a[i]===o?null:o); save(); rerender(L,ex,b.id); });
+        g.append(b);
+      });
+      box.append(g);
+      if(it.after) box.append(el('span',null,' '+esc(it.after)));
+      if(locked && it.why && (ex.showWhy || a[i]!==it.a)) box.append(el('span','why',esc(it.why)));
+      li.append(box); ol.append(li);
+    });
+    card.append(ol);
+  }
+
+  if(ex.type==='click'){
+    const ol=el('ol','items');
+    ex.items.forEach((src,i)=>{
+      const li=el('li'); const box=el('div','it'); const toks=tokenize(src); const S=new Set(a[i]);
+      toks.forEach((x,j)=>{
+        if(x.sp){ box.append(document.createTextNode(x.sp)); return; }
+        if(x.p){ box.append(document.createTextNode(x.p)); return; }
+        const s=el('span','tok',esc(x.w)); s.id=`${base}-${i}-t${j}`;
+        if(S.has(j)) s.classList.add('on');
+        if(locked){
+          if(S.has(j)&&x.key) s.classList.add('c-ok'); else if(S.has(j)) s.classList.add('c-fp'); else if(x.key) s.classList.add('c-miss');
+        } else {
+          s.tabIndex=0; s.setAttribute('role','button'); s.setAttribute('aria-pressed',S.has(j)?'true':'false');
+          const tog=()=>{ const set=new Set(a[i]); set.has(j)?set.delete(j):set.add(j); a[i]=[...set]; save(); rerender(L,ex,s.id); };
+          s.addEventListener('click',tog); s.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); }});
+        }
+        box.append(s);
+      });
+      li.append(box); ol.append(li);
+    });
+    card.append(ol);
+  }
+
+  if(ex.type==='classify'){
+    const toks=tokenize(ex.text); const cur=ui.cur[base]; const catOf=k=>ex.cats.find(c=>c.k===k);
+    const tb=el('div','textbox');
+    toks.forEach((x,j)=>{
+      if(x.sp||x.p){ tb.append(document.createTextNode(x.sp||x.p)); return; }
+      const s=el('span','tok',esc(x.w)); s.id=`${base}-t${j}`; const g=a[j];
+      if(g){ s.dataset.tag=catOf(g).s; s.classList.add('t-'+g); }
+      if(locked){
+        if(x.key&&g===x.key) s.classList.add('c-ok');
+        else if(x.key&&g){ s.classList.add('c-ko'); }
+        else if(x.key){ s.classList.add('c-miss'); }
+        else if(g){ s.classList.add('c-fp'); }
+        tb.append(s);
+        if(x.key&&g!==x.key) tb.append(el('span','fix sm',esc(catOf(x.key).s)));
+        return;
+      }
+      if(cur===j) s.classList.add('cur');
+      s.tabIndex=0; s.setAttribute('role','button');
+      const pick=()=>{ ui.cur[base]=(ui.cur[base]===j?undefined:j); rerender(L,ex,s.id); };
+      s.addEventListener('click',pick); s.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); pick(); }});
+      tb.append(s);
+    });
+    card.append(tb);
+    if(!locked){
+      const bar=el('div','catbar'); bar.append(el('span','lbl', cur!==undefined?`Mot choisi : <b>${esc(toks[cur].w)}</b> — choisis sa sorte`:'Touche d\'abord un mot du texte.'));
+      ex.cats.forEach(c=>{ const b=el('button','cat t-'+c.k,esc(c.l)); b.type='button'; b.id=`${base}-c-${c.k}`; b.disabled=cur===undefined;
+        b.addEventListener('click',()=>{ a[cur]=c.k; ui.cur[base]=undefined; save(); rerender(L,ex); updateProgress(); }); bar.append(b); });
+      const clr=el('button','cat clear',esc(ex.none||'Pas un déterminant')); clr.type='button'; clr.id=`${base}-c-clear`; clr.disabled=cur===undefined||a[cur]===undefined;
+      clr.addEventListener('click',()=>{ delete a[cur]; ui.cur[base]=undefined; save(); rerender(L,ex); updateProgress(); }); bar.append(clr);
+      card.append(bar);
+    }
+    const n=Object.keys(a).length;
+    card.append(el('p','countline',`${ex.cl||'Déterminants repérés'} : ${n} / ${toks.filter(x=>x.key).length}`));
+    if(ex.bonus) card.append(renderBonus(L));
+  }
+
+  if(ex.type==='errors'){
+    const toks=tokenize(ex.text); const tb=el('div','textbox');
+    toks.forEach((x,j)=>{
+      if(x.sp||x.p){ tb.append(document.createTextNode(x.sp||x.p)); return; }
+      const s=el('span','tok',esc(x.w)); s.id=`${base}-t${j}`; const marked=a[j]!==undefined;
+      if(marked) s.classList.add('err');
+      if(locked){
+        if(x.fix){ const ok=marked&&norm(a[j])===norm(x.fix); s.classList.add(ok?'c-ok':'c-miss'); tb.append(s); if(!ok) tb.append(el('span','fix sm',esc(x.fix))); return; }
+        if(marked) s.classList.add('c-fp');
+        tb.append(s); return;
+      }
+      s.tabIndex=0; s.setAttribute('role','button'); s.setAttribute('aria-pressed',marked?'true':'false');
+      const tog=()=>{ if(a[j]!==undefined) delete a[j]; else a[j]=''; save(); rerender(L,ex, a[j]!==undefined?`${base}-fx${j}`:s.id); updateProgress(); };
+      s.addEventListener('click',tog); s.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); tog(); }});
+      tb.append(s);
+    });
+    card.append(tb);
+    const list=el('div','fixlist'); const keys=Object.keys(a).map(Number).sort((x,y)=>x-y);
+    if(!keys.length) list.append(el('p','empty','Aucun mot marqué pour l\'instant.'));
+    keys.forEach(j=>{
+      const row=el('div','fixrow'); row.append(el('span','w',esc(toks[j].w)), el('span',null,'→'));
+      const ok=toks[j].fix&&norm(a[j])===norm(toks[j].fix);
+      const inp=blankInput(`${base}-fx${j}`,a[j],'m',locked,ok);
+      if(!locked) inp.addEventListener('input',()=>{ a[j]=inp.value; save(); });
+      row.append(inp);
+      if(locked&&!toks[j].fix) row.append(el('span','fix sm','ce mot était juste'));
+      else if(locked&&!ok) row.append(el('span','fix',esc(toks[j].fix)));
+      list.append(row);
+    });
+    card.append(list);
+    card.append(el('p','countline',`Mots marqués : ${keys.length} / ${toks.filter(x=>x.fix).length}`));
+  }
+
+  if(ex.type==='build'){
+    const ol=el('ol','items');
+    ex.dets.forEach((d,i)=>{
+      const li=el('li'); const box=el('div','it'); box.append(el('span','det',esc(d)));
+      const ok=ex.valid[d].some(([n,j])=>a[i][0]===n&&a[i][1]===j);
+      [['nom',ex.nouns],['adjectif',ex.adjs]].forEach(([lab,list],k)=>{
+        const s=el('select','sel'); s.id=`${base}-${i}-s${k}`; s.setAttribute('aria-label',`${lab} pour « ${d} »`);
+        s.append(new Option(lab+'…',''));
+        list.forEach(o=>s.append(new Option(o,o)));
+        s.value=a[i][k]||'';
+        if(locked){ s.disabled=true; s.classList.add(ok?'ok':'ko'); }
+        else s.addEventListener('change',()=>{ a[i][k]=s.value; save(); updateProgress(); });
+        box.append(document.createTextNode(' ')); box.append(s);
+      });
+      if(locked&&!ok) box.append(el('span','fix',esc(d+' '+ex.valid[d][0].join(' '))));
+      li.append(box); ol.append(li);
+    });
+    card.append(ol);
+    if(locked) card.append(el('p','hint','« mes » et « les » peuvent être échangés : mes chaussures neuves, les amis fidèles.'));
+  }
+  return card;
+}
+
+function renderBonus(L){
+  const wrap=el('div','bonus');
+  wrap.append(el('h3',null,'Défi bonus, non noté'));
+  wrap.append(el('p','hint','Décris ta chambre en 3 ou 4 phrases. Utilise au moins un déterminant de chaque sorte.'));
+  const ta=el('textarea','write'); ta.id='bonus-'+L.id; ta.value=state.bonus[L.id]||''; ta.setAttribute('aria-label','Ton texte');
+  const checks=el('div','checks');
+  const upd=()=>{ const words=new Set((ta.value.toLowerCase().replace(/[’]/g,"'").match(/[a-zà-öø-ÿœ]+'?/g)||[]));
+    checks.innerHTML=''; BONUS_SETS.forEach(c=>{ const yes=c.w.some(w=>words.has(w)); const s=el('span','chk t-'+c.k+(yes?' yes':''),(yes?'✓ ':'')+esc(c.l)); checks.append(s); }); };
+  ta.addEventListener('input',()=>{ state.bonus[L.id]=ta.value; save(); upd(); });
+  upd(); wrap.append(ta, checks);
+  return wrap;
+}
+
+function rerender(L,ex,focusId){
+  const old=document.getElementById(`ex-${L.id}-${ex.n}`); if(!old) return;
+  const nu=renderEx(L,ex); old.replaceWith(nu);
+  if(focusId){ const f=document.getElementById(focusId); if(f) f.focus({preventScroll:true}); }
+  updateProgress();
+}
+
+function updateProgress(){
+  const L=LESSONS[state.tab]; if(!L) return; const p=progress(L);
+  document.getElementById('barfill').style.width=(p.tot?Math.round(100*p.done/p.tot):0)+'%';
+  document.getElementById('progtxt').textContent=`${p.done} / ${p.tot} réponses`;
+  if(!state.done[L.id] && ui.warn) renderFinish(L);
+}
+
+/* ---- détail des erreurs, copie enregistrée, bilan ---- */
+function wrongs(L,ex){
+  const a=A(L,ex), out=[], cut=s=>{ s=plain(s); return s.length>140?s.slice(0,137)+'…':s; };
+  if(ex.type==='fill') ex.items.forEach((it,i)=>it.a.forEach((acc,k)=>{ if(!acc.map(norm).includes(norm(a[i][k]))) out.push({n:ex.n,q:cut((it.p?it.p+' — ':'')+it.q),attendu:acc[0],donne:a[i][k]||'(vide)'}); }));
+  if(ex.type==='choice') ex.items.forEach((it,i)=>{ if(a[i]!==it.a) out.push({n:ex.n,q:cut([it.b,'('+(it.opts||ex.opts).join(' / ')+')',it.after].filter(Boolean).join(' ')),attendu:it.a,donne:a[i]||'(vide)'}); });
+  if(ex.type==='click') ex.items.forEach((src,i)=>{ const t=tokenize(src); const E=t.map((x,j)=>x.key?j:-1).filter(j=>j>=0); const S=a[i];
+    if(!(E.length===S.length&&E.every(j=>S.includes(j)))) out.push({n:ex.n,q:cut(t.map(x=>x.w||x.sp||x.p).join('')),attendu:E.map(j=>t[j].w).join(', '),donne:S.length?S.slice().sort((x,y)=>x-y).map(j=>t[j].w).join(', '):'(rien)'}); });
+  if(ex.type==='classify'){ const t=tokenize(ex.text); const lab=k=>(ex.cats.find(c=>c.k===k)||{}).l;
+    t.forEach((x,j)=>{ const g=a[j]; if(x.key&&g!==x.key) out.push({n:ex.n,q:x.w,attendu:lab(x.key),donne:g?lab(g):'(non repéré)'}); else if(!x.key&&g) out.push({n:ex.n,q:x.w,attendu:(ex.none||'pas un déterminant').toLowerCase(),donne:lab(g)}); }); }
+  if(ex.type==='errors'){ const t=tokenize(ex.text);
+    t.forEach((x,j)=>{ const g=a[j]; if(x.fix&&!(g!==undefined&&norm(g)===norm(x.fix))) out.push({n:ex.n,q:x.w,attendu:x.fix,donne:g===undefined?'(non trouvé)':(g||'(vide)')});
+      else if(!x.fix&&g!==undefined) out.push({n:ex.n,q:x.w,attendu:'mot juste, à ne pas corriger',donne:g||'(marqué)'}); }); }
+  if(ex.type==='build') ex.dets.forEach((d,i)=>{ if(!ex.valid[d].some(([n,j])=>a[i][0]===n&&a[i][1]===j)) out.push({n:ex.n,q:d+' …',attendu:d+' '+ex.valid[d][0].join(' '),donne:[d,a[i][0]||'?',a[i][1]||'?'].join(' ')}); });
+  return out;
+}
+function ensureDraw(L){
+  state.draw=state.draw||{};
+  if(!state.draw[L.id] && !state.done[L.id] && progress(L).done===0){ state.ans[L.id]={}; state.draw[L.id]=makeDraw(L); save(); }
+}
+/* ---- temps de jeu : 3 niveaux par leçon, baisse quand la leçon est maîtrisée ---- */
+const JEU={1:[15,30,60],2:[10,20,45],3:[0,10,30]};
+const jeuMin=(n,lv)=>{ const t=JEU[lv||1]||JEU[1]; return n>=18?t[2]:(n>=15?t[1]:(n>=13?t[0]:0)); };
+let RESETS={};
+function lessonLevel(id){
+  if(!Array.isArray(copies)) return 1; const since='';
+  const ok=copies.filter(c=>c.lecon===id&&!c.verif&&String(c.at)>since);
+  if(ok.some(c=>c.jeu===45)) return 3; if(ok.some(c=>c.jeu===60)) return 2; return 1;
+}
+function rulesHTML(L){
+  const lv=lessonLevel(L.id), c=n=>n===lv?' class="cur"':'', T=(n)=>{ const t=10*(PER_EX[n]/1000), m=Math.floor(t/60), sc=t%60; return m+' min'+(sc?' '+sc:''); };
+  const row=(lab,i)=>`<tr><th>${lab}</th>${[1,2,3].map(n=>`<td${c(n)}>${JEU[n][i]?JEU[n][i]+' min':'—'}</td>`).join('')}</tr>`;
+  return `<ol class="rl">
+  <li><b>La fiche</b> : 10 exercices tirés au hasard. Chaque exercice vaut 2 points, la note est sur 20.</li>
+  <li><b>Le chrono</b> démarre à ta première réponse. Il ne coupe jamais ta copie.</li>
+  <li><b>Le bonus +2</b> : tu finis dans le temps conseillé <b>et</b> ta note dépasse 12/20. Le total ne dépasse jamais 20.</li>
+  <li><b>Le temps de jeu</b> dépend de ta note finale (bonus compris) et du niveau de la leçon :</li></ol>
+  <table class="rt"><thead><tr><th></th>${[1,2,3].map(n=>`<th${c(n)}>Niveau ${n}${n===lv?'<br><small>cette leçon</small>':''}</th>`).join('')}</tr></thead><tbody>
+  <tr><th>Temps conseillé</th>${[1,2,3].map(n=>`<td${c(n)}>${T(n)}</td>`).join('')}</tr>
+  ${row('18 et plus',2)}${row('15 à 17,5',1)}${row('13 à 14,5',0)}
+  <tr><th>Moins de 13</th>${[1,2,3].map(n=>`<td${c(n)}>—</td>`).join('')}</tr></tbody></table>
+  <ol class="rl" start="5">
+  <li><b>Les niveaux</b> : quand tu gagnes 1 h sur une leçon, elle passe au niveau 2. Quand tu gagnes 45 min, elle passe au niveau 3. Chaque nouvelle leçon commence au niveau 1.</li>
+  <li><b>Fair-play</b> : si tu copies ou colles du texte, si tu quittes souvent la page ou si tu vas beaucoup trop vite, ton temps de jeu devra être validé par un parent.</li></ol>`;
+}
+function levelText(lv){ return lv===3?'Leçon maîtrisée : récompenses au niveau 3 sur 3. Une nouvelle leçon rapporte le maximum.':(lv===2?'Leçon bien réussie : récompenses au niveau 2 sur 3. Une nouvelle leçon rapporte le maximum.':''); }
+function flagsOf(c){
+  const out=[]; if(typeof c.duree!=='number') return out; const nb=c.nbEx||20;
+  if(c.duree<(nb<=10?120:240)) out.push('Très rapide pour '+nb+' exercices');
+  if(c.collages>0) out.push('Texte collé ('+c.collages+')');
+  if(c.copies>0) out.push('Texte copié depuis la page ('+c.copies+')');
+  if(c.absences>=3) out.push('A quitté la page '+c.absences+' fois');
+  return out;
+}
+function prevBase(L){
+  if(!Array.isArray(copies)) return null; const nm=curName(), pid=state.cur;
+  const list=copies.filter(c=>c.lecon===L.id&&(c.pid?c.pid===pid:(c.eleve||'').trim()===nm));
+  return list.length?(Number(list[0].note)||0):null;
+}
+function computeBonus(L,R){
+  const w=wch(L.id); const inTime=!!w.run&&(w.el||0)<=goalMs(L); const pv=prevBase(L);
+  return {t:(inTime&&R.note>12)?2:0, p:0, inTime, prev:pv, lvl:lessonLevel(L.id)};
+}
+function result(L){
+  let total=0;
+  const scores=L.ex.map(ex=>{ const g=grade(L,ex); total+=g.t?g.s/g.t:0; return {n:ex.n,s:g.s,t:g.t,titre:ex.t}; });
+  const erreurs=[].concat(...L.ex.map(ex=>wrongs(L,ex)));
+  return {note:Math.round(total*(20/L.ex.length)*2)/2, scores, erreurs};
+}
+
+async function saveCopy(L){
+  if(state.copyId[L.id]) return;
+  await caps;
+  if(!DB){ ui.save[L.id]='nodb'; renderFinish(L); return; }
+  if(CANW===false){ ui.save[L.id]='denied'; renderFinish(L); return; }
+  ui.save[L.id]='saving'; renderFinish(L);
+  const R=result(L); const W=wch(L.id);
+  const doc={duree:Math.round(W.ms/1000), chrono:Math.round((W.el||0)/1000), collages:W.paste, copies:W.copy||0, absences:W.away, lecon:L.id, titre:L.title, eleve:curName().slice(0,40), nbEx:L.ex.length, pid:state.cur||null, par:UID||null, at:new Date().toISOString(), note:R.note, scores:R.scores, erreurs:R.erreurs.slice(0,200)};
+  if(!(state.draw&&state.draw[L.id])) doc.serie=(state.set[L.id]||0)+1;
+  const B=state.bon[L.id]||{t:0,p:0}; doc.bonusT=B.t; doc.bonusP=B.p; doc.total=Math.min(20,R.note+B.t+B.p); doc.niveau=B.lvl||1; doc.jeu=jeuMin(doc.total,doc.niveau); doc.verif=flagsOf(doc).length>0;
+  try{ const ref=DB.collection('copies').doc(); await ref.set(doc); state.copyId[L.id]=ref.id; ui.save[L.id]='saved'; save(); }
+  catch(e){ ui.save[L.id]= e&&e.code==='invalid_argument'?'denied':(e&&e.code==='quota_exceeded'?'quota':'error'); }
+  if(state.tab===L.id) renderFinish(L);
+}
+
+function saveStatusEl(L){
+  const st=state.copyId[L.id]?'saved':(ui.save[L.id]||'idle');
+  const msg={saved:['ok','✓ Copie enregistrée dans le suivi (sur cet ordinateur).'], saving:['','Enregistrement de la copie…'],
+    nodb:['bad',"Copie non enregistrée."],
+    denied:['bad',"Copie non enregistrée : ce compte peut seulement lire la page. Il faut un accès Contributeur."],
+    quota:['bad','Copie non enregistrée : le suivi est plein.'], error:['bad',"La copie n'a pas pu être enregistrée."]}[st];
+  const d=el('div','status'+(msg&&msg[0]?' '+msg[0]:''));
+  if(msg) d.append(document.createTextNode(msg[1]));
+  if((st==='idle'||st==='error') && DB){
+    const b=el('button','btn ghost sm',st==='error'?'Réessayer':'Enregistrer dans le suivi'); b.type='button';
+    b.addEventListener('click',()=>{ ui.save[L.id]=undefined; saveCopy(L); }); d.append(b);
+  }
+  return d;
+}
+
+function bilanBlock(b){
+  const w=el('div','bilan'); w.append(el('h3',null,'Mon bilan'));
+  if(b.enfant){ const k=el('div'); k.append(el('p','sub','Pour toi')); const kp=el('p','b-kid'); kp.textContent=b.enfant; k.append(kp); w.append(k); }
+  const p=el('div','b-par'); p.append(el('p','sub','Pour les parents'));
+  if(b.parents.length){ const ul=el('ul'); b.parents.forEach(x=>{ const li=el('li'); li.textContent=x; ul.append(li); }); p.append(ul); }
+  if(b.a_revoir.length){ p.append(el('p','sub','À revoir')); const tr=el('div','tagrow'); b.a_revoir.forEach(x=>{ const s=el('span','rtag'); s.textContent=x; tr.append(s); }); p.append(tr); }
+  if(b.conseil){ const c=el('p',null,'<b>Conseil : </b>'); c.append(document.createTextNode(b.conseil)); p.append(c); }
+  w.append(p); return w;
+}
+function cleanBilan(r){
+  const arr=v=>Array.isArray(v)?v.map(x=>plain(x)).filter(Boolean).slice(0,6):[];
+  if(!r||typeof r!=='object') return null;
+  const b={enfant:plain(r.enfant), parents:arr(r.parents), a_revoir:arr(r.a_revoir), conseil:plain(r.conseil)};
+  return (b.enfant||b.parents.length)?b:null;
+}
+function bilanPrompt(L,R){
+  const ex=R.scores.map(s=>`- Exercice ${s.n} (${s.titre}) : ${s.s}/${s.t}`).join('\n');
+  const er=R.erreurs.slice(0,90).map(e=>`- Ex. ${e.n} | ${e.q} | donné : ${e.donne} | attendu : ${e.attendu}`).join('\n')||'(aucune erreur)';
+  const name=curName().slice(0,40);
+  return `Tu es un professeur de mathématiques de 6e (programme français, géométrie), bienveillant et précis.
+Voici la copie corrigée d'un élève de 11 ans sur la leçon « ${L.title} ».${name?` L'élève s'appelle ${name}.`:''}
+Note : ${fmt(R.note)}/20.
+${(()=>{ const W=wch(L.id); return `Indices de travail : durée active ${Math.round(W.ms/60000*10)/10} min (temps conseillé : ${goalTxt(L)}, niveau ${lessonLevel(L.id)}/3), ${W.paste} collage(s), ${W.copy||0} copie(s) du texte des exercices, page quittée ${W.away} fois. Si ces indices paraissent anormaux (très rapide, collages), mentionne-le avec prudence dans la partie réservée aux parents, sans accuser l'enfant.`; })()}
+
+Résultats par exercice :
+${ex}
+
+Erreurs de l'élève :
+${er}
+
+Rédige un bilan à partir de ces données uniquement. Ne cite que des erreurs présentes dans la liste. Écris en français, sans markdown.
+Réponds uniquement avec un objet JSON de cette forme :
+{"enfant": "3 ou 4 phrases au tutoiement, encourageantes et concrètes, adressées à l'élève", "parents": ["3 à 5 constats courts pour les parents : ce qui est acquis, ce qui ne l'est pas, avec un exemple tiré des erreurs"], "a_revoir": ["2 à 4 règles précises à revoir, formulées simplement"], "conseil": "une activité courte à faire à la maison cette semaine"}`;
+}
+async function askBilan(L){
+  if(!SAMPLE) return;
+  ui.bil[L.id]={st:'thinking'}; renderFinish(L);
+  try{
+    const b=cleanBilan(localBilan(L,result(L)));
+    if(!b) throw {code:'invalid_json'};
+    state.bilan[L.id]=b; ui.bil[L.id]={st:'done'}; save();
+    const id=state.copyId[L.id];
+    if(DB&&id){ try{ await DB.collection('copies').doc(id).update({bilan:b}); }catch(e){} }
+  }catch(e){ ui.bil[L.id]={st:'error', code:(e&&e.code)||'upstream_error'}; }
+  if(state.tab===L.id) renderFinish(L);
+}
+function bilanArea(L){
+  const wrap=el('div');
+  if(state.bilan[L.id]){ wrap.append(bilanBlock(state.bilan[L.id])); return wrap; }
+  const u=ui.bil[L.id]||{};
+  if(u.st==='thinking'){ wrap.append(el('p','thinking','Préparation du bilan…')); return wrap; }
+  if(!SAMPLE || ['not_granted','sampling_disabled','not_declared','capability_disabled','capability_removed'].includes(u.code)) return wrap;
+  const d=el('div','status');
+  const b=el('button','btn sm',u.st==='error'?'Réessayer le bilan':'Voir mon bilan'); b.type='button'; b.id='btn-bilan-'+L.id;
+  b.addEventListener('click',()=>askBilan(L)); d.append(b);
+  if(u.st==='error') d.append(el('span',null, u.code==='rate_limited'?'Trop de demandes pour le moment, réessaie plus tard.':"Le bilan n'a pas pu être préparé."));
+  else d.append(el('span',null,'Un message pour ton enfant et un bilan pour toi.'));
+  wrap.append(d); return wrap;
+}
+
+/* ---- profils ---- */
+const AVS=['🦊','🐼','🦁','🐯','🐸','🐧','🦄','🐙','🚀','⚽','🎮','🌟'];
+function pickProfile(id){
+  stash(); state.cur=id; loadWork(curP()); ui.picker=false; ui.cur={}; ui.warn=false; ui.confirmReset=false; ui.delP='';
+  if(state.tab==='suivi') state.tab=IDS[0]; save(); renderAll(); window.scrollTo(0,0);
+}
+function addProfile(name,av){
+  name=name.trim().slice(0,40); if(!name) return false;
+  const id='p'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  state.profiles.push({id,name,av,w:null}); pickProfile(id); return true;
+}
+function delProfile(id){
+  const was=state.cur===id; state.profiles=state.profiles.filter(p=>p.id!==id);
+  if(was){ state.cur=''; loadWork(null); }
+  ui.delP=''; save(); renderAll();
+}
+function renderProfBtn(){
+  const b=document.getElementById('profBtn'); const p=curP(); b.innerHTML='';
+  const a=el('span','av'); a.textContent=p?p.av:'👤'; const n=el('span','nm'); n.textContent=p?p.name:'Profil';
+  b.append(a,n);
+}
+function renderProfiles(){
+  const v=document.getElementById('profView'); v.innerHTML='';
+  const hero=el('section','hero');
+  hero.append(el('div','eyebrow','Profils'), el('h1',null,state.profiles.length?'Qui travaille ?':'Crée un premier profil'),
+    el('p',null,"Chaque enfant a son profil : ses réponses, ses notes et son suivi sont séparés. Les parents retrouvent tout dans l'onglet Suivi."));
+  v.append(hero);
+  if(state.profiles.length){
+    const g=el('div','pgrid');
+    state.profiles.forEach(p=>{
+      const c=el('div','pcard'+(p.id===state.cur?' cur':'')); c.tabIndex=0; c.setAttribute('role','button');
+      const a=el('div','av'); a.textContent=p.av; const n=el('div'); n.textContent=p.name;
+      c.append(a,n);
+      if(p.id===state.cur) c.append(el('small',null,'profil actuel'));
+      const go=()=>pickProfile(p.id); c.addEventListener('click',go); c.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); go(); } });
+      g.append(c);
+    });
+    v.append(g);
+  }
+  if(state.profiles.some(p=>p.av===ui.newAv)) ui.newAv=AVS.find(x=>!state.profiles.some(p=>p.av===x))||ui.newAv;
+  const box=el('div','pbox'); box.append(el('h3',null,'Ajouter un profil'));
+  const nm=el('input'); nm.type='text'; nm.id='pname'; nm.placeholder='Prénom'; nm.maxLength=40; nm.autocomplete='off';
+  const avs=el('div','avs'); AVS.forEach(x=>{ const b=el('button'); b.type='button'; b.textContent=x; b.setAttribute('aria-pressed',x===ui.newAv?'true':'false'); b.setAttribute('aria-label','Avatar '+x);
+    b.addEventListener('click',()=>{ ui.newAv=x; avs.querySelectorAll('button').forEach(k=>k.setAttribute('aria-pressed',k===b?'true':'false')); }); avs.append(b); });
+  const ok=el('button','btn','Créer et commencer'); ok.type='button';
+  const go=()=>{ if(!addProfile(nm.value,ui.newAv)) nm.focus(); };
+  ok.addEventListener('click',go); nm.addEventListener('keydown',e=>{ if(e.key==='Enter') go(); });
+  box.append(nm,avs,ok); v.append(box);
+  if(state.profiles.length){
+    const m=el('div','pbox'); m.append(el('h3',null,'Gérer les profils'));
+    state.profiles.forEach(p=>{
+      const row=el('div'); row.style.cssText='display:flex;gap:10px;align-items:center;flex-wrap:wrap';
+      const t=el('span'); t.textContent=p.av+' '+p.name; row.append(t);
+      if(ui.delP===p.id){
+        row.append(el('span',null,"Supprimer ce profil et ses réponses en cours ? Les copies déjà dans le suivi restent."));
+        const y=el('button','btn red sm','Oui, supprimer'); y.type='button'; y.addEventListener('click',()=>delProfile(p.id));
+        const n2=el('button','btn ghost sm','Annuler'); n2.type='button'; n2.addEventListener('click',()=>{ ui.delP=''; renderProfiles(); });
+        row.append(y,n2);
+      } else { const d=el('button','linkbtn','Supprimer'); d.type='button'; d.addEventListener('click',()=>{ ui.delP=p.id; renderProfiles(); }); row.append(d); }
+      m.append(row);
+    });
+    v.append(m);
+  }
+}
+document.getElementById('profBtn').addEventListener('click',()=>{ ui.picker=true; ui.delP=''; renderAll(); window.scrollTo(0,0); });
+
+/* ---- onglet Suivi ---- */
+const LTITLE={}, LNUM={}; IDS.forEach(i=>{ LTITLE[i]=LESSONS[i].title; LNUM[i]=LESSONS[i].num; });
+function when(iso){ try{ return new Date(iso).toLocaleString('fr-FR',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}); }catch(e){ return ''; } }
+function renderSuivi(){
+  const v=document.getElementById('suiviView'); v.innerHTML='';
+  const hero=el('section','hero');
+  hero.append(el('div','eyebrow','Suivi parent'), el('h1',null,'Suivi des copies'),
+    el('p',null,'Chaque copie corrigée est enregistrée ici, avec la note, le détail par exercice, les erreurs et le bilan. Les copies sont gardées dans ce navigateur, sur cet appareil.'));
+  v.append(hero);
+  const say=t=>{ v.append(el('p','empty',t)); };
+  if(!DB){ say(capsDone?"Le suivi n'est pas disponible.":'Chargement du suivi…'); return; }
+  if(dbErr){ say('Le suivi ne peut pas être chargé pour le moment. Recharge la page.'); return; }
+  if(copies===null){ say('Chargement du suivi…'); return; }
+  if(!copies.length){ say("Aucune copie pour l'instant. Une copie apparaît ici dès que ton enfant clique sur « Corriger ma copie »."); return; }
+  const names=[]; state.profiles.forEach(p=>{ if(!names.includes(p.name)) names.push(p.name); });
+  copies.forEach(c=>{ const n=(c.eleve||'').trim(); if(n&&!names.includes(n)) names.push(n); });
+  if(false){
+    const f=el('div','filt'); f.setAttribute('role','group'); f.setAttribute('aria-label','Filtrer par enfant');
+    ['',...names].forEach(n=>{ const b=el('button'); b.type='button'; b.textContent=n||'Tous'; b.setAttribute('aria-pressed',ui.filter===n?'true':'false');
+      b.addEventListener('click',()=>{ ui.filter=n; renderSuivi(); }); f.append(b); });
+    hero.append(f);
+  }
+  const all=copies; copies=ui.filter?all.filter(c=>(c.eleve||'').trim()===ui.filter):all;
+  try{ renderSuiviBody(v); } finally { copies=all; }
+}
+function renderSuiviBody(v){
+  if(!copies.length){ v.append(el('p','empty','Aucune copie pour ce profil.')); return; }
+  const sum=el('div','sum');
+  IDS.forEach(id=>{
+    const list=copies.filter(c=>c.lecon===id).slice().sort((a,b)=>String(a.at).localeCompare(String(b.at)));
+    const card=el('div','sumcard'); card.append(el('h3',null,`<span class="lt ${id}" style="background:${LESSONS[id].color||''}">${LNUM[id]}</span>${esc(LTITLE[id])}`));
+    if(!list.length){ card.append(el('p','trend','Pas encore de copie.')); sum.append(card); return; }
+    const notes=list.map(c=>Number(c.total!==undefined?c.total:c.note)||0);
+    const k=el('div','kpis');
+    [[list.length,'copie'+(list.length>1?'s':'')],[fmt(notes[notes.length-1])+'/20','dernière note'],[fmt(Math.max(...notes))+'/20','meilleure note']]
+      .forEach(([b,s])=>k.append(el('div','kpi',`<b>${esc(b)}</b><span>${esc(s)}</span>`)));
+    card.append(k);
+    if(notes.length>1) card.append(el('p','trend','Évolution : '+notes.slice(-8).map(fmt).join(' → ')));
+    { const lv=lessonLevel(id); const t=JEU[lv]; const p=el('p','trend',`Récompenses : niveau ${lv}/3 (${t[0]} / ${t[1]} / ${t[2]} min)`);
+
+      card.append(p); }
+    sum.append(card);
+  });
+  v.append(sum);
+  const wrap=el('div','copies');
+  copies.forEach(c=>{
+    const card=el('article','copy'); const id=IDS.includes(c.lecon)?c.lecon:IDS[0];
+    const h=el('div','copy-h'); const meta=el('div','meta');
+    meta.append(el('div','what',`<span class="lt ${id}" style="background:${LESSONS[id].color||''}">${LNUM[id]}</span>${esc(LTITLE[id])}`));
+    const sub=el('div','when'); sub.textContent=[c.eleve,(c.nbEx?c.nbEx+' exercices':'série '+(c.serie||1)),when(c.at)].filter(Boolean).join(' · '); meta.append(sub);
+    const nb=Number(c.note)||0, bs=(c.bonusT||0)+(c.bonusP||0), tt=Number(c.total!==undefined?c.total:c.note)||0; const bw=el('div','mbox'); bw.append(el('div','mini'+(tt>=15?' good':''),`${fmt(nb)}<small style="font-size:16px">/20</small>`)); if(bs) bw.append(el('div','mplus',`+${bs} bonus = ${fmt(tt)}/20`)); h.append(meta,bw);
+    card.append(h);
+    if(typeof c.duree==='number'||typeof c.jeu==='number'){
+      const fl=el('div','flags');
+      const fd=t=>{ const mn=Math.floor(t/60), sc=t%60; return mn?mn+' min'+(sc?' '+String(sc).padStart(2,'0')+' s':''):sc+' s'; };
+      if(typeof c.chrono==='number') fl.append(el('span','tm','⏱ Chrono '+fd(c.chrono)));
+      if(typeof c.duree==='number') fl.append(el('span','tm',(typeof c.chrono==='number'?'Activité ':'⏱ ')+fd(c.duree)));
+      if(c.jeu>0) fl.append(el('span','game'+(c.verif?' chk':''),'🎮 '+c.jeu+' min'+(c.niveau>1?' · niv. '+c.niveau:'')+(c.verif?' · à valider':'')));
+      flagsOf(c).forEach(t=>fl.append(el('span','flag',esc(t))));
+      card.append(fl);
+    }
+    const sc=Array.isArray(c.scores)?c.scores.filter(s=>s&&s.s<s.t):[];
+    if(sc.length){ card.append(el('p','sub','Exercices à reprendre'));
+      const chips=el('div','chips'); sc.forEach(s=>{ const ch=el('div','chip '+(Number(s.s)===0?'zero':'part'),`<b>${esc(s.n)}</b><span>${esc(s.s)}/${esc(s.t)}</span>`); ch.title=plain(s.titre); chips.append(ch); });
+      card.append(chips); }
+    else card.append(el('p','status ok','Tous les exercices sont réussis.'));
+    const b=cleanBilan(c.bilan); if(b) card.append(bilanBlock(b));
+    const errs=Array.isArray(c.erreurs)?c.erreurs:[];
+    if(errs.length){
+      const det=el('details'); det.append(el('summary',null,`Voir les erreurs (${errs.length})`));
+      const ul=el('ul','errs');
+      errs.forEach(e=>{ const li=el('li'); li.append(el('b',null,'Ex. '+esc(e.n)+' — ')); li.append(document.createTextNode(plain(e.q)+' : '));
+        const g=el('span','g'); g.textContent=plain(e.donne); const ar=document.createTextNode(' → '); const ok=el('span','e'); ok.textContent=plain(e.attendu);
+        li.append(g,ar,ok); ul.append(li); });
+      det.append(ul); card.append(det);
+    }
+    wrap.append(card);
+  });
+  v.append(wrap);
+}
+
+function appreciation(n){
+  if(n>=18) return 'Excellent travail, bravo !';
+  if(n>=15) return 'Très bien ! Encore un petit effort.';
+  if(n>=12) return 'Bien. Regarde tes erreurs en rouge.';
+  if(n>=10) return "Assez bien. Relis l'aide-mémoire.";
+  return "À retravailler : relis la leçon et recommence.";
+}
+
+function renderFinish(L){
+  const box=document.getElementById('finish'); box.innerHTML='';
+  if(!state.done[L.id]){
+    const p=progress(L); const left=p.tot-p.done;
+    box.append(el('h2',null,'Rendre ma copie'));
+    box.append(el('p',null,`Tu as donné ${p.done} réponses sur ${p.tot}. Quand tu as fini, fais corriger ta copie : tu verras tes erreurs en rouge et ta note sur 20.`));
+
+    if(ui.warn && left>0){
+      const w=el('div','warn',`Il reste <b>${left}</b> réponse${left>1?'s':''} vide${left>1?'s':''}. Elles compteront comme fausses.`);
+      const bt=el('div','btns');
+      const go=el('button','btn red','Corriger quand même'); go.type='button'; go.addEventListener('click',()=>correct(L));
+      const back=el('button','btn ghost','Continuer à répondre'); back.type='button'; back.addEventListener('click',()=>{ ui.warn=false; renderFinish(L); });
+      bt.append(go,back); w.append(bt); box.append(w);
+    } else {
+      const bt=el('div','btns'); const go=el('button','btn red','Corriger ma copie'); go.type='button'; go.id='btn-correct-'+L.id;
+      go.addEventListener('click',()=>{ const pp=progress(L); if(pp.done<pp.tot){ ui.warn=true; renderFinish(L);} else correct(L); });
+      bt.append(go); box.append(bt);
+    }
+    return;
+  }
+  const R=result(L); const scores=R.scores; const note=R.note;
+  const B=state.bon&&state.bon[L.id]; const total=B?Math.min(20,note+B.t+B.p):note;
+  box.append(el('h2',null,'Ma note'));
+  const bsum=B?(B.t+B.p):0;
+  const r=el('div','result'); r.append(el('div','mark',`${fmt(note)}<small>/20</small>`)); if(bsum) r.append(el('div','bplus',`+${bsum}<small>bonus</small>`)); r.append(el('div','appr',esc(appreciation(total)))); box.append(r);
+  if(bsum) box.append(el('p','totalline',`Total : <b>${fmt(total)}/20</b>`+(note+bsum>20?' <small>(plafonné à 20)</small>':'')));
+  if(B){ const bl=el('ul','bonuses');
+        bl.append(el('li',B.t?'ok':'',B.t?'⏱ Dans le temps conseillé avec plus de 12/20 : <b>+2</b>':(B.inTime?'⏱ Dans le temps, mais il faut plus de 12/20 pour le bonus : <b>0</b>':'⏱ Temps conseillé dépassé : <b>0</b>')));
+    box.append(bl); }
+  { const w=wch(L.id); const fl=flagsOf({duree:Math.round(w.ms/1000),collages:w.paste,copies:w.copy||0,absences:w.away,nbEx:L.ex.length}); const lv=B&&B.lvl?B.lvl:lessonLevel(L.id); const jm=jeuMin(total,lv);
+    box.append(el('div','jeu'+(jm?' on':''), jm?(fl.length?'🎮 Temps de jeu : <b>'+jm+' min</b> — à confirmer par un parent':'🎮 Temps de jeu gagné : <b>'+jm+' min</b>'):(lv===3?'🎮 Dès 15/20, tu gagnes du temps de jeu.':'🎮 Dès 13/20, tu gagnes du temps de jeu.')));
+    if(lv>1) box.append(el('p','lvl',esc(levelText(lv)))); }
+  box.append(el('p',null,`Chaque exercice vaut ${fmt(20/L.ex.length)} point${20/L.ex.length>1?'s':''}, partagé entre ses réponses. Les corrections sont écrites en rouge dans chaque exercice.`));
+  const chips=el('div','chips');
+  scores.forEach(s=>{ const cls=s.s===s.t?'full':(s.s===0?'zero':'part'); const c=el('div','chip '+cls,`<b>${s.n}</b><span>${s.s}/${s.t}</span>`); c.setAttribute('aria-label',`Exercice ${s.n} : ${s.s} sur ${s.t}`); chips.append(c); });
+  box.append(el('p','chips-lbl','Détail par exercice'));
+  box.append(chips);
+  box.append(saveStatusEl(L));
+  box.append(shareEl(L));
+  box.append(bilanArea(L));
+  const bt=el('div','btns');
+  if(ui.confirmReset){
+    const w=el('div','warn', state.copyId[L.id]?'Une nouvelle fiche d\'exercices va s\'ouvrir. La copie corrigée reste dans le suivi.':'Une nouvelle fiche d\'exercices va s\'ouvrir. Les réponses actuelles seront effacées.');
+    const b2=el('div','btns');
+    const yes=el('button','btn red','Oui, nouvelle fiche'); yes.type='button'; yes.addEventListener('click',()=>reset(L));
+    const no=el('button','btn ghost','Annuler'); no.type='button'; no.addEventListener('click',()=>{ ui.confirmReset=false; renderFinish(L); });
+    b2.append(yes,no); w.append(b2); box.append(w);
+  } else {
+    const again=el('button','btn ghost','Nouvelle fiche'); again.type='button'; again.addEventListener('click',()=>{ ui.confirmReset=true; renderFinish(L); });
+    const other=IDS[(IDS.indexOf(state.tab)+1)%IDS.length];
+    const next=el('button','btn',`Aller à la leçon ${LESSONS[other].num}`); next.type='button'; next.addEventListener('click',()=>{ switchTab(other); window.scrollTo({top:0,behavior:reduced()?'auto':'smooth'}); });
+    bt.append(again,next); box.append(bt);
+  }
+}
+
+function correct(L){
+  state.bon=state.bon||{}; state.bon[L.id]=computeBonus(L,result(L));
+  state.done[L.id]=true; ui.warn=false; delete state.copyId[L.id]; delete state.bilan[L.id]; ui.save[L.id]=undefined; ui.bil[L.id]=undefined;
+  save(); renderLesson();
+  const f=document.getElementById('finish'); if(f) f.scrollIntoView({behavior:reduced()?'auto':'smooth',block:'start'});
+  saveCopy(L);
+}
+function reset(L){
+  state.ans[L.id]={}; state.done[L.id]=false; state.bonus[L.id]=''; delete state.copyId[L.id]; delete state.bilan[L.id]; if(state.watch) delete state.watch[L.id]; if(state.bon) delete state.bon[L.id];
+  state.draw=state.draw||{}; state.draw[L.id]=makeDraw(L);
+  ui.save[L.id]=undefined; ui.bil[L.id]=undefined; ui.confirmReset=false; ui.cur={}; save(); renderLesson();
+  window.scrollTo({top:0,behavior:reduced()?'auto':'smooth'});
+}
+
+function renderAll(){
+  document.querySelectorAll('.tab').forEach(t=>t.setAttribute('aria-selected',t.dataset.l===state.tab?'true':'false')); try{ const sel=document.querySelector('.tab[aria-selected="true"]'); const c=sel&&sel.parentElement; if(c) c.scrollLeft+=sel.getBoundingClientRect().left-c.getBoundingClientRect().left-(c.clientWidth-sel.offsetWidth)/2; }catch(e){}
+  const sv=state.tab==='suivi'; const pk=ui.picker||(!state.cur&&!sv);
+  renderProfBtn();
+  document.getElementById('profView').hidden=!pk; document.getElementById('suiviView').hidden=pk||!sv; document.getElementById('lessonView').hidden=pk||sv;
+  if(pk){ document.body.dataset.lesson='suivi'; renderProfiles(); }
+  else if(sv){ document.body.dataset.lesson='suivi'; renderSuivi(); } else renderLesson();
+}
+
+function renderLesson(){
+  const L=LESSONS[state.tab];
+  document.body.dataset.lesson=L.id;
+  ensureDraw(L);
+  document.getElementById('eyebrow').textContent=`Leçon ${L.num} · ${L.domain} · ${(state.draw&&state.draw[L.id])?'fiche de '+L.ex.length+' exercices':'série '+((state.set[L.id]||0)+1)+'/'+NSETS}${state.done[L.id]?' · copie corrigée':''}`;
+  document.getElementById('h1').textContent=L.title;
+  document.getElementById('intro').textContent=state.done[L.id]?`${L.ex.length} exercices corrigés.`:`${L.ex.length} exercices. Réponds directement sur la page, puis fais corriger ta copie pour obtenir ta note sur 20. Un chrono démarre à ta première réponse : si tu finis en ${goalTxt(L)} maximum (temps conseillé${lessonLevel(L.id)>1?' au niveau '+lessonLevel(L.id):''}) avec plus de 12/20, tu gagnes 2 points de bonus.`+(lessonLevel(L.id)>1?' '+levelText(lessonLevel(L.id)):'');
+  document.getElementById('memobody').innerHTML=L.memo; { const sd=document.getElementById('story'); if(L.story){ sd.hidden=false; document.getElementById('storybody').innerHTML=L.story; if(sd.dataset.l!==L.id){ sd.open=false; sd.dataset.l=L.id; } } else sd.hidden=true; }
+  document.getElementById('rulesbody').innerHTML=rulesHTML(L);
+  const sh=document.getElementById('sheets'); sh.innerHTML='';
+  L.ex.forEach(ex=>{ const pt=(ex.part!==undefined)?ex.part:L.parts[ex.n]; if(pt) sh.append(el('h2','part',esc(pt))); sh.append(renderEx(L,ex)); });
+  renderFinish(L); updateProgress(); updateTimer();
+}
+
+function switchTab(id){ ui.picker=false; state.tab=id; ui.warn=false; ui.confirmReset=false; save(); renderAll(); }
+const SUIVI_BTN=`<button class="tab" role="tab" id="tab-suivi" data-l="suivi" aria-selected="false"><span class="num"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12l4-4 3 3 5-6"/></svg></span>Suivi</button>`;
+document.querySelector('.tabs').innerHTML=IDS.map((id,k)=>{ const L=LESSONS[id]; return `<button class="tab" role="tab" id="tab-${id}" data-l="${id}" aria-selected="${k===0}"><span class="num" style="background:${L.color||''}">${L.num}</span>${L.tab}</button>`; }).join('')+SUIVI_BTN;
+document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>switchTab(t.dataset.l)));
+
+function start(data){
+  const saved=(data&&data.ans)?data:loadSaved();
+  if(saved){ state=Object.assign(state,saved); state.bonus=state.bonus||{}; state.copyId=state.copyId||{}; state.bilan=state.bilan||{}; state.eleve=state.eleve||''; state.set=Object.assign(Z(()=>0),state.set||{}); state.done=Object.assign(Z(()=>false),state.done||{}); state.watch=state.watch||{}; state.draw=state.draw||{}; state.last=state.last||{}; state.bon=state.bon||{};
+    IDS.forEach(i=>{ state.ans[i]=state.ans[i]||{}; }); state.profiles=Array.isArray(state.profiles)?state.profiles:[]; state.cur=state.cur||'';
+    if(!state.profiles.length && false){ const id='p'+Date.now().toString(36); state.profiles.push({id,name:state.eleve.trim().slice(0,40),av:'🦊',w:null}); state.cur=id; stash(); }
+    else if(state.cur&&!curP()) state.cur='';
+    else if(curP()&&!curP().w) stash();
+    if(curP()&&curP().w) loadWork(curP()); }
+  if(!state.profiles.length){ const id='p'+Date.now().toString(36); state.profiles.push({id,name:(state.eleve||'').trim().slice(0,40)||'Adam',av:'🦊',w:null}); state.cur=id; stash(); }
+  if(!state.cur||!curP()){ state.cur=state.profiles[0].id; loadWork(curP()); }
+  ui.picker=false;
+  if(![...IDS,'suivi'].includes(state.tab)) state.tab=IDS[0];
+  const h=(location.hash||'').slice(1); if(IDS.includes(h)) state.tab=h; else if(h==='accords') state.tab='acc'; else if(h==='determinants') state.tab='det'; else if(h==='suivi') state.tab='suivi';
+  renderAll();
+}
+window.claude?.hot?.snapshot?.(()=>{ stash(); return state; });
+start({});
+})();
+</script>
+
+</html>

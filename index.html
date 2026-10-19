@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Cahier d'Adam</title>
+<style>
+:root{--bg:#f6f4ef;--sheet:#fff;--ink:#1f2a44;--muted:#5f6b7a;--rule:#e2ded3;--maths:#2f6fdb;--fr:#c2562f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14171d;--sheet:#1d222b;--ink:#eceff4;--muted:#9aa5b4;--rule:#323946;--maths:#6aa0ff;--fr:#ee8a64}}
+:root[data-theme="dark"]{--bg:#14171d;--sheet:#1d222b;--ink:#eceff4;--muted:#9aa5b4;--rule:#323946;--maths:#6aa0ff;--fr:#ee8a64}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+.w{max-width:720px;margin:0 auto;padding:28px 16px 48px}
+h1{font-size:28px;margin:0 0 4px}p.s{color:var(--muted);margin:0 0 24px}
+details{background:var(--sheet);border:1.5px solid var(--rule);border-radius:14px;margin-bottom:16px;overflow:hidden}
+summary{cursor:pointer;list-style:none;padding:16px 18px;font-weight:800;font-size:20px;display:flex;align-items:center;gap:12px}
+summary::-webkit-details-marker{display:none}summary .i{font-size:26px}
+summary::after{content:"▾";margin-left:auto;color:var(--muted)}details:not([open]) summary::after{content:"▸"}
+.m summary{border-left:6px solid var(--maths)}.f summary{border-left:6px solid var(--fr)}
+ul{list-style:none;margin:0;padding:0 12px 12px}
+li a{display:flex;gap:12px;align-items:center;padding:12px 10px;border-top:1px solid var(--rule);color:inherit;text-decoration:none;border-radius:8px}
+li a:hover,li a:focus-visible{background:var(--bg)}
+.n{flex:none;width:30px;height:30px;border-radius:8px;color:#fff;display:grid;place-items:center;font-weight:800}
+.m .n{background:var(--maths)}.f .n{background:var(--fr)}
+li small{display:block;color:var(--muted);font-size:14px}li b{font-weight:700}
+</style>
+<div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p>
+<details class="m" open><summary><span class="i">📐</span>Mathématiques</summary><ul>
+<li><a href="maths.html#determinants"><span class="n">1</span><span><b>Droites, segments et médiatrices</b><small>Chapitre 8 · cours 1 et 3</small></span></a></li>
+<li><a href="maths.html#accords"><span class="n">2</span><span><b>Cercles et disques</b><small>Chapitre 8 · cours 2</small></span></a></li>
+<li><a href="maths.html#dv1"><span class="n">3</span><span><b>La division euclidienne</b><small>Chapitre 4 · cours 1</small></span></a></li>
+<li><a href="maths.html#dv2"><span class="n">4</span><span><b>Multiples et diviseurs</b><small>Chapitre 4 · cours 2</small></span></a></li>
+<li><a href="maths.html#dv3"><span class="n">5</span><span><b>La division décimale</b><small>Chapitre 4 · cours 3</small></span></a></li>
+<li><a href="maths.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details>
+<details class="f" open><summary><span class="i">📖</span>Français</summary><ul>
+<li><a href="francais.html#determinants"><span class="n">6</span><span><b>Les déterminants</b><small>Grammaire</small></span></a></li>
+<li><a href="francais.html#accords"><span class="n">7</span><span><b>Les accords dans le groupe nominal</b><small>Orthographe</small></span></a></li>
+<li><a href="francais.html#pro"><span class="n">8</span><span><b>Les pronoms personnels</b><small>Grammaire</small></span></a></li>
+<li><a href="francais.html#adv"><span class="n">9</span><span><b>Les adverbes</b><small>Grammaire</small></span></a></li>
+<li><a href="francais.html#prep"><span class="n">10</span><span><b>Les prépositions et groupes prépositionnels</b><small>Grammaire</small></span></a></li>
+<li><a href="francais.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details></div>
+
+</html>
