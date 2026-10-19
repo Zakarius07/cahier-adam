@@ -46,6 +46,25 @@ summary::after{margin-left:0}
 <li><a href="francais.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details></div>
 <script>
 (function(){
+ try{
+  var m=/^#import=(.+)$/.exec(location.hash||''); if(!m) return;
+  var o=JSON.parse(decodeURIComponent(escape(atob(m[1].replace(/-/g,'+').replace(/_/g,'/')))));
+  var K={m:'cahier-maths-6e-copies-v1',f:'cahier-fr-6e-copies-v1'},n=0;
+  ['m','f'].forEach(function(k){
+   if(!Array.isArray(o[k]))return;
+   var cur=[];try{cur=JSON.parse(localStorage.getItem(K[k])||'[]');if(!Array.isArray(cur))cur=[]}catch(e){}
+   var ids={};cur.forEach(function(c){ids[c.id]=1});
+   o[k].forEach(function(c){if(c&&c.id&&!ids[c.id]){cur.push(c);n++}});
+   localStorage.setItem(K[k],JSON.stringify(cur));
+  });
+  history.replaceState(null,'',location.pathname);
+  window.__imp=n;
+  var b=document.createElement('p');b.className='s';b.style.cssText='background:var(--sheet);border:1.5px solid var(--rule);border-radius:12px;padding:10px 14px;color:var(--ink)';
+  b.textContent=n?('\u2713 '+n+' ancienne'+(n>1?'s':'')+' copie'+(n>1?'s':'')+' r\u00e9cup\u00e9r\u00e9e'+(n>1?'s':'')+' dans ce navigateur.'):'Ces copies sont d\u00e9j\u00e0 dans ce navigateur.';
+  document.querySelector('.w').insertBefore(b,document.getElementById('tot'));
+ }catch(e){}
+})();
+(function(){
 var KEYS={maths:'cahier-maths-6e-copies-v1',francais:'cahier-fr-6e-copies-v1'};
 var SKEYS={maths:'cahier-maths-6e-droites-cercles-v1',francais:'cahier-6e-determinants-accords-v1'};
 function rd(k){try{var a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
@@ -61,9 +80,9 @@ function render(){
  document.querySelectorAll('details').forEach(function(det){
   var df=0,ds=0,dn=0;
   det.querySelectorAll('li a').forEach(function(a){
-   var h=a.getAttribute('href').split('#'),file=h[0].replace('.html',''),id=h[1];
+   var h=a.getAttribute('href').split('#'),file=h[0].replace('.html',''),id=h[1];var ALIAS={determinants:'det',accords:'acc'};id=ALIAS[id]||id;
    if(id==='suivi')return;
-   var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
+   var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).map(function(c){return Object.assign({},c,{note:typeof c.total==='number'?c.total:c.note})}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
    var run=started(st(SKEYS[file]),id);
    var r=a.querySelector('.r'); if(!r){r=document.createElement('span');r.className='r';a.appendChild(r)}
    var info=a.querySelector('.info'); if(!info){info=document.createElement('span');info.className='info';a.children[1].appendChild(info)}
