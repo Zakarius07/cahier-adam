@@ -21,9 +21,15 @@ li a{display:flex;gap:12px;align-items:center;padding:12px 10px;border-top:1px s
 li a:hover,li a:focus-visible{background:var(--bg)}
 .n{flex:none;width:30px;height:30px;border-radius:8px;color:#fff;display:grid;place-items:center;font-weight:800}
 .m .n{background:var(--maths)}.f .n{background:var(--fr)}
-li small{display:block;color:var(--muted);font-size:14px}li b{font-weight:700}
+li a>span:nth-child(2){min-width:0}li small{display:block;color:var(--muted);font-size:14px}li b{font-weight:700}
+.r{margin-left:auto;text-align:right;flex:none;font-size:13px;color:var(--muted);line-height:1.3}
+.r .nt{display:inline-block;min-width:54px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:14px;color:#fff;text-align:center}
+.nt.g{background:#2e9d5b}.nt.o{background:#d88a1a}.nt.b{background:#d2503f}.nt.z{background:transparent;color:var(--muted);font-weight:600;border:1px dashed var(--rule)}
+.sum{white-space:nowrap;display:block;margin-left:auto;margin-right:8px;font-size:13px;font-weight:600;color:var(--muted);text-align:right}
+summary::after{margin-left:0}
+.tot{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.tot span{background:var(--sheet);border:1.5px solid var(--rule);border-radius:12px;padding:8px 12px;font-size:14px;color:var(--muted)}.tot b{display:block;font-size:20px;color:var(--ink)}
 </style>
-<div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p>
+<div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p><div class="tot" id="tot"></div>
 <details class="m" open><summary><span class="i">📐</span>Mathématiques</summary><ul>
 <li><a href="maths.html#determinants"><span class="n">1</span><span><b>Droites, segments et médiatrices</b><small>Chapitre 8 · cours 1 et 3</small></span></a></li>
 <li><a href="maths.html#accords"><span class="n">2</span><span><b>Cercles et disques</b><small>Chapitre 8 · cours 2</small></span></a></li>
@@ -38,6 +44,38 @@ li small{display:block;color:var(--muted);font-size:14px}li b{font-weight:700}
 <li><a href="francais.html#adv"><span class="n">9</span><span><b>Les adverbes</b><small>Grammaire</small></span></a></li>
 <li><a href="francais.html#prep"><span class="n">10</span><span><b>Les prépositions et groupes prépositionnels</b><small>Grammaire</small></span></a></li>
 <li><a href="francais.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details></div>
+<script>
+(function(){
+var KEYS={maths:'cahier-maths-6e-copies-v1',francais:'cahier-fr-6e-copies-v1'};
+function rd(k){try{var a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+function f(n){return (Math.round(n*10)/10).toString().replace('.',',')}
+function cls(n){return n>=16?'g':n>=12?'o':'b'}
+function d(iso){try{var x=new Date(iso);return x.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}catch(e){return''}}
+function mm(sec){var m=Math.round(sec/60);return m<1?'<1 min':m+' min'}
+function render(){
+ var G={fiches:0,ex:0,sec:0,sum:0};
+ document.querySelectorAll('details').forEach(function(det){
+  var df=0,ds=0,dn=0;
+  det.querySelectorAll('li a').forEach(function(a){
+   var h=a.getAttribute('href').split('#'),file=h[0].replace('.html',''),id=h[1];
+   if(id==='suivi')return;
+   var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
+   var r=a.querySelector('.r'); if(!r){r=document.createElement('span');r.className='r';a.appendChild(r)}
+   if(!list.length){r.innerHTML='<span class="nt z">à faire</span>';return}
+   var last=list[list.length-1],best=Math.max.apply(null,list.map(function(c){return c.note})),avg=list.reduce(function(t,c){return t+c.note},0)/list.length;
+   var ex=list.reduce(function(t,c){return t+(c.nbEx||10)},0),sec=list.reduce(function(t,c){return t+(c.duree||0)},0);
+   r.innerHTML='<span class="nt '+cls(last.note)+'">'+f(last.note)+'/20</span><br>'+list.length+' fiche'+(list.length>1?'s':'')+' · '+ex+' ex.<br>max '+f(best)+' · moy. '+f(avg);
+   df+=list.length;ds+=avg;dn++;G.fiches+=list.length;G.ex+=ex;G.sec+=sec;G.sum+=list.reduce(function(t,c){return t+c.note},0);
+  });
+  var sm=det.querySelector('summary'),el=sm.querySelector('.sum');
+  if(!el){el=document.createElement('span');el.className='sum';sm.insertBefore(el,sm.querySelector('.i').nextSibling.nextSibling)}
+  el.textContent=df?df+' fiche'+(df>1?'s':''):'';
+ });
+ var t=document.getElementById('tot');
+ t.innerHTML=G.fiches?'<span><b>'+G.fiches+'</b>fiches faites</span><span><b>'+G.ex+'</b>exercices</span><span><b>'+f(G.sum/G.fiches)+'/20</b>moyenne</span><span><b>'+mm(G.sec)+'</b>de travail</span>':'';
+}
+render();window.addEventListener('pageshow',render);window.addEventListener('storage',render);
+})();
+</script>
 
 </html>
-<!-- test auto-deploy 17:56:00 -->
