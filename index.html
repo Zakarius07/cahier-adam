@@ -31,18 +31,18 @@ summary::after{margin-left:0}
 </style>
 <div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p><div class="tot" id="tot"></div><p class="s" id="dg" style="font-size:13px"></p>
 <details class="m" open><summary><span class="i">📐</span>Mathématiques</summary><ul>
-<li><a href="maths.html#determinants"><span class="n">1</span><span><b>Droites, segments et médiatrices</b><small>Chapitre 8 · cours 1 et 3</small></span></a></li>
-<li><a href="maths.html#accords"><span class="n">2</span><span><b>Cercles et disques</b><small>Chapitre 8 · cours 2</small></span></a></li>
-<li><a href="maths.html#dv1"><span class="n">3</span><span><b>La division euclidienne</b><small>Chapitre 4 · cours 1</small></span></a></li>
-<li><a href="maths.html#dv2"><span class="n">4</span><span><b>Multiples et diviseurs</b><small>Chapitre 4 · cours 2</small></span></a></li>
-<li><a href="maths.html#dv3"><span class="n">5</span><span><b>La division décimale</b><small>Chapitre 4 · cours 3</small></span></a></li>
+<li><a data-f="maths" data-id="det" href="maths.html#determinants"><span class="n">1</span><span><b>Droites, segments et médiatrices</b><small>Chapitre 8 · cours 1 et 3</small></span></a></li>
+<li><a data-f="maths" data-id="acc" href="maths.html#accords"><span class="n">2</span><span><b>Cercles et disques</b><small>Chapitre 8 · cours 2</small></span></a></li>
+<li><a data-f="maths" data-id="dv1" href="maths.html#dv1"><span class="n">3</span><span><b>La division euclidienne</b><small>Chapitre 4 · cours 1</small></span></a></li>
+<li><a data-f="maths" data-id="dv2" href="maths.html#dv2"><span class="n">4</span><span><b>Multiples et diviseurs</b><small>Chapitre 4 · cours 2</small></span></a></li>
+<li><a data-f="maths" data-id="dv3" href="maths.html#dv3"><span class="n">5</span><span><b>La division décimale</b><small>Chapitre 4 · cours 3</small></span></a></li>
 <li><a href="maths.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details>
 <details class="f" open><summary><span class="i">📖</span>Français</summary><ul>
-<li><a href="francais.html#determinants"><span class="n">6</span><span><b>Les déterminants</b><small>Grammaire</small></span></a></li>
-<li><a href="francais.html#accords"><span class="n">7</span><span><b>Les accords dans le groupe nominal</b><small>Orthographe</small></span></a></li>
-<li><a href="francais.html#pro"><span class="n">8</span><span><b>Les pronoms personnels</b><small>Grammaire</small></span></a></li>
-<li><a href="francais.html#adv"><span class="n">9</span><span><b>Les adverbes</b><small>Grammaire</small></span></a></li>
-<li><a href="francais.html#prep"><span class="n">10</span><span><b>Les prépositions et groupes prépositionnels</b><small>Grammaire</small></span></a></li>
+<li><a data-f="francais" data-id="det" href="francais.html#determinants"><span class="n">6</span><span><b>Les déterminants</b><small>Grammaire</small></span></a></li>
+<li><a data-f="francais" data-id="acc" href="francais.html#accords"><span class="n">7</span><span><b>Les accords dans le groupe nominal</b><small>Orthographe</small></span></a></li>
+<li><a data-f="francais" data-id="pro" href="francais.html#pro"><span class="n">8</span><span><b>Les pronoms personnels</b><small>Grammaire</small></span></a></li>
+<li><a data-f="francais" data-id="adv" href="francais.html#adv"><span class="n">9</span><span><b>Les adverbes</b><small>Grammaire</small></span></a></li>
+<li><a data-f="francais" data-id="prep" href="francais.html#prep"><span class="n">10</span><span><b>Les prépositions et groupes prépositionnels</b><small>Grammaire</small></span></a></li>
 <li><a href="francais.html#suivi"><span class="n">★</span><span><b>Suivi des résultats</b><small>Notes, temps de jeu, historique</small></span></a></li></ul></details></div>
 <script>
 (function(){
@@ -80,8 +80,8 @@ function render(){
  document.querySelectorAll('details').forEach(function(det){
   var df=0,ds=0,dn=0;
   det.querySelectorAll('li a').forEach(function(a){
-   var h=a.getAttribute('href').split('#'),file=h[0].replace(/^.*\//,'').replace(/\.html$/,''),id=h[1];var ALIAS={determinants:'det',accords:'acc'};id=ALIAS[id]||id;
-   if(id==='suivi')return;
+   var file=a.getAttribute('data-f'),id=a.getAttribute('data-id');if(!file||!id)return;
+   
    var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).map(function(c){return Object.assign({},c,{note:typeof c.total==='number'?c.total:c.note})}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
    var run=started(st(SKEYS[file]),id);
    var r=a.querySelector('.r'); if(!r){r=document.createElement('span');r.className='r';a.appendChild(r)}
@@ -102,7 +102,7 @@ function render(){
   if(!el){el=document.createElement('span');el.className='sum';sm.insertBefore(el,sm.querySelector('.i').nextSibling.nextSibling)}
   el.textContent=df?pl(df,'fiche'):'';
  });
- var dm=rd(KEYS.maths).length,dfr=rd(KEYS.francais).length;document.getElementById('dg').textContent='Copies enregistr\u00e9es sur cet appareil : maths '+dm+' \u00b7 fran\u00e7ais '+dfr;var t=document.getElementById('tot');
+ var dm=rd(KEYS.maths).length,dfr=rd(KEYS.francais).length;document.getElementById('dg').textContent='Copies enregistr\u00e9es sur cet appareil (v4) : maths '+dm+' \u00b7 fran\u00e7ais '+dfr;var t=document.getElementById('tot');
  t.innerHTML=G.fiches?'<span><b>'+G.fiches+'</b>fiches faites</span><span><b>'+G.ex+'</b>exercices</span><span><b>'+f(G.sum/G.fiches)+'/20</b>moyenne</span><span><b>'+mm(G.sec)+'</b>de travail</span>':'';
 }
 render();window.addEventListener('pageshow',render);window.addEventListener('storage',render);
