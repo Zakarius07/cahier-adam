@@ -25,7 +25,7 @@ li a>span:nth-child(2){min-width:0}li small{display:block;color:var(--muted);fon
 .r{margin-left:auto;text-align:right;flex:none;font-size:13px;color:var(--muted);line-height:1.3}
 .r .nt{display:inline-block;min-width:54px;padding:2px 8px;border-radius:999px;font-weight:800;font-size:14px;color:#fff;text-align:center}
 .nt.g{background:#2e9d5b}.nt.o{background:#d88a1a}.nt.b{background:#d2503f}.nt.z{background:transparent;color:var(--muted);font-weight:600;border:1px dashed var(--rule)}
-.sum{white-space:nowrap;display:block;margin-left:auto;margin-right:8px;font-size:13px;font-weight:600;color:var(--muted);text-align:right}
+.info{display:flex;flex-wrap:wrap;gap:2px 10px;margin-top:3px}.info i{font-style:normal;font-size:12.5px;color:var(--muted)}.info i b{color:var(--ink)}.nt.b0{background:#4a7bd0}.r u{text-decoration:none;font-weight:800;font-size:16px}.r u.up{color:#2e9d5b}.r u.dn{color:#d2503f}.tg{font-weight:700}.tg.g{color:#2e9d5b}.tg.o{color:#d88a1a}.tg.b{color:#d2503f}.sum{white-space:nowrap;display:block;margin-left:auto;margin-right:8px;font-size:13px;font-weight:600;color:var(--muted);text-align:right}
 summary::after{margin-left:0}
 .tot{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.tot span{background:var(--sheet);border:1.5px solid var(--rule);border-radius:12px;padding:8px 12px;font-size:14px;color:var(--muted)}.tot b{display:block;font-size:20px;color:var(--ink)}
 </style>
@@ -47,11 +47,15 @@ summary::after{margin-left:0}
 <script>
 (function(){
 var KEYS={maths:'cahier-maths-6e-copies-v1',francais:'cahier-fr-6e-copies-v1'};
+var SKEYS={maths:'cahier-maths-6e-droites-cercles-v1',francais:'cahier-6e-determinants-accords-v1'};
 function rd(k){try{var a=JSON.parse(localStorage.getItem(k)||'[]');return Array.isArray(a)?a:[]}catch(e){return[]}}
+function st(k){try{return JSON.parse(localStorage.getItem(k))||{}}catch(e){return{}}}
 function f(n){return (Math.round(n*10)/10).toString().replace('.',',')}
 function cls(n){return n>=16?'g':n>=12?'o':'b'}
-function d(iso){try{var x=new Date(iso);return x.toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}catch(e){return''}}
-function mm(sec){var m=Math.round(sec/60);return m<1?'<1 min':m+' min'}
+function d(iso){try{return new Date(iso).toLocaleDateString('fr-FR',{day:'numeric',month:'short'})}catch(e){return''}}
+function mm(sec){var m=Math.round(sec/60);return m<1?'moins d\u20191 min':m+' min'}
+function pl(n,w){return n+' '+w+(n>1?'s':'')}
+function started(S,id){try{if(S.done&&S.done[id])return false;var a=S.ans&&S.ans[id];return !!a&&Object.keys(a).length>0}catch(e){return false}}
 function render(){
  var G={fiches:0,ex:0,sec:0,sum:0};
  document.querySelectorAll('details').forEach(function(det){
@@ -60,16 +64,24 @@ function render(){
    var h=a.getAttribute('href').split('#'),file=h[0].replace('.html',''),id=h[1];
    if(id==='suivi')return;
    var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
+   var run=started(st(SKEYS[file]),id);
    var r=a.querySelector('.r'); if(!r){r=document.createElement('span');r.className='r';a.appendChild(r)}
-   if(!list.length){r.innerHTML='<span class="nt z">à faire</span>';return}
-   var last=list[list.length-1],best=Math.max.apply(null,list.map(function(c){return c.note})),avg=list.reduce(function(t,c){return t+c.note},0)/list.length;
+   var info=a.querySelector('.info'); if(!info){info=document.createElement('span');info.className='info';a.children[1].appendChild(info)}
+   if(!list.length){
+     r.innerHTML=run?'<span class="nt b0">en cours</span>':'<span class="nt z">\u00e0 faire</span>';
+     info.innerHTML='<i>0 fiche faite</i><i>3 s\u00e9ries \u00b7 60 exercices</i>';return}
+   var last=list[list.length-1],prev=list.length>1?list[list.length-2]:null;
+   var best=Math.max.apply(null,list.map(function(c){return c.note})),avg=list.reduce(function(t,c){return t+c.note},0)/list.length;
    var ex=list.reduce(function(t,c){return t+(c.nbEx||10)},0),sec=list.reduce(function(t,c){return t+(c.duree||0)},0);
-   r.innerHTML='<span class="nt '+cls(last.note)+'">'+f(last.note)+'/20</span><br>'+list.length+' fiche'+(list.length>1?'s':'')+' · '+ex+' ex.<br>max '+f(best)+' · moy. '+f(avg);
+   var trend=prev?(last.note>prev.note?' <u class="up">\u2197</u>':last.note<prev.note?' <u class="dn">\u2198</u>':''):'';
+   var tag=best>=16?'\u2713 acquis':last.note<12?'\u00e0 revoir':'en progr\u00e8s';
+   r.innerHTML='<span class="nt '+cls(last.note)+'">'+f(last.note)+'/20</span>'+trend+'<br><small class="tg '+cls(best>=16?20:last.note)+'">'+tag+'</small>'+(run?'<br><small>nouvelle fiche en cours</small>':'');
+   info.innerHTML='<i><b>'+pl(list.length,'fiche')+'</b> faite'+(list.length>1?'s':'')+'</i><i>'+ex+' exercices</i><i>meilleure '+f(best)+'</i><i>moyenne '+f(avg)+'</i><i>'+mm(sec)+'</i><i>derni\u00e8re le '+d(last.at)+'</i>';
    df+=list.length;ds+=avg;dn++;G.fiches+=list.length;G.ex+=ex;G.sec+=sec;G.sum+=list.reduce(function(t,c){return t+c.note},0);
   });
   var sm=det.querySelector('summary'),el=sm.querySelector('.sum');
   if(!el){el=document.createElement('span');el.className='sum';sm.insertBefore(el,sm.querySelector('.i').nextSibling.nextSibling)}
-  el.textContent=df?df+' fiche'+(df>1?'s':''):'';
+  el.textContent=df?pl(df,'fiche'):'';
  });
  var t=document.getElementById('tot');
  t.innerHTML=G.fiches?'<span><b>'+G.fiches+'</b>fiches faites</span><span><b>'+G.ex+'</b>exercices</span><span><b>'+f(G.sum/G.fiches)+'/20</b>moyenne</span><span><b>'+mm(G.sec)+'</b>de travail</span>':'';
