@@ -80,7 +80,7 @@ function render(){
  document.querySelectorAll('details').forEach(function(det){
   var df=0,ds=0,dn=0;
   det.querySelectorAll('li a').forEach(function(a){
-   var h=a.getAttribute('href').split('#'),file=h[0].replace('.html',''),id=h[1];var ALIAS={determinants:'det',accords:'acc'};id=ALIAS[id]||id;
+   var h=a.getAttribute('href').split('#'),file=h[0].replace(/^.*\//,'').replace(/\.html$/,''),id=h[1];var ALIAS={determinants:'det',accords:'acc'};id=ALIAS[id]||id;
    if(id==='suivi')return;
    var list=rd(KEYS[file]).filter(function(c){return c&&c.lecon===id&&typeof c.note==='number'}).map(function(c){return Object.assign({},c,{note:typeof c.total==='number'?c.total:c.note})}).sort(function(x,y){return String(x.at).localeCompare(String(y.at))});
    var run=started(st(SKEYS[file]),id);
