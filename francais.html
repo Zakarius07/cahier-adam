@@ -1534,6 +1534,22 @@ function updateProgress(){
   document.getElementById('barfill').style.width=(p.tot?Math.round(100*p.done/p.tot):0)+'%';
   document.getElementById('progtxt').textContent=`${p.done} / ${p.tot} réponses`;
   if(!state.done[L.id] && ui.warn) renderFinish(L);
+  pubProg(L,p);
+}
+/* suivi de la fiche en cours, lu par la page d'accueil + bouton « Corriger » quand tout est rempli */
+function pubProg(L,p){
+  try{
+    p=p||progress(L); const k='cahier-prog-v1'; let o={}; try{ o=JSON.parse(localStorage.getItem(k))||{}; }catch(e){}
+    o.francais=o.francais||{}; o.francais[L.id]={d:p.done,t:p.tot,done:!!state.done[L.id],at:new Date().toISOString()};
+    localStorage.setItem(k,JSON.stringify(o));
+  }catch(e){}
+  let b=document.getElementById('fixcorr');
+  const show=!state.done[L.id] && p.tot>0 && p.done>=p.tot && IDS.includes(state.tab);
+  if(!b){ b=document.createElement('div'); b.id='fixcorr'; b.style.cssText='position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:30;background:#1f7a46;color:#fff;border-radius:14px;padding:10px 12px;box-shadow:0 6px 24px rgba(0,0,0,.35);display:none;align-items:center;gap:10px;font-weight:700;font-size:15px';
+    b.innerHTML='<span style="flex:1">\u2705 Tout est rempli ! Fais corriger ta copie pour enregistrer ta note.</span><button type="button" style="border:0;border-radius:10px;padding:10px 14px;font-weight:800;font-size:15px;background:#fff;color:#1f7a46">Corriger</button>';
+    b.querySelector('button').addEventListener('click',()=>{ const LL=LESSONS[state.tab]; if(LL && !state.done[LL.id]) correct(LL); });
+    document.body.appendChild(b); }
+  b.style.display=show?'flex':'none';
 }
 
 /* ---- détail des erreurs, copie enregistrée, bilan ---- */
@@ -1910,7 +1926,7 @@ function correct(L){
   state.done[L.id]=true; ui.warn=false; delete state.copyId[L.id]; delete state.bilan[L.id]; ui.save[L.id]=undefined; ui.bil[L.id]=undefined;
   save(); renderLesson();
   const f=document.getElementById('finish'); if(f) f.scrollIntoView({behavior:reduced()?'auto':'smooth',block:'start'});
-  saveCopy(L);
+  saveCopy(L); try{ pubProg(L); }catch(e){}
 }
 function reset(L){
   state.ans[L.id]={}; state.done[L.id]=false; state.bonus[L.id]=''; delete state.copyId[L.id]; delete state.bilan[L.id]; if(state.watch) delete state.watch[L.id]; if(state.bon) delete state.bon[L.id];
