@@ -29,7 +29,7 @@ li a>span:nth-child(2){min-width:0}li small{display:block;color:var(--muted);fon
 summary::after{margin-left:0}
 .tot{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 20px}.tot span{background:var(--sheet);border:1.5px solid var(--rule);border-radius:12px;padding:8px 12px;font-size:14px;color:var(--muted)}.tot b{display:block;font-size:20px;color:var(--ink)}
 </style>
-<div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p><div class="tot" id="tot"></div>
+<div class="w"><h1>Cahier d'Adam</h1><p class="s">6<sup>e</sup> · choisis un dossier, puis une leçon. Chaque fiche a 10 exercices notés sur 20. Tes résultats restent enregistrés dans ce navigateur.</p><div class="tot" id="tot"></div><p class="s" id="dg" style="font-size:13px"></p>
 <details class="m" open><summary><span class="i">📐</span>Mathématiques</summary><ul>
 <li><a href="maths.html#determinants"><span class="n">1</span><span><b>Droites, segments et médiatrices</b><small>Chapitre 8 · cours 1 et 3</small></span></a></li>
 <li><a href="maths.html#accords"><span class="n">2</span><span><b>Cercles et disques</b><small>Chapitre 8 · cours 2</small></span></a></li>
@@ -58,9 +58,9 @@ summary::after{margin-left:0}
    localStorage.setItem(K[k],JSON.stringify(cur));
   });
   history.replaceState(null,'',location.pathname);
-  window.__imp=n;
+  window.__imp=n; var cm=0,cf=0;try{cm=JSON.parse(localStorage.getItem(K.m)||'[]').length;cf=JSON.parse(localStorage.getItem(K.f)||'[]').length}catch(e){}
   var b=document.createElement('p');b.className='s';b.style.cssText='background:var(--sheet);border:1.5px solid var(--rule);border-radius:12px;padding:10px 14px;color:var(--ink)';
-  b.textContent=n?('\u2713 '+n+' ancienne'+(n>1?'s':'')+' copie'+(n>1?'s':'')+' r\u00e9cup\u00e9r\u00e9e'+(n>1?'s':'')+' dans ce navigateur.'):'Ces copies sont d\u00e9j\u00e0 dans ce navigateur.';
+  b.textContent=n?('\u2713 '+n+' ancienne'+(n>1?'s':'')+' copie'+(n>1?'s':'')+' r\u00e9cup\u00e9r\u00e9e'+(n>1?'s':'')+' dans ce navigateur.'):'Copies enregistr\u00e9es dans ce navigateur : maths '+cm+', fran\u00e7ais '+cf+'.';
   document.querySelector('.w').insertBefore(b,document.getElementById('tot'));
  }catch(e){}
 })();
@@ -102,7 +102,7 @@ function render(){
   if(!el){el=document.createElement('span');el.className='sum';sm.insertBefore(el,sm.querySelector('.i').nextSibling.nextSibling)}
   el.textContent=df?pl(df,'fiche'):'';
  });
- var t=document.getElementById('tot');
+ var dm=rd(KEYS.maths).length,dfr=rd(KEYS.francais).length;document.getElementById('dg').textContent='Copies enregistr\u00e9es sur cet appareil : maths '+dm+' \u00b7 fran\u00e7ais '+dfr;var t=document.getElementById('tot');
  t.innerHTML=G.fiches?'<span><b>'+G.fiches+'</b>fiches faites</span><span><b>'+G.ex+'</b>exercices</span><span><b>'+f(G.sum/G.fiches)+'/20</b>moyenne</span><span><b>'+mm(G.sec)+'</b>de travail</span>':'';
 }
 render();window.addEventListener('pageshow',render);window.addEventListener('storage',render);
